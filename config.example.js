@@ -1,4 +1,4 @@
 window.VIORI_CONFIG = {
-  supabaseUrl: "https://YOUR_PROJECT_REF.supabase.co",
+  supabaseUrl: "https://qathmhkogycyupaszsqn.supabase.co",
   supabaseAnonKey: "YOUR_PUBLIC_ANON_KEY"
 };

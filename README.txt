@@ -49,6 +49,7 @@ GitHub + Supabase:
 4. Workflow Apply Supabase migrations запускается только вручную и применяет файлы из supabase/migrations.
 5. Для локального подключения скопируйте config.example.js в config.js и укажите URL проекта и public anon key.
 6. Никогда не добавляйте service_role key или пароль базы в config.js, исходный код либо Git.
+7. Supabase Project Ref этого проекта: qathmhkogycyupaszsqn.
 
 Что нужно заменить перед публикацией:
 1. Номер WhatsApp:
