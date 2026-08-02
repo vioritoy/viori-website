@@ -16,8 +16,13 @@ port = 54323
 
 [auth]
 enabled = true
-site_url = "http://localhost:5173"
-additional_redirect_urls = ["http://localhost:5173", "https://YOUR_DOMAIN.nl"]
+site_url = "https://vioritoy.github.io/viori-website/"
+additional_redirect_urls = [
+  "https://vioritoy.github.io/viori-website/",
+  "https://vioritoy.github.io/viori-website/**",
+  "http://localhost:5173",
+  "http://127.0.0.1:5500/**"
+]
 enable_signup = true
 
 [storage]
