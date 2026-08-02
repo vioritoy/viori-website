@@ -1146,6 +1146,34 @@ body.shop-open { overflow: hidden; }
 .delete-product { padding: 7px 10px; border: 1px solid #d9b4a5; border-radius: 9px; background: transparent; color: #8d4935; }
 .product-image img { width: 100%; height: 100%; object-fit: cover; }
 
+/* Responsive foundation shared by storefront, checkout and both account types. */
+:where(input,select,textarea,button) { max-width:100%; }
+:where(.hero-copy,.product-card,.admin-focus,.admin-activity,.dashboard-page,.checkout-dialog,.passport-content) { min-width:0; }
+.account-status,.privacy-note,.nfc-passport-item span,.toy-code { overflow-wrap:anywhere; word-break:break-word; }
+.cart-item { grid-template-columns:minmax(0,1fr) auto; }
+.admin-product-item { grid-template-columns:minmax(0,1fr) auto; }
+.admin-product-item:has(img) { grid-template-columns:64px minmax(0,1fr) auto; }
+
+@media (max-width:1180px) {
+  .nav { gap:16px; }
+  .main-nav { gap:18px; }
+  .header-cta { display:none; }
+  .account-panel.admin-mode { width:min(1000px,100vw); }
+  .account-panel.admin-mode .dashboard-view { grid-template-columns:180px minmax(0,1fr); column-gap:20px; }
+  .admin-metrics article { padding:16px; }
+  .admin-metrics strong { font-size:36px; }
+}
+
+@media (min-width:681px) and (max-width:900px) {
+  .account-panel.admin-mode .dashboard-view { display:block; }
+  .account-panel.admin-mode .dashboard-tabs { position:sticky; top:0; flex-direction:row; margin:0 -48px 20px; padding:12px 48px; border-width:0 0 1px; border-radius:0; overflow-x:auto; }
+  .account-panel.admin-mode .dashboard-tab { width:auto; min-width:max-content; text-align:center; }
+  .account-panel.admin-mode .dashboard-page { margin-top:0; }
+  .checkout-dialog,.passport-dialog,.product-dialog { width:min(720px,100%); }
+  .passport-cover { min-height:420px; }
+  .passport-content { padding:40px 34px; }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(26px);
@@ -1221,6 +1249,9 @@ body.shop-open { overflow: hidden; }
   .account-button-text { display:none; }
   .account-button { padding: 7px 10px; }
   .account-panel { padding: 54px 20px 30px; }
+  .account-modal { justify-items:stretch; }
+  .account-panel { width:100%; height:100dvh; padding-bottom:max(30px,env(safe-area-inset-bottom)); }
+  .account-close,.shop-close { top:max(12px,env(safe-area-inset-top)); right:14px; width:44px; height:44px; background:#fff; }
   .account-panel.admin-mode .dashboard-head { margin:-54px -20px 0; padding:48px 20px 25px; }
   .account-panel.admin-mode .dashboard-view { display:block; }
   .account-panel.admin-mode .dashboard-tabs { position:sticky; top:0; flex-direction:row; margin:0 -20px 18px; padding:10px 20px; border-width:0 0 1px; border-radius:0; overflow-x:auto; }
@@ -1237,8 +1268,8 @@ body.shop-open { overflow: hidden; }
     padding: 60px 0 72px;
   }
 
-  h1 { font-size: 54px; }
-  h2 { font-size: 42px; }
+  h1 { font-size: clamp(42px,14vw,54px); line-height:.94; }
+  h2 { font-size: clamp(34px,11vw,42px); line-height:1; }
 
   .hero-art {
     min-height: 350px;
@@ -1269,15 +1300,31 @@ body.shop-open { overflow: hidden; }
     grid-template-columns: 1fr;
   }
   .life-steps,.trust-grid { grid-template-columns: 1fr; }
+  .product-modal,.checkout-modal,.passport-modal,.cancellation-modal { place-items:stretch; padding:0; }
+  .product-dialog,.checkout-dialog,.passport-dialog,.cancellation-dialog { width:100%; max-height:100dvh; min-height:100dvh; border-radius:0; }
   .product-dialog { grid-template-columns: 1fr; }
   .product-dialog-image { min-height: 320px; }
   .product-dialog-copy { padding: 35px 20px 25px; }
-  .cart-panel { padding-inline: 20px; }
+  .cart-panel { width:100vw; height:100dvh; padding:58px 20px max(24px,env(safe-area-inset-bottom)); }
   .checkout-dialog { padding: 42px 20px 25px; }
   .checkout-grid { grid-template-columns: 1fr; }
   .passport-dialog { grid-template-columns:1fr; }
   .passport-cover { min-height:310px; }
   .passport-content { padding:35px 20px; }
+  .passport-facts { grid-template-columns:1fr; }
+  .passport-facts div + div { border-top:1px solid var(--line); }
+  .memory-form { padding:18px; }
+  .delivery-options label { grid-template-columns:18px minmax(0,1fr); }
+  .delivery-options label > b { grid-column:2; }
+  .payment-method { min-height:44px; }
+  .dashboard-tabs { scrollbar-width:none; }
+  .dashboard-tabs::-webkit-scrollbar { display:none; }
+  .dashboard-tab,.auth-tab { min-height:44px; white-space:nowrap; }
+  .admin-order-top,.toy-life-head,.profile-card,.compliance-status { align-items:flex-start; flex-direction:column; }
+  .order-status-select { width:100%; min-height:44px; }
+  .admin-product-item,.nfc-passport-item,.overview-order { grid-template-columns:minmax(0,1fr); }
+  .admin-product-item button,.nfc-state,.overview-status { justify-self:start; }
+  .admin-quick-actions button,.admin-section-title button,.logout-button { min-height:44px; }
 
   .product-description { min-height: auto; }
 
@@ -1313,6 +1360,29 @@ body.shop-open { overflow: hidden; }
   .legal-hero { padding-top:60px; }
   .legal-content article,.legal-warning { padding:22px; }
   .legal-content dl div { grid-template-columns:1fr; gap:3px; }
+}
+
+@media (max-width:420px) {
+  .container { width:min(100% - 22px,1160px); }
+  .nav { gap:7px; }
+  .brand img { width:40px; height:40px; }
+  .account-button,.cart-button { min-width:40px; min-height:40px; padding:7px 8px; }
+  .menu-button { width:40px; height:40px; }
+  .hero-actions { align-items:stretch; flex-direction:column; }
+  .hero-actions .button,.hero-actions .text-link { width:100%; justify-content:center; text-align:center; }
+  .hero-points { align-items:flex-start; flex-direction:column; gap:8px; }
+  .hero-art { min-height:300px; }
+  .floating-tag { max-width:145px; }
+  .filters { margin-inline:-11px; padding-inline:11px; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+  .filter { min-width:max-content; }
+  .card-actions { grid-template-columns:1fr; }
+  .admin-metrics { grid-template-columns:1fr; }
+  .admin-welcome h2 { font-size:36px; }
+  .account-panel.admin-mode .dashboard-head { padding-right:66px; }
+  .checkout-dialog h2,.cancellation-dialog h2 { font-size:38px; }
+  .cookie-banner { left:10px; right:10px; bottom:10px; width:calc(100% - 20px); padding:16px; border-radius:16px; }
+  .legal-nav { flex-wrap:nowrap; margin-inline:-11px; padding-inline:11px; overflow-x:auto; }
+  .legal-nav a { min-width:max-content; }
 }
 
 @media (prefers-reduced-motion: reduce) {
