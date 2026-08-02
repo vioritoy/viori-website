@@ -20308,11 +20308,26 @@ ${suffix}`;
     "#loginForm label:nth-child(1) span": "Email",
     "#loginForm label:nth-child(2) span": "Password",
     "#loginForm .button": "Sign in",
-    "#registerForm label:nth-child(1) span": "Your name",
-    "#registerForm label:nth-child(2) span": "Email",
-    "#registerForm label:nth-child(3) span": "Password",
-    "#registerForm .consent span": "I agree to the processing of my data",
-    "#registerForm .button": "Create account",
+    ".auth-story-panel .eyebrow": "HER WORLD STARTS HERE",
+    ".auth-story-panel h2": "A story that stays with your family",
+    ".auth-story-panel > div:nth-child(2) > p:last-child": "One secure adult account keeps toys, orders and precious family chapters together.",
+    ".auth-benefits li:nth-child(1) span": "<strong>Personal NFC passport</strong><small>Only the owner controls the toy's story</small>",
+    ".auth-benefits li:nth-child(2) span": "<strong>Family memories</strong><small>Save meaningful moments and new chapters</small>",
+    ".auth-benefits li:nth-child(3) span": "<strong>Orders in one place</strong><small>Follow your character from creation to delivery</small>",
+    ".auth-trust": "Protected by Supabase \xB7 NFC does not track location",
+    "#registerForm .registration-progress p": "Secure registration takes less than a minute",
+    "#registerForm > label:nth-of-type(1) > span": "Your name",
+    "#registerForm > label:nth-of-type(2) > span": "Email",
+    "#registerForm > label:nth-of-type(3) > span": "Create a password",
+    "#registerForm > label:nth-of-type(4) > span": "Repeat password",
+    "#registerForm > label:nth-of-type(5) > span": "I confirm that this account is managed by an adult",
+    "#registerForm > label:nth-of-type(6) > span": 'I accept the <a href="legal.html#terms" target="_blank">terms</a> and <a href="legal.html#privacy" target="_blank">privacy policy</a>',
+    "#registerForm .registration-submit span": "Create my VIORI world",
+    "#registerForm .registration-security": "Your data is encrypted. We never sell personal information.",
+    "#registrationSuccess .eyebrow": "ALMOST THERE",
+    "#registrationSuccess h2": "Confirm your email",
+    "#registrationSuccess > p:not(.eyebrow)": "We sent you a secure link. After confirmation, your personal VIORI world will open.",
+    "#registrationSuccess .button": "Continue to sign in",
     ".dashboard-head .eyebrow": "MY ACCOUNT",
     ".dashboard-greeting": "Hello,",
     '.dashboard-tab[data-dashboard-tab="toys"]': "My toys",
@@ -20630,8 +20645,8 @@ ${suffix}`;
     const messageInput = document.querySelector('textarea[name="message"]');
     nameInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0410\u043D\u043D\u0430");
     messageInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "Tell us your preferred colour, size and any other details" : "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0446\u0432\u0435\u0442, \u0440\u0430\u0437\u043C\u0435\u0440 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0434\u0435\u0442\u0430\u043B\u0438");
-    document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 6 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
-    document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 6 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
+    document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
+    document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
     document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0410\u043D\u043D\u0430");
     document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, VIORI-MIA-001" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, VIORI-MIA-001");
     document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage !== "ru" ? "VIORI \u2014 home" : "VIORI \u2014 \u0433\u043B\u0430\u0432\u043D\u0430\u044F");
@@ -21501,6 +21516,7 @@ ${suffix}`;
   }
   function showProductionAuthForm(formId) {
     ["loginForm", "registerForm", "forgotPasswordForm", "resetPasswordForm"].forEach((id) => document.getElementById(id)?.classList.toggle("hidden", id !== formId));
+    document.getElementById("registrationSuccess")?.classList.add("hidden");
     document.querySelector(".auth-tabs")?.classList.toggle("hidden", formId === "forgotPasswordForm" || formId === "resetPasswordForm");
   }
   function productionCloseAccount() {
@@ -21736,6 +21752,26 @@ ${suffix}`;
     }));
     document.getElementById("forgotPasswordButton")?.addEventListener("click", () => showProductionAuthForm("forgotPasswordForm"));
     document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+    document.getElementById("registrationSuccessLogin")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+    document.querySelectorAll(".password-toggle").forEach((button) => button.addEventListener("click", () => {
+      const input = button.parentElement?.querySelector('input[type="password"],input[type="text"]');
+      if (!input) return;
+      const reveal = input.type === "password";
+      input.type = reveal ? "text" : "password";
+      button.textContent = reveal ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C" : currentLanguage !== "ru" ? "Show" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C";
+      button.setAttribute("aria-label", button.textContent);
+    }));
+    const registrationPassword = document.querySelector('#registerForm input[name="password"]');
+    registrationPassword?.addEventListener("input", () => {
+      const value = registrationPassword.value;
+      const score = Math.min(4, Number(value.length >= 8) + Number(/[a-zа-я]/i.test(value) && /[A-ZА-Я]/.test(value)) + Number(/\d/.test(value)) + Number(/[^\wа-яА-Я]/.test(value)));
+      const strength = document.getElementById("passwordStrength");
+      if (!strength) return;
+      strength.dataset.score = String(score);
+      const labels = currentLanguage !== "ru" ? ["Use at least 8 characters", "Weak password", "Fair password", "Good password", "Strong password"] : ["\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432", "\u0421\u043B\u0430\u0431\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0425\u043E\u0440\u043E\u0448\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C"];
+      const label = strength.querySelector("span");
+      if (label) label.textContent = labels[score];
+    });
     document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -21763,8 +21799,21 @@ ${suffix}`;
       event.preventDefault();
       const form = event.currentTarget;
       const data = new FormData(form);
-      const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
-      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Check your email to confirm registration." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 email \u0438 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044E.";
+      const password = String(data.get("password"));
+      if (password !== String(data.get("passwordConfirm"))) {
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "\u041F\u0430\u0440\u043E\u043B\u0438 \u043D\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0442.";
+        return;
+      }
+      const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password, options: { data: { display_name: String(data.get("name")).trim(), account_owner_is_adult: true, privacy_consent_at: (/* @__PURE__ */ new Date()).toISOString() }, emailRedirectTo: location.origin + location.pathname } });
+      if (error) {
+        if (accountStatus) accountStatus.textContent = productionMessage(error);
+        return;
+      }
+      form.reset();
+      document.querySelector(".auth-tabs")?.classList.add("hidden");
+      form.classList.add("hidden");
+      document.getElementById("registrationSuccess")?.classList.remove("hidden");
+      if (accountStatus) accountStatus.textContent = "";
     });
     document.getElementById("loginForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();

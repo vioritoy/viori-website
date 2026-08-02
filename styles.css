@@ -1048,6 +1048,52 @@ body.shop-open { overflow: hidden; }
 }
 .account-panel.admin-mode { width:min(1120px,100vw); background:#f4eee8; }
 .account-panel:not(.admin-mode) { background:linear-gradient(180deg,#fffdf9 0%,#f8f0e7 100%); }
+.account-panel:has(.auth-view:not(.hidden)) { width:min(980px,100vw); padding:0; background:#fffaf5; }
+.auth-experience { display:grid; grid-template-columns:.86fr 1.14fr; min-height:100%; }
+.auth-story-panel { position:relative; display:flex; flex-direction:column; justify-content:space-between; min-width:0; padding:46px 38px; overflow:hidden; background:linear-gradient(150deg,#3a241a 0%,#62402e 58%,#9a6a4b 140%); color:#fff; }
+.auth-story-panel::before { content:""; position:absolute; width:340px; height:340px; right:-190px; top:-130px; border:1px solid rgba(255,255,255,.12); border-radius:50%; box-shadow:0 0 0 50px rgba(255,255,255,.025),0 0 0 100px rgba(255,255,255,.02); }
+.auth-story-panel > * { position:relative; z-index:1; }
+.auth-story-brand { display:flex; align-items:center; gap:12px; color:rgba(255,255,255,.72); font-size:10px; font-weight:800; letter-spacing:.16em; }
+.auth-story-brand img { width:46px; height:46px; border-radius:50%; background:#fff; object-fit:contain; }
+.auth-story-panel .eyebrow { margin-top:50px; color:#efc5a9; }
+.auth-story-panel h2 { max-width:420px; margin-bottom:18px; font-size:clamp(42px,4vw,58px); }
+.auth-story-panel > div > p:last-child { max-width:400px; color:rgba(255,255,255,.7); font-size:14px; }
+.auth-benefits { display:grid; gap:10px; margin:30px 0; padding:0; list-style:none; }
+.auth-benefits li { display:grid; grid-template-columns:34px 1fr; gap:12px; align-items:center; padding:12px; border:1px solid rgba(255,255,255,.1); border-radius:14px; background:rgba(255,255,255,.055); backdrop-filter:blur(8px); }
+.auth-benefits b { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:rgba(239,197,169,.16); color:#efc5a9; font-size:10px; }
+.auth-benefits strong,.auth-benefits small { display:block; }
+.auth-benefits strong { font-size:12px; }
+.auth-benefits small { margin-top:3px; color:rgba(255,255,255,.58); font-size:10px; line-height:1.4; }
+.auth-trust { margin:0; color:rgba(255,255,255,.5); font-size:9px; letter-spacing:.04em; }
+.auth-form-panel { align-self:center; width:100%; max-width:520px; margin:auto; padding:64px 54px; }
+.auth-form-panel > h2 { font-size:clamp(42px,5vw,58px); }
+.auth-form-panel .auth-tabs { margin-top:30px; }
+.registration-progress { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:#f6ede5; }
+.registration-progress span { width:8px; height:8px; border-radius:50%; background:#66845f; box-shadow:0 0 0 5px rgba(102,132,95,.12); }
+.registration-progress p { margin:0; color:var(--muted); font-size:10px; }
+.account-form label > small { display:block; margin-top:5px; color:var(--muted); font-size:9px; font-weight:500; }
+.password-field { position:relative; }
+.password-field input { padding-right:84px; }
+.password-toggle { position:absolute; right:10px; top:34px; min-height:32px; padding:4px 8px; border:0; background:transparent; color:var(--accent-dark); font-size:9px; font-weight:800; cursor:pointer; }
+.password-strength { display:grid; gap:7px; margin-top:-6px; }
+.password-strength > div { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
+.password-strength i { height:4px; border-radius:999px; background:#e3d8cf; transition:.2s; }
+.password-strength[data-score="1"] i:nth-child(-n+1) { background:#b95d4e; }
+.password-strength[data-score="2"] i:nth-child(-n+2) { background:#ce8a45; }
+.password-strength[data-score="3"] i:nth-child(-n+3) { background:#8b9b58; }
+.password-strength[data-score="4"] i { background:#5f8159; }
+.password-strength > span { color:var(--muted); font-size:9px; }
+.consent a { color:var(--accent-dark); text-decoration:underline; text-underline-offset:2px; }
+.registration-submit { display:flex; align-items:center; justify-content:space-between; min-height:52px; padding-inline:20px; }
+.registration-submit b { font-size:18px; transition:transform .2s; }
+.registration-submit:hover b { transform:translateX(4px); }
+.registration-security { display:flex; gap:8px; margin:0; color:var(--muted); font-size:9px; line-height:1.5; }
+.registration-security > span { color:#66845f; }
+.registration-success { padding:22px 0; text-align:center; }
+.registration-success-mark { display:grid; place-items:center; width:72px; height:72px; margin:0 auto 24px; border-radius:50%; background:#e8f0e5; color:#5f8159; font-size:30px; box-shadow:0 0 0 12px rgba(95,129,89,.07); }
+.registration-success h2 { font-size:48px; }
+.registration-success > p:not(.eyebrow) { color:var(--muted); }
+.registration-success .button { width:100%; margin-top:15px; }
 .account-panel.admin-mode .customer-only { display:none !important; }
 .account-panel:not(.admin-mode) .admin-only { display:none !important; }
 .account-panel.admin-mode .dashboard-head { margin:-58px -48px 0; padding:42px 48px 30px; background:linear-gradient(125deg,#302018,#583725); color:white; }
@@ -1193,6 +1239,11 @@ body.shop-open { overflow: hidden; }
   .checkout-dialog,.passport-dialog,.product-dialog { width:min(720px,100%); }
   .passport-cover { min-height:420px; }
   .passport-content { padding:40px 34px; }
+  .auth-experience { grid-template-columns:.72fr 1.28fr; }
+  .auth-story-panel { padding:38px 28px; }
+  .auth-story-panel h2 { font-size:42px; }
+  .auth-benefits small { display:none; }
+  .auth-form-panel { padding:54px 38px; }
 }
 
 .reveal {
@@ -1272,6 +1323,15 @@ body.shop-open { overflow: hidden; }
   .account-panel { padding: 54px 20px 30px; }
   .account-modal { justify-items:stretch; }
   .account-panel { width:100%; height:100dvh; padding-bottom:max(30px,env(safe-area-inset-bottom)); }
+  .account-panel:has(.auth-view:not(.hidden)) { overflow-y:auto; }
+  .auth-experience { display:block; }
+  .auth-story-panel { min-height:auto; padding:28px 20px 24px; }
+  .auth-story-panel > div:nth-child(2),.auth-benefits { display:none; }
+  .auth-story-brand { justify-content:center; }
+  .auth-trust { margin-top:18px; text-align:center; }
+  .auth-form-panel { max-width:none; padding:36px 20px max(32px,env(safe-area-inset-bottom)); }
+  .auth-form-panel > h2 { padding-right:42px; font-size:42px; }
+  .password-toggle { min-width:64px; }
   .account-close,.shop-close { top:max(12px,env(safe-area-inset-top)); right:14px; width:44px; height:44px; background:#fff; }
   .account-panel.admin-mode .dashboard-head { margin:-54px -20px 0; padding:48px 20px 25px; }
   .account-panel.admin-mode .dashboard-view { display:block; }

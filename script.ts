@@ -89,11 +89,26 @@ const englishTranslations: Record<string, string> = {
   '#loginForm label:nth-child(1) span': "Email",
   '#loginForm label:nth-child(2) span': "Password",
   "#loginForm .button": "Sign in",
-  '#registerForm label:nth-child(1) span': "Your name",
-  '#registerForm label:nth-child(2) span': "Email",
-  '#registerForm label:nth-child(3) span': "Password",
-  "#registerForm .consent span": "I agree to the processing of my data",
-  "#registerForm .button": "Create account",
+  ".auth-story-panel .eyebrow": "HER WORLD STARTS HERE",
+  ".auth-story-panel h2": "A story that stays with your family",
+  ".auth-story-panel > div:nth-child(2) > p:last-child": "One secure adult account keeps toys, orders and precious family chapters together.",
+  ".auth-benefits li:nth-child(1) span": "<strong>Personal NFC passport</strong><small>Only the owner controls the toy's story</small>",
+  ".auth-benefits li:nth-child(2) span": "<strong>Family memories</strong><small>Save meaningful moments and new chapters</small>",
+  ".auth-benefits li:nth-child(3) span": "<strong>Orders in one place</strong><small>Follow your character from creation to delivery</small>",
+  ".auth-trust": "Protected by Supabase · NFC does not track location",
+  "#registerForm .registration-progress p": "Secure registration takes less than a minute",
+  '#registerForm > label:nth-of-type(1) > span': "Your name",
+  '#registerForm > label:nth-of-type(2) > span': "Email",
+  '#registerForm > label:nth-of-type(3) > span': "Create a password",
+  '#registerForm > label:nth-of-type(4) > span': "Repeat password",
+  '#registerForm > label:nth-of-type(5) > span': "I confirm that this account is managed by an adult",
+  '#registerForm > label:nth-of-type(6) > span': 'I accept the <a href="legal.html#terms" target="_blank">terms</a> and <a href="legal.html#privacy" target="_blank">privacy policy</a>',
+  "#registerForm .registration-submit span": "Create my VIORI world",
+  "#registerForm .registration-security": "Your data is encrypted. We never sell personal information.",
+  "#registrationSuccess .eyebrow": "ALMOST THERE",
+  "#registrationSuccess h2": "Confirm your email",
+  "#registrationSuccess > p:not(.eyebrow)": "We sent you a secure link. After confirmation, your personal VIORI world will open.",
+  "#registrationSuccess .button": "Continue to sign in",
   ".dashboard-head .eyebrow": "MY ACCOUNT",
   ".dashboard-greeting": "Hello,",
   '.dashboard-tab[data-dashboard-tab="toys"]': "My toys",
@@ -339,8 +354,8 @@ function setLanguage(language: string | undefined) {
   const messageInput = document.querySelector('textarea[name="message"]');
   nameInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
   messageInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "Tell us your preferred colour, size and any other details" : "Напишите желаемый цвет, размер и другие детали");
-  document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "Не менее 6 символов");
-  document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "Не менее 6 символов");
+  document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "Не менее 8 символов");
+  document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "Не менее 8 символов");
   document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
   document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, VIORI-MIA-001" : "Например, VIORI-MIA-001");
   document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage !== "ru" ? "VIORI — home" : "VIORI — главная");
@@ -1256,6 +1271,7 @@ function productionOpenAccount(): void {
 
 function showProductionAuthForm(formId: "loginForm" | "registerForm" | "forgotPasswordForm" | "resetPasswordForm"): void {
   ["loginForm", "registerForm", "forgotPasswordForm", "resetPasswordForm"].forEach((id) => document.getElementById(id)?.classList.toggle("hidden", id !== formId));
+  document.getElementById("registrationSuccess")?.classList.add("hidden");
   document.querySelector(".auth-tabs")?.classList.toggle("hidden", formId === "forgotPasswordForm" || formId === "resetPasswordForm");
 }
 
@@ -1447,6 +1463,25 @@ if (supabase) {
   }));
   document.getElementById("forgotPasswordButton")?.addEventListener("click", () => showProductionAuthForm("forgotPasswordForm"));
   document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+  document.getElementById("registrationSuccessLogin")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+  document.querySelectorAll<HTMLButtonElement>(".password-toggle").forEach((button) => button.addEventListener("click", () => {
+    const input = button.parentElement?.querySelector<HTMLInputElement>('input[type="password"],input[type="text"]');
+    if (!input) return;
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    button.textContent = reveal ? (currentLanguage !== "ru" ? "Hide" : "Скрыть") : (currentLanguage !== "ru" ? "Show" : "Показать");
+    button.setAttribute("aria-label", button.textContent);
+  }));
+  const registrationPassword = document.querySelector<HTMLInputElement>('#registerForm input[name="password"]');
+  registrationPassword?.addEventListener("input", () => {
+    const value = registrationPassword.value;
+    const score = Math.min(4, Number(value.length >= 8) + Number(/[a-zа-я]/i.test(value) && /[A-ZА-Я]/.test(value)) + Number(/\d/.test(value)) + Number(/[^\wа-яА-Я]/.test(value)));
+    const strength = document.getElementById("passwordStrength");
+    if (!strength) return;
+    strength.dataset.score = String(score);
+    const labels = currentLanguage !== "ru" ? ["Use at least 8 characters", "Weak password", "Fair password", "Good password", "Strong password"] : ["Используйте минимум 8 символов", "Слабый пароль", "Средний пароль", "Хороший пароль", "Надёжный пароль"];
+    const label = strength.querySelector("span"); if (label) label.textContent = labels[score];
+  });
   document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);
     const { error } = await supabase.auth.resetPasswordForEmail(String(data.get("email")).trim(), { redirectTo: `${location.origin}${location.pathname}?reset-password=1` });
@@ -1462,8 +1497,12 @@ if (supabase) {
   });
   document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
-    const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
-    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage !== "ru" ? "Check your email to confirm registration." : "Проверьте email и подтвердите регистрацию.");
+    const password = String(data.get("password"));
+    if (password !== String(data.get("passwordConfirm"))) { if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "Пароли не совпадают."; return; }
+    const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password, options: { data: { display_name: String(data.get("name")).trim(), account_owner_is_adult: true, privacy_consent_at: new Date().toISOString() }, emailRedirectTo: location.origin + location.pathname } });
+    if (error) { if (accountStatus) accountStatus.textContent = productionMessage(error); return; }
+    form.reset(); document.querySelector(".auth-tabs")?.classList.add("hidden"); form.classList.add("hidden"); document.getElementById("registrationSuccess")?.classList.remove("hidden");
+    if (accountStatus) accountStatus.textContent = "";
   });
   document.getElementById("loginForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);

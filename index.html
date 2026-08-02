@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260803-5" />
+  <link rel="stylesheet" href="styles.css?v=20260803-6" />
 </head>
 <body>
   <header class="site-header">
@@ -327,9 +327,18 @@
       <button class="account-close" type="button" data-close-account aria-label="Закрыть">×</button>
 
       <div class="auth-view" id="authView">
+        <div class="auth-experience">
+          <aside class="auth-story-panel">
+            <div class="auth-story-brand"><img src="assets/viori-logo.png" alt=""><span>VIORI WORLD</span></div>
+            <div><p class="eyebrow">ЕЁ МИР НАЧИНАЕТСЯ ЗДЕСЬ</p><h2>История, которая остаётся с вашей семьёй</h2><p>Один защищённый аккаунт взрослого хранит игрушки, заказы и особенные семейные главы.</p></div>
+            <ul class="auth-benefits"><li><b>01</b><span><strong>Личный NFC-паспорт</strong><small>Только владелец управляет историей игрушки</small></span></li><li><b>02</b><span><strong>Семейные воспоминания</strong><small>Сохраняйте важные события и новые главы</small></span></li><li><b>03</b><span><strong>Заказы в одном месте</strong><small>Следите за созданием и доставкой персонажа</small></span></li></ul>
+            <p class="auth-trust">Защищено Supabase · NFC не отслеживает местоположение</p>
+          </aside>
+
+          <div class="auth-form-panel">
         <p class="eyebrow">VIORI WORLD</p>
-        <h2 id="accountTitle">Жизнь вашей игрушки</h2>
-        <p class="account-intro">Создайте личный кабинет, чтобы оформлять заказы, регистрировать игрушки по NFC-коду и хранить их истории.</p>
+        <h2 id="accountTitle">Ваш личный мир VIORI</h2>
+        <p class="account-intro">Войдите или создайте взрослый аккаунт владельца игрушки.</p>
 
         <div class="auth-tabs" role="tablist">
           <button class="auth-tab active" type="button" data-auth-tab="login">Войти</button>
@@ -338,17 +347,22 @@
 
         <form class="account-form" id="loginForm">
           <label><span>Email</span><input type="email" name="email" placeholder="name@example.com" required></label>
-          <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
+          <label class="password-field"><span>Пароль</span><input type="password" name="password" minlength="8" autocomplete="current-password" placeholder="Не менее 8 символов" required><button class="password-toggle" type="button" aria-label="Показать пароль">Показать</button></label>
           <button class="button" type="submit">Войти</button>
           <button class="text-link auth-help" id="forgotPasswordButton" type="button">Забыли пароль?</button>
         </form>
 
         <form class="account-form hidden" id="registerForm">
-          <label><span>Ваше имя</span><input type="text" name="name" placeholder="Например, Анна" required></label>
-          <label><span>Email</span><input type="email" name="email" placeholder="name@example.com" required></label>
-          <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
-          <label class="consent"><input type="checkbox" required><span>Я согласен(на) с обработкой данных</span></label>
-          <button class="button" type="submit">Создать кабинет</button>
+          <div class="registration-progress"><span></span><p>Безопасная регистрация занимает меньше минуты</p></div>
+          <label><span>Ваше имя</span><input type="text" name="name" minlength="2" maxlength="80" autocomplete="name" placeholder="Например, Виктория" required><small>Так мы будем обращаться к вам в кабинете</small></label>
+          <label><span>Email</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required><small>На него придёт ссылка подтверждения</small></label>
+          <label class="password-field"><span>Придумайте пароль</span><input type="password" name="password" minlength="8" autocomplete="new-password" placeholder="Минимум 8 символов" required><button class="password-toggle" type="button" aria-label="Показать пароль">Показать</button></label>
+          <div class="password-strength" id="passwordStrength" aria-live="polite"><div><i></i><i></i><i></i><i></i></div><span>Добавьте буквы и цифры</span></div>
+          <label class="password-field"><span>Повторите пароль</span><input type="password" name="passwordConfirm" minlength="8" autocomplete="new-password" placeholder="Повторите пароль" required><button class="password-toggle" type="button" aria-label="Показать пароль">Показать</button></label>
+          <label class="consent"><input type="checkbox" name="adultConfirmation" required><span>Я подтверждаю, что аккаунтом управляет взрослый</span></label>
+          <label class="consent"><input type="checkbox" name="privacyConsent" required><span>Я принимаю <a href="legal.html#terms" target="_blank">условия</a> и <a href="legal.html#privacy" target="_blank">политику конфиденциальности</a></span></label>
+          <button class="button registration-submit" type="submit"><span>Создать мой мир VIORI</span><b aria-hidden="true">→</b></button>
+          <p class="registration-security"><span aria-hidden="true">◇</span> Мы никогда не продаём личные данные и не создаём аккаунты для детей.</p>
         </form>
         <form class="account-form hidden" id="forgotPasswordForm">
           <p class="account-intro">Укажите email — мы отправим защищённую ссылку для смены пароля.</p>
@@ -362,7 +376,16 @@
           <label><span>Повторите пароль</span><input type="password" name="passwordConfirm" minlength="8" autocomplete="new-password" required></label>
           <button class="button" type="submit">Сохранить новый пароль</button>
         </form>
+        <div class="registration-success hidden" id="registrationSuccess">
+          <div class="registration-success-mark" aria-hidden="true">✓</div>
+          <p class="eyebrow">ПОЧТИ ГОТОВО</p>
+          <h2>Подтвердите ваш email</h2>
+          <p>Мы отправили защищённую ссылку. После подтверждения откроется личный мир VIORI.</p>
+          <button class="button" id="registrationSuccessLogin" type="button">Перейти ко входу</button>
+        </div>
         <p class="account-status" id="accountStatus" aria-live="polite"></p>
+          </div>
+        </div>
       </div>
 
       <div class="dashboard-view hidden" id="dashboardView">
@@ -471,6 +494,6 @@
   <div class="cancellation-modal" id="cancellationModal" aria-hidden="true"><button class="shop-backdrop" type="button" data-close-cancellation aria-label="Закрыть"></button><section class="cancellation-dialog" role="dialog" aria-modal="true" aria-labelledby="cancellationTitle"><button class="shop-close" type="button" data-close-cancellation aria-label="Закрыть">×</button><div id="cancellationFormView"><p class="eyebrow">ПРАВО НА ОТМЕНУ</p><h2 id="cancellationTitle">Отменить заказ</h2><p>Отправьте запрос — мы сохраним дату обращения и свяжемся с вами после проверки статуса заказа.</p><form class="checkout-form" id="cancellationForm"><label><span>Номер заказа</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001" required></label><label><span>Email заказа</span><input type="email" name="email" required></label><label><span>Причина (необязательно)</span><textarea name="reason" rows="3"></textarea></label><button class="button" type="submit">Отправить запрос на отмену</button><p class="account-status" id="cancellationStatus" aria-live="polite"></p></form></div><div class="checkout-success hidden" id="cancellationSuccess"><div>✓</div><p class="eyebrow">ЗАПРОС ПРИНЯТ</p><h2>Отмена зарегистрирована</h2><p id="cancellationReference"></p><button class="button" type="button" data-close-cancellation>Закрыть</button></div></section></div>
 
   <script src="config.js"></script>
-  <script src="script.js?v=20260803-5"></script>
+  <script src="script.js?v=20260803-6"></script>
 </body>
 </html>
