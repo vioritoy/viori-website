@@ -21284,6 +21284,14 @@ ${suffix}`;
     document.getElementById("accountModal")?.setAttribute("aria-hidden", "true");
     document.body.classList.remove("account-open");
   }
+  function switchProductionDashboardPage(pageName) {
+    document.querySelectorAll(".dashboard-tab").forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.dashboardTab === pageName);
+    });
+    document.querySelectorAll(".dashboard-page").forEach((page) => {
+      page.classList.toggle("hidden", page.dataset.dashboardPage !== pageName);
+    });
+  }
   async function loadProductionAccount() {
     if (!supabase) return;
     const { data: { user } } = await supabase.auth.getUser();
@@ -21319,6 +21327,10 @@ ${suffix}`;
     document.getElementById("profileEmail").textContent = email;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
+    const selectedPage = document.querySelector(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
+    if (!selectedPage || !isAdmin && (selectedPage === "admin" || selectedPage === "admin-home")) {
+      switchProductionDashboardPage(isAdmin ? "admin-home" : "toys");
+    }
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
       const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
@@ -21365,14 +21377,33 @@ ${suffix}`;
     if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage === "en" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage === "en" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
     const passportContainer = document.getElementById("nfcPassports");
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+    const orderContainer = document.getElementById("adminOrders");
+    if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${safeText(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
     document.getElementById("adminMetricProducts").textContent = String(productionProducts.length);
     document.getElementById("adminMetricOrders").textContent = String(productionOrders.length);
     document.getElementById("adminMetricNewOrders").textContent = String(productionOrders.filter((o) => o.status === "new").length);
     document.getElementById("adminMetricPassports").textContent = String(productionPassports.length);
+    const overview = document.getElementById("adminOverviewOrders");
+    if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>\u20AC${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
   }
   if (supabase) {
     document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
     document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
+    document.querySelectorAll(".dashboard-tab").forEach((tab) => tab.addEventListener("click", () => {
+      if (tab.classList.contains("hidden")) return;
+      switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
+    }));
+    document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => {
+      if (productionProfile?.role !== "admin") return;
+      switchProductionDashboardPage(button.dataset.adminGo || "admin");
+    }));
+    document.querySelector('#adminProductForm input[name="image"]')?.addEventListener("change", (event) => {
+      const file = event.currentTarget.files?.[0];
+      const preview = document.getElementById("adminImagePreview");
+      if (!file || !preview) return;
+      preview.style.backgroundImage = `url("${URL.createObjectURL(file)}")`;
+      preview.classList.remove("hidden");
+    });
     document.querySelectorAll(".auth-tab").forEach((tab) => tab.addEventListener("click", () => {
       document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
       document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
@@ -21460,6 +21491,16 @@ ${suffix}`;
       if (!button?.dataset.deleteDbProduct) return;
       await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct);
       await loadProductionAdmin();
+    });
+    document.addEventListener("change", async (event) => {
+      const select = event.target.closest("[data-db-order]");
+      if (!select?.dataset.dbOrder || productionProfile?.role !== "admin") return;
+      const { error } = await supabase.from("orders").update({ status: select.value }).eq("id", select.dataset.dbOrder);
+      if (error) {
+        select.value = productionOrders.find((order) => order.id === select.dataset.dbOrder)?.status || "new";
+        return;
+      }
+      await loadProductionAccount();
     });
     supabase.auth.onAuthStateChange(() => {
       window.setTimeout(() => void loadProductionAccount(), 0);
