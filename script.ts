@@ -312,6 +312,9 @@ Object.keys(englishTranslations).forEach((selector) => {
 });
 
 const languageButtons = document.querySelectorAll<HTMLButtonElement>(".language-button");
+const languageSwitcher = document.querySelector<HTMLElement>(".language-switcher");
+const languageMenuButton = document.getElementById("languageMenuButton") as HTMLButtonElement | null;
+const languageLabels: Record<Language, string> = { ru: "Русский", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Français" };
 let currentLanguage: Language = "ru";
 
 function setLanguage(language: string | undefined) {
@@ -334,22 +337,25 @@ function setLanguage(language: string | undefined) {
   document.querySelector(".order-product")?.setAttribute("data-product", bunnyName || "");
   const nameInput = document.querySelector('input[name="name"]');
   const messageInput = document.querySelector('textarea[name="message"]');
-  nameInput?.setAttribute("placeholder", currentLanguage === "en" ? "For example, Anna" : "Например, Анна");
-  messageInput?.setAttribute("placeholder", currentLanguage === "en" ? "Tell us your preferred colour, size and any other details" : "Напишите желаемый цвет, размер и другие детали");
-  document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage === "en" ? "At least 6 characters" : "Не менее 6 символов");
-  document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage === "en" ? "At least 6 characters" : "Не менее 6 символов");
-  document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage === "en" ? "For example, Anna" : "Например, Анна");
-  document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage === "en" ? "For example, VIORI-MIA-001" : "Например, VIORI-MIA-001");
-  document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage === "en" ? "VIORI — home" : "VIORI — главная");
-  mainNav?.setAttribute("aria-label", currentLanguage === "en" ? "Main navigation" : "Основная навигация");
-  menuButton?.setAttribute("aria-label", currentLanguage === "en" ? "Open menu" : "Открыть меню");
-  document.querySelector(".language-switcher")?.setAttribute("aria-label", currentLanguage === "en" ? "Choose language" : "Выбор языка");
+  nameInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
+  messageInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "Tell us your preferred colour, size and any other details" : "Напишите желаемый цвет, размер и другие детали");
+  document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "Не менее 6 символов");
+  document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 6 characters" : "Не менее 6 символов");
+  document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
+  document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, VIORI-MIA-001" : "Например, VIORI-MIA-001");
+  document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage !== "ru" ? "VIORI — home" : "VIORI — главная");
+  mainNav?.setAttribute("aria-label", currentLanguage !== "ru" ? "Main navigation" : "Основная навигация");
+  menuButton?.setAttribute("aria-label", currentLanguage !== "ru" ? "Open menu" : "Открыть меню");
+  document.querySelector(".language-switcher")?.setAttribute("aria-label", currentLanguage !== "ru" ? "Choose language" : "Выбор языка");
 
   languageButtons.forEach((button) => {
     const active = button.dataset.language === currentLanguage;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
+    button.setAttribute("aria-checked", String(active));
   });
+  const currentLabel = document.getElementById("currentLanguageLabel");
+  if (currentLabel) currentLabel.textContent = languageLabels[currentLanguage];
 
   document.getElementById("year")!.textContent = String(new Date().getFullYear());
   localStorage.setItem("viori-language", currentLanguage);
@@ -358,7 +364,21 @@ function setLanguage(language: string | undefined) {
   if (getSession()) renderAccount();
 }
 
-languageButtons.forEach((button) => button.addEventListener("click", () => setLanguage(button.dataset.language)));
+function closeLanguageMenu(): void {
+  languageSwitcher?.classList.remove("open");
+  languageMenuButton?.setAttribute("aria-expanded", "false");
+}
+
+languageMenuButton?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const open = !languageSwitcher?.classList.contains("open");
+  languageSwitcher?.classList.toggle("open", open);
+  languageMenuButton.setAttribute("aria-expanded", String(open));
+  if (open) document.querySelector<HTMLButtonElement>(`.language-button[data-language="${currentLanguage}"]`)?.focus();
+});
+languageButtons.forEach((button) => button.addEventListener("click", () => { setLanguage(button.dataset.language); closeLanguageMenu(); languageMenuButton?.focus(); }));
+document.addEventListener("click", (event) => { if (!languageSwitcher?.contains(event.target as Node)) closeLanguageMenu(); });
+document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeLanguageMenu(); });
 
 menuButton?.addEventListener("click", () => {
   const isOpen = mainNav?.classList.toggle("open") || false;
@@ -417,7 +437,7 @@ orderForm?.addEventListener("submit", (event) => {
     }
   }
 
-  const text = currentLanguage === "en" ? [
+  const text = currentLanguage !== "ru" ? [
     "Hello! I would like to order a VIORI toy.",
     "",
     `Name: ${data.get("name")}`,
@@ -433,7 +453,7 @@ orderForm?.addEventListener("submit", (event) => {
   ].join("\n");
 
   if (WHATSAPP_NUMBER === "31000000000") {
-    if (formStatus) formStatus.textContent = currentLanguage === "en"
+    if (formStatus) formStatus.textContent = currentLanguage !== "ru"
       ? "The form works. Add the real WhatsApp number in script.js before publishing."
       : "Форма работает. Перед публикацией укажите настоящий номер WhatsApp в файле script.js.";
     return;
@@ -501,7 +521,7 @@ document.getElementById("registerForm")?.addEventListener("submit", (event) => {
   const email = String(data.get("email")).trim().toLowerCase();
   const accounts = getAccounts();
   if (accounts[email]) {
-    if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "An account with this email already exists." : "Аккаунт с таким email уже существует.";
+    if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "An account with this email already exists." : "Аккаунт с таким email уже существует.";
     return;
   }
   const hasAdmin = Object.values(accounts).some((account) => account.role === "admin");
@@ -519,7 +539,7 @@ document.getElementById("loginForm")?.addEventListener("submit", (event) => {
   const email = String(data.get("email")).trim().toLowerCase();
   const account = getAccounts()[email];
   if (!account || account.password !== String(data.get("password"))) {
-    if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Incorrect email or password." : "Неверный email или пароль.";
+    if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Incorrect email or password." : "Неверный email или пароль.";
     return;
   }
   localStorage.setItem("viori-session", email);
@@ -567,7 +587,7 @@ function claimNfcPassport(codeValue: string, email: string): "claimed" | "owned"
   const now = new Date().toISOString();
   passport.ownerEmail = email;
   passport.claimedAt = now;
-  account.toys.unshift({ code, name: currentLanguage === "en" ? passport.nameEn : passport.nameRu, nameRu: passport.nameRu, nameEn: passport.nameEn, born: now, memories: [] });
+  account.toys.unshift({ code, name: currentLanguage !== "ru" ? passport.nameEn : passport.nameRu, nameRu: passport.nameRu, nameEn: passport.nameEn, born: now, memories: [] });
   saveNfcPassports(passports);
   saveAccounts(accounts);
   return "claimed";
@@ -582,10 +602,10 @@ document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
   const status = document.getElementById("nfcStatus");
   const result = claimNfcPassport(code, email);
   const messages = {
-    claimed: currentLanguage === "en" ? "The passport is activated. Welcome to the VIORI world." : "Паспорт активирован. Добро пожаловать в мир VIORI.",
-    owned: currentLanguage === "en" ? "This toy is already in your collection." : "Эта игрушка уже есть в вашей коллекции.",
-    taken: currentLanguage === "en" ? "This passport has already been activated by another owner." : "Этот паспорт уже активирован другим владельцем.",
-    invalid: currentLanguage === "en" ? "Passport not found. Check the code and try again." : "Паспорт не найден. Проверьте код и попробуйте снова."
+    claimed: currentLanguage !== "ru" ? "The passport is activated. Welcome to the VIORI world." : "Паспорт активирован. Добро пожаловать в мир VIORI.",
+    owned: currentLanguage !== "ru" ? "This toy is already in your collection." : "Эта игрушка уже есть в вашей коллекции.",
+    taken: currentLanguage !== "ru" ? "This passport has already been activated by another owner." : "Этот паспорт уже активирован другим владельцем.",
+    invalid: currentLanguage !== "ru" ? "Passport not found. Check the code and try again." : "Паспорт не найден. Проверьте код и попробуйте снова."
   };
   if (status) status.textContent = messages[result];
   if (result !== "claimed") return;
@@ -610,14 +630,14 @@ function renderCatalogProducts(): void {
   if (!grid || !select) return;
 
   getCatalogProducts().forEach((product) => {
-    const name = currentLanguage === "en" ? product.nameEn : product.nameRu;
-    const description = currentLanguage === "en" ? product.descriptionEn : product.descriptionRu;
+    const name = currentLanguage !== "ru" ? product.nameEn : product.nameRu;
+    const description = currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu;
     const card = document.createElement("article");
     card.className = "product-card admin-added visible";
     card.dataset.category = product.category;
     const activeFilter = document.querySelector<HTMLButtonElement>(".filter.active")?.dataset.filter || "all";
     card.classList.toggle("hidden", activeFilter !== "all" && activeFilter !== product.category);
-    card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage === "en" ? "Crochet toy" : "Вязаная игрушка"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage === "en" ? "from" : "от"} €${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Details" : "Подробнее"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Add to bag" : "В корзину"}</button></div>`;
+    card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage !== "ru" ? "Crochet toy" : "Вязаная игрушка"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage !== "ru" ? "from" : "от"} €${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Details" : "Подробнее"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "В корзину"}</button></div>`;
     grid.appendChild(card);
 
     const option = document.createElement("option");
@@ -632,18 +652,18 @@ let activeShopProduct: ShopProduct | null = null;
 
 function resolveShopProduct(button: HTMLElement): ShopProduct | null {
   if (button.dataset.staticProduct === "mia") {
-    return { id: "static:mia", name: currentLanguage === "en" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.", image: "" };
+    return { id: "static:mia", name: currentLanguage !== "ru" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.", image: "" };
   }
   const id = button.dataset.catalogProduct;
   const product = getCatalogProducts().find((item) => item.id === id);
   if (!product) return null;
-  return { id: `catalog:${product.id}`, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image };
+  return { id: `catalog:${product.id}`, name: currentLanguage !== "ru" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu, image: product.image };
 }
 
 function resolveShopProductById(id: string): ShopProduct | null {
-  if (id === "static:mia") return { id, name: currentLanguage === "en" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом.", image: "" };
+  if (id === "static:mia") return { id, name: currentLanguage !== "ru" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом.", image: "" };
   const product = getCatalogProducts().find((item) => `catalog:${item.id}` === id);
-  return product ? { id, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
+  return product ? { id, name: currentLanguage !== "ru" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
 }
 
 function getCart(): CartItem[] {
@@ -668,7 +688,7 @@ function addProductToCart(product: ShopProduct, quantity = 1): void {
 function openProduct(product: ShopProduct): void {
   activeShopProduct = product;
   document.getElementById("productModalName")!.textContent = product.name;
-  document.getElementById("productModalPrice")!.textContent = `${currentLanguage === "en" ? "from" : "от"} €${product.price}`;
+  document.getElementById("productModalPrice")!.textContent = `${currentLanguage !== "ru" ? "from" : "от"} €${product.price}`;
   document.getElementById("productModalDescription")!.textContent = product.description;
   const image = document.getElementById("productModalImage") as HTMLElement;
   image.style.backgroundImage = product.image ? `url("${product.image}")` : "linear-gradient(145deg,#e9d6c6,#f9eee5)";
@@ -702,7 +722,7 @@ function renderCart(): void {
   document.getElementById("cartCount")!.textContent = String(items.reduce((sum, entry) => sum + entry.item.quantity, 0));
   document.getElementById("cartTotal")!.textContent = `€${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
   const container = document.getElementById("cartItems")!;
-  container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} × €${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage === "en" ? "Remove" : "Удалить"}">×</button></article>`).join("") : `<div class="cart-empty">${currentLanguage === "en" ? "Your future character is waiting for you." : "Ваш будущий персонаж ждёт встречи с вами."}</div>`;
+  container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} × €${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage !== "ru" ? "Remove" : "Удалить"}">×</button></article>`).join("") : `<div class="cart-empty">${currentLanguage !== "ru" ? "Your future character is waiting for you." : "Ваш будущий персонаж ждёт встречи с вами."}</div>`;
   container.querySelectorAll<HTMLButtonElement>("[data-remove-cart]").forEach((button) => button.addEventListener("click", () => saveCart(cart.filter((item) => item.id !== button.dataset.removeCart))));
 }
 
@@ -868,7 +888,7 @@ document.getElementById("cancellationForm")?.addEventListener("submit", (event) 
   const order = orders.find((item) => item.number === orderNumber && item.customer.email.toLowerCase() === email);
   const status = document.getElementById("cancellationStatus");
   if (!order) {
-    if (status) status.textContent = currentLanguage === "en" ? "No matching order was found." : "Заказ с такими данными не найден.";
+    if (status) status.textContent = currentLanguage !== "ru" ? "No matching order was found." : "Заказ с такими данными не найден.";
     return;
   }
   const requests = getCancellationRequests();
@@ -878,7 +898,7 @@ document.getElementById("cancellationForm")?.addEventListener("submit", (event) 
   order.status = "cancelled";
   saveCheckoutOrders(orders);
   form.reset();
-  document.getElementById("cancellationReference")!.textContent = `${currentLanguage === "en" ? "Reference" : "Номер обращения"}: ${reference}`;
+  document.getElementById("cancellationReference")!.textContent = `${currentLanguage !== "ru" ? "Reference" : "Номер обращения"}: ${reference}`;
   document.getElementById("cancellationFormView")?.classList.add("hidden");
   document.getElementById("cancellationSuccess")?.classList.remove("hidden");
   renderAdminOrders();
@@ -916,7 +936,7 @@ adminProductForm?.addEventListener("submit", (event) => {
   const file = data.get("image");
   if (!(file instanceof File) || !file.size) return;
   if (file.size > 1.5 * 1024 * 1024) {
-    if (status) status.textContent = currentLanguage === "en" ? "The image is larger than 1.5 MB." : "Изображение больше 1,5 МБ.";
+    if (status) status.textContent = currentLanguage !== "ru" ? "The image is larger than 1.5 MB." : "Изображение больше 1,5 МБ.";
     return;
   }
   const reader = new FileReader();
@@ -936,12 +956,12 @@ adminProductForm?.addEventListener("submit", (event) => {
       saveCatalogProducts(products);
       form.reset();
       document.getElementById("adminImagePreview")?.classList.add("hidden");
-      if (status) status.textContent = currentLanguage === "en" ? "The toy has been published." : "Игрушка опубликована.";
+      if (status) status.textContent = currentLanguage !== "ru" ? "The toy has been published." : "Игрушка опубликована.";
       renderCatalogProducts();
       renderAdminProducts();
       renderAdminOverview();
     } catch {
-      if (status) status.textContent = currentLanguage === "en" ? "Browser storage is full. Use a smaller image." : "Хранилище браузера заполнено. Загрузите изображение меньшего размера.";
+      if (status) status.textContent = currentLanguage !== "ru" ? "Browser storage is full. Use a smaller image." : "Хранилище браузера заполнено. Загрузите изображение меньшего размера.";
     }
   });
   reader.readAsDataURL(file);
@@ -950,7 +970,7 @@ adminProductForm?.addEventListener("submit", (event) => {
 function renderAdminProducts(): void {
   const container = document.getElementById("adminProducts");
   if (!container) return;
-  container.innerHTML = getCatalogProducts().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage === "en" ? product.nameEn : product.nameRu)}</strong><span>€${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage === "en" ? "Delete" : "Удалить"}</button></div>`).join("");
+  container.innerHTML = getCatalogProducts().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage !== "ru" ? product.nameEn : product.nameRu)}</strong><span>€${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div>`).join("");
   container.querySelectorAll<HTMLButtonElement>("[data-delete-product]").forEach((button) => {
     button.addEventListener("click", () => {
       saveCatalogProducts(getCatalogProducts().filter((product) => product.id !== button.dataset.deleteProduct));
@@ -965,14 +985,14 @@ function orderStatusLabel(status: CheckoutOrder["status"]): string {
   const labels: Record<CheckoutOrder["status"], [string, string]> = {
     new: ["Новый", "New"], making: ["Создаётся", "Making"], shipped: ["Отправлен", "Shipped"], completed: ["Завершён", "Completed"], cancelled: ["Отменён", "Cancelled"]
   };
-  return labels[status][currentLanguage === "en" ? 1 : 0];
+  return labels[status][currentLanguage !== "ru" ? 1 : 0];
 }
 
 function renderAdminOrders(): void {
   const container = document.getElementById("adminOrders");
   if (!container) return;
   const orders = getCheckoutOrders();
-  container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>€${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} · ${safeText(order.customer.city)} · ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${(["new", "making", "shipped", "completed", "cancelled"] as CheckoutOrder["status"][]).map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
+  container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} · ${safeText(order.customer.city)} · ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${(["new", "making", "shipped", "completed", "cancelled"] as CheckoutOrder["status"][]).map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
   container.querySelectorAll<HTMLSelectElement>("[data-order-number]").forEach((select) => select.addEventListener("change", () => {
     const currentOrders = getCheckoutOrders();
     const order = currentOrders.find((item) => item.number === select.dataset.orderNumber);
@@ -994,7 +1014,7 @@ function renderAdminOverview(): void {
   document.getElementById("adminMetricPassports")!.textContent = String(passports.length);
   const container = document.getElementById("adminOverviewOrders");
   if (!container) return;
-  container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} · €${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
+  container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} · €${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
 }
 
 function generateNfcCode(): string {
@@ -1019,7 +1039,7 @@ document.getElementById("nfcIssueForm")?.addEventListener("submit", (event) => {
   form.reset();
   const activationUrl = `${window.location.href.split("?")[0]}?nfc=${encodeURIComponent(code)}`;
   const status = document.getElementById("nfcIssueStatus");
-  if (status) status.textContent = `${currentLanguage === "en" ? "Passport created" : "Паспорт создан"}: ${activationUrl}`;
+  if (status) status.textContent = `${currentLanguage !== "ru" ? "Passport created" : "Паспорт создан"}: ${activationUrl}`;
   renderNfcPassports();
   renderAdminOverview();
 });
@@ -1028,7 +1048,7 @@ function renderNfcPassports(): void {
   const container = document.getElementById("nfcPassports");
   if (!container) return;
   const passports = getNfcPassports();
-  container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` · ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : (currentLanguage === "en" ? "Ready for activation" : "Готов к активации")}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? (currentLanguage === "en" ? "Activated" : "Активирован") : (currentLanguage === "en" ? "New" : "Новый")}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No passports issued yet." : "Паспорта ещё не выпускались."}</p></div>`;
+  container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` · ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : (currentLanguage !== "ru" ? "Ready for activation" : "Готов к активации")}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? (currentLanguage !== "ru" ? "Activated" : "Активирован") : (currentLanguage !== "ru" ? "New" : "Новый")}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No passports issued yet." : "Паспорта ещё не выпускались."}</p></div>`;
 }
 
 let activePassportCode: string | null = null;
@@ -1039,10 +1059,10 @@ function openPassport(code: string): void {
   const toy = account?.toys.find((item) => item.code === code);
   if (!toy) return;
   activePassportCode = code;
-  const name = currentLanguage === "en" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
+  const name = currentLanguage !== "ru" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
   document.getElementById("passportName")!.textContent = name;
   document.getElementById("passportCode")!.textContent = toy.code;
-  document.getElementById("passportBorn")!.textContent = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+  document.getElementById("passportBorn")!.textContent = new Date(toy.born).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU");
   renderPassportTimeline(toy);
   document.getElementById("passportModal")?.classList.add("open");
   document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
@@ -1056,9 +1076,9 @@ function closePassport(): void {
 }
 
 function renderPassportTimeline(toy: Toy): void {
-  const born = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+  const born = new Date(toy.born).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU");
   const memories = toy.memories || [];
-  document.getElementById("passportTimeline")!.innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage === "en" ? "The story begins" : "История начинается"}</h3><p>${currentLanguage === "en" ? "The day this character became part of your family." : "День, когда персонаж стал частью вашей семьи."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
+  document.getElementById("passportTimeline")!.innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</h3><p>${currentLanguage !== "ru" ? "The day this character became part of your family." : "День, когда персонаж стал частью вашей семьи."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
 }
 
 document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", closePassport));
@@ -1100,13 +1120,13 @@ function renderDashboard(account: Account): void {
   const toys = account.toys || [];
   document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
   document.getElementById("toyList")!.innerHTML = toys.map((toy) => {
-    const date = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
-    const name = currentLanguage === "en" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
-    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage === "en" ? "The story begins" : "История начинается"}</strong>${currentLanguage === "en" ? `Joined your family on ${date}` : `Стала частью вашей семьи ${date}`}</div><div class="life-event"><strong>${currentLanguage === "en" ? "Saved chapters" : "Сохранённые главы"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage === "en" ? "Open passport" : "Открыть паспорт"}</button></article>`;
+    const date = new Date(toy.born).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU");
+    const name = currentLanguage !== "ru" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
+    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</strong>${currentLanguage !== "ru" ? `Joined your family on ${date}` : `Стала частью вашей семьи ${date}`}</div><div class="life-event"><strong>${currentLanguage !== "ru" ? "Saved chapters" : "Сохранённые главы"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
   }).join("");
   const shopOrders = getCheckoutOrders().filter((order) => order.customer.email.toLowerCase() === account.email.toLowerCase());
   const legacyOrders = account.orders || [];
-  document.getElementById("ordersList")!.innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} · €${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} · ${orderStatusLabel(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "Заказов пока нет"}</h3><p>${currentLanguage === "en" ? "Your future characters will appear here." : "Здесь появятся ваши будущие персонажи."}</p></div>`;
+  document.getElementById("ordersList")!.innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} · €${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${orderStatusLabel(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3><p>${currentLanguage !== "ru" ? "Your future characters will appear here." : "Здесь появятся ваши будущие персонажи."}</p></div>`;
 }
 
 function renderAccount() {
@@ -1123,7 +1143,7 @@ function renderAccount() {
     account = session ? getAccounts()[session] : undefined;
     setTimeout(() => {
       const status = document.getElementById("nfcStatus");
-      if (status) status.textContent = result === "claimed" ? (currentLanguage === "en" ? "The passport is activated." : "Паспорт активирован.") : result === "taken" ? (currentLanguage === "en" ? "This passport belongs to another owner." : "Этот паспорт принадлежит другому владельцу.") : result === "invalid" ? (currentLanguage === "en" ? "Passport not found." : "Паспорт не найден.") : "";
+      if (status) status.textContent = result === "claimed" ? (currentLanguage !== "ru" ? "The passport is activated." : "Паспорт активирован.") : result === "taken" ? (currentLanguage !== "ru" ? "This passport belongs to another owner." : "Этот паспорт принадлежит другому владельцу.") : result === "invalid" ? (currentLanguage !== "ru" ? "Passport not found." : "Паспорт не найден.") : "";
     }, 0);
     const cleanUrl = new URL(window.location.href);
     cleanUrl.searchParams.delete("nfc");
@@ -1156,7 +1176,7 @@ function renderCart(): void {
   document.getElementById("cartCount")!.textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
   document.getElementById("cartTotal")!.textContent = `€${items.reduce((sum, row) => sum + row.product.price_cents * row.item.quantity, 0) / 100}`;
   const container = document.getElementById("cartItems");
-  if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage === "en" ? product.name_en : product.name_ru)}</strong><span>€${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "Your bag is empty." : "Корзина пока пуста."}</p></div>`;
+  if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage !== "ru" ? product.name_en : product.name_ru)}</strong><span>€${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "Your bag is empty." : "Корзина пока пуста."}</p></div>`;
   const checkout = document.getElementById("cartCheckout") as HTMLButtonElement | null;
   if (checkout) checkout.disabled = !items.length;
 }
@@ -1178,7 +1198,7 @@ function productionCheckoutTotal(): number {
 async function openProductionCheckout(): Promise<void> {
   if (!supabase) return;
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) { closeProductionCart(); productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in before checkout." : "Войдите в аккаунт перед оформлением заказа."; return; }
+  if (!user) { closeProductionCart(); productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in before checkout." : "Войдите в аккаунт перед оформлением заказа."; return; }
   closeProductionCart();
   const form = document.getElementById("checkoutForm") as HTMLFormElement;
   (form.elements.namedItem("email") as HTMLInputElement).value = user.email || "";
@@ -1196,15 +1216,15 @@ async function renderCatalogProducts(): Promise<void> {
   if (!grid || error) return;
   productionProducts = (data || []) as DbProduct[];
   if (!productionProducts.length) {
-    grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage === "en" ? "The collection is being prepared" : "Коллекция готовится"}</h3><p>${currentLanguage === "en" ? "Products will appear after safety documentation is complete." : "Товары появятся после завершения документов по безопасности."}</p></div>`;
+    grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "The collection is being prepared" : "Коллекция готовится"}</h3><p>${currentLanguage !== "ru" ? "Products will appear after safety documentation is complete." : "Товары появятся после завершения документов по безопасности."}</p></div>`;
     return;
   }
   grid.innerHTML = productionProducts.map((product) => {
-    const name = currentLanguage === "en" ? product.name_en : product.name_ru;
-    const description = currentLanguage === "en" ? product.description_en : product.description_ru;
+    const name = currentLanguage !== "ru" ? product.name_en : product.name_ru;
+    const description = currentLanguage !== "ru" ? product.description_en : product.description_ru;
     const path = product.product_images?.[0]?.storage_path;
     const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
-    return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage === "en" ? "Add to bag" : "В корзину"}</button></div></article>`;
+    return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "В корзину"}</button></div></article>`;
   }).join("");
   renderCart();
 }
@@ -1222,10 +1242,10 @@ let activePassportId: string | null = null;
 
 function productionMessage(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error || "");
-  if (message.includes("Invalid login credentials")) return currentLanguage === "en" ? "Incorrect email or password." : "Неверный email или пароль.";
-  if (message.includes("Email not confirmed")) return currentLanguage === "en" ? "Confirm your email first." : "Сначала подтвердите email.";
-  if (message.includes("User already registered")) return currentLanguage === "en" ? "This email is already registered." : "Этот email уже зарегистрирован.";
-  return currentLanguage === "en" ? "Something went wrong. Please try again." : "Произошла ошибка. Попробуйте ещё раз.";
+  if (message.includes("Invalid login credentials")) return currentLanguage !== "ru" ? "Incorrect email or password." : "Неверный email или пароль.";
+  if (message.includes("Email not confirmed")) return currentLanguage !== "ru" ? "Confirm your email first." : "Сначала подтвердите email.";
+  if (message.includes("User already registered")) return currentLanguage !== "ru" ? "This email is already registered." : "Этот email уже зарегистрирован.";
+  return currentLanguage !== "ru" ? "Something went wrong. Please try again." : "Произошла ошибка. Попробуйте ещё раз.";
 }
 
 function productionOpenAccount(): void {
@@ -1280,7 +1300,7 @@ async function loadProductionAccount(): Promise<void> {
   if (transferToken) {
     const { error } = await supabase.rpc("accept_passport_transfer", { transfer_token: transferToken });
     const clean = new URL(location.href); clean.searchParams.delete("transfer"); history.replaceState({}, "", clean);
-    if (accountStatus) accountStatus.textContent = error ? (currentLanguage === "en" ? "Transfer link is invalid or expired." : "Ссылка передачи недействительна или устарела.") : (currentLanguage === "en" ? "The toy is now in your account." : "Игрушка передана в ваш кабинет.");
+    if (accountStatus) accountStatus.textContent = error ? (currentLanguage !== "ru" ? "Transfer link is invalid or expired." : "Ссылка передачи недействительна или устарела.") : (currentLanguage !== "ru" ? "The toy is now in your account." : "Игрушка передана в ваш кабинет.");
     if (!error) { productionOpenAccount(); await loadProductionAccount(); }
   }
 }
@@ -1300,10 +1320,10 @@ function renderProductionDashboard(email: string): void {
   switchProductionDashboardPage(allowedPage);
   document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
   document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
-    const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
-    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage === "en" ? "Open passport" : "Открыть паспорт"}</button></article>`;
+    const name = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
+    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
   }).join("");
-  document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} · ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
+  document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
   if (isAdmin) void loadProductionAdmin();
 }
 
@@ -1311,7 +1331,7 @@ async function claimProductionPassport(token: string): Promise<void> {
   if (!supabase) return;
   const status = document.getElementById("nfcStatus");
   const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
-  if (status) status.textContent = error ? (currentLanguage === "en" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован.") : (currentLanguage === "en" ? "Passport activated." : "Паспорт активирован.");
+  if (status) status.textContent = error ? (currentLanguage !== "ru" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован.") : (currentLanguage !== "ru" ? "Passport activated." : "Паспорт активирован.");
   const clean = new URL(location.href); clean.searchParams.delete("nfc"); history.replaceState({}, "", clean);
   if (!error) await loadProductionAccount();
 }
@@ -1321,11 +1341,11 @@ async function openProductionPassport(id: string): Promise<void> {
   const passport = productionPassports.find((item) => item.id === id);
   if (!passport) return;
   activePassportId = id;
-  document.getElementById("passportName")!.textContent = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
+  document.getElementById("passportName")!.textContent = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
   document.getElementById("passportCode")!.textContent = passport.public_code;
   document.getElementById("passportBorn")!.textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
   const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
-  document.getElementById("passportTimeline")!.innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage === "en" ? "The story begins" : "История начинается"}</h3></article>`;
+  document.getElementById("passportTimeline")!.innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</h3></article>`;
   document.getElementById("passportModal")?.classList.add("open");
   document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
 }
@@ -1343,17 +1363,17 @@ async function loadProductionAdmin(): Promise<void> {
 
 function renderProductionAdmin(): void {
   const productContainer = document.getElementById("adminProducts");
-  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage === "en" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage === "en" ? "Delete" : "Удалить"}</button></div>`).join("");
+  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div>`).join("");
   const passportContainer = document.getElementById("nfcPassports");
-  if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+  if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
   const orderContainer = document.getElementById("adminOrders");
-  if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${safeText(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
+  if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${safeText(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
   document.getElementById("adminMetricProducts")!.textContent = String(productionProducts.length);
   document.getElementById("adminMetricOrders")!.textContent = String(productionOrders.length);
   document.getElementById("adminMetricNewOrders")!.textContent = String(productionOrders.filter((o) => o.status === "new").length);
   document.getElementById("adminMetricPassports")!.textContent = String(productionPassports.length);
   const overview = document.getElementById("adminOverviewOrders");
-  if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>€${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
+  if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>€${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
 }
 
 if (supabase) {
@@ -1385,7 +1405,7 @@ if (supabase) {
   });
   document.getElementById("openCancellation")?.addEventListener("click", async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in to request a cancellation." : "Войдите, чтобы запросить отмену."; return; }
+    if (!user) { productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in to request a cancellation." : "Войдите, чтобы запросить отмену."; return; }
     const form = document.getElementById("cancellationForm") as HTMLFormElement;
     (form.elements.namedItem("email") as HTMLInputElement).value = user.email || "";
     (form.elements.namedItem("email") as HTMLInputElement).readOnly = true;
@@ -1395,8 +1415,8 @@ if (supabase) {
   document.getElementById("cancellationForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("cancellationStatus");
     const { data: reference, error } = await supabase.rpc("request_order_cancellation", { target_order_number: String(data.get("orderNumber")).trim(), cancellation_reason: String(data.get("reason")).trim() });
-    if (error || !reference) { if (status) status.textContent = currentLanguage === "en" ? "This order cannot be cancelled online." : "Этот заказ нельзя отменить онлайн."; return; }
-    document.getElementById("cancellationReference")!.textContent = `${currentLanguage === "en" ? "Reference" : "Номер обращения"}: ${String(reference).slice(0, 8).toUpperCase()}`;
+    if (error || !reference) { if (status) status.textContent = currentLanguage !== "ru" ? "This order cannot be cancelled online." : "Этот заказ нельзя отменить онлайн."; return; }
+    document.getElementById("cancellationReference")!.textContent = `${currentLanguage !== "ru" ? "Reference" : "Номер обращения"}: ${String(reference).slice(0, 8).toUpperCase()}`;
     document.getElementById("cancellationFormView")?.classList.add("hidden"); document.getElementById("cancellationSuccess")?.classList.remove("hidden");
   });
   document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
@@ -1430,20 +1450,20 @@ if (supabase) {
   document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);
     const { error } = await supabase.auth.resetPasswordForEmail(String(data.get("email")).trim(), { redirectTo: `${location.origin}${location.pathname}?reset-password=1` });
-    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Check your email for the reset link." : "Проверьте почту — ссылка для смены пароля отправлена.");
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage !== "ru" ? "Check your email for the reset link." : "Проверьте почту — ссылка для смены пароля отправлена.");
   });
   document.getElementById("resetPasswordForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
     const password = String(data.get("password")); const confirmation = String(data.get("passwordConfirm"));
-    if (password !== confirmation) { if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Passwords do not match." : "Пароли не совпадают."; return; }
+    if (password !== confirmation) { if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "Пароли не совпадают."; return; }
     const { error } = await supabase.auth.updateUser({ password });
-    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Password updated." : "Новый пароль сохранён.");
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage !== "ru" ? "Password updated." : "Новый пароль сохранён.");
     if (!error) { history.replaceState({}, "", location.pathname); showProductionAuthForm("loginForm"); }
   });
   document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
     const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
-    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Check your email to confirm registration." : "Проверьте email и подтвердите регистрацию.");
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage !== "ru" ? "Check your email to confirm registration." : "Проверьте email и подтвердите регистрацию.");
   });
   document.getElementById("loginForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);
@@ -1464,9 +1484,9 @@ if (supabase) {
   document.getElementById("passportTransferForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); if (!activePassportId) return; const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("passportTransferStatus");
     const { data: token, error } = await supabase.rpc("create_passport_transfer", { target_passport: activePassportId, recipient_email: String(data.get("email")).trim() });
-    if (error || !token) { if (status) status.textContent = currentLanguage === "en" ? "Recipient must have a different registered VIORI account." : "Получатель должен иметь другой зарегистрированный аккаунт VIORI."; return; }
+    if (error || !token) { if (status) status.textContent = currentLanguage !== "ru" ? "Recipient must have a different registered VIORI account." : "Получатель должен иметь другой зарегистрированный аккаунт VIORI."; return; }
     const url = `${location.origin}${location.pathname}?transfer=${encodeURIComponent(token)}`;
-    if (status) status.textContent = `${currentLanguage === "en" ? "Send this one-time link" : "Отправьте одноразовую ссылку"}: ${url}`;
+    if (status) status.textContent = `${currentLanguage !== "ru" ? "Send this one-time link" : "Отправьте одноразовую ссылку"}: ${url}`;
     form.reset();
   });
   document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
@@ -1474,7 +1494,7 @@ if (supabase) {
     const { data: result, error } = await supabase.rpc("issue_nfc_passport", { name_ru: String(data.get("nameRu")), name_en: String(data.get("nameEn")), target_order_number: String(data.get("orderNumber")) || null });
     if (error || !result?.[0]) { if (status) status.textContent = productionMessage(error); return; }
     const activationUrl = `${location.origin}${location.pathname}?nfc=${encodeURIComponent(result[0].claim_token)}`;
-    if (status) status.textContent = `${currentLanguage === "en" ? "Copy now — shown once" : "Скопируйте сейчас — показывается один раз"}: ${activationUrl}`;
+    if (status) status.textContent = `${currentLanguage !== "ru" ? "Copy now — shown once" : "Скопируйте сейчас — показывается один раз"}: ${activationUrl}`;
     form.reset(); await loadProductionAdmin();
   });
   document.getElementById("adminProductForm")?.addEventListener("submit", async (event) => {
@@ -1488,7 +1508,7 @@ if (supabase) {
       const upload = await supabase.storage.from("product-images").upload(path, file, { contentType: file.type, upsert: false });
       if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
     }
-    form.reset(); if (status) status.textContent = currentLanguage === "en" ? "Saved as a draft pending safety data." : "Сохранено как черновик до заполнения данных безопасности."; await loadProductionAdmin();
+    form.reset(); if (status) status.textContent = currentLanguage !== "ru" ? "Saved as a draft pending safety data." : "Сохранено как черновик до заполнения данных безопасности."; await loadProductionAdmin();
   });
   document.addEventListener("click", async (event) => { const button = (event.target as HTMLElement).closest<HTMLElement>("[data-delete-db-product]"); if (!button?.dataset.deleteDbProduct) return; await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct); await loadProductionAdmin(); });
   document.addEventListener("change", async (event) => {

@@ -100,28 +100,31 @@ button { cursor: pointer; }
 .main-nav a:hover::after { right: 0; }
 
 .language-switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+  position:relative;
   flex: 0 0 auto;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
 }
 
-.language-button {
-  padding: 5px 3px;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font-size: inherit;
-  font-weight: inherit;
+.language-trigger {
+  display:flex; align-items:center; gap:8px; min-height:40px; padding:8px 12px;
+  border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.82);
+  color:var(--accent-dark); font:600 12px/1 "Montserrat",sans-serif; cursor:pointer;
+  box-shadow:0 8px 24px rgba(73,46,30,.06); transition:.2s ease;
 }
+.language-trigger:hover,.language-trigger[aria-expanded="true"] { border-color:#bda78f; background:#fff; box-shadow:0 12px 28px rgba(73,46,30,.12); }
+.language-globe { position:relative; display:grid; place-items:center; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; font-size:0; opacity:.72; }
+.language-globe::before,.language-globe::after { content:""; position:absolute; width:10px; height:18px; border:1px solid currentColor; border-block:0; border-radius:50%; }
+.language-globe::after { width:18px; height:1px; border:0; border-top:1px solid currentColor; border-radius:0; }
+.language-chevron { font-size:16px; line-height:0; transition:transform .2s ease; }
+.language-trigger[aria-expanded="true"] .language-chevron { transform:rotate(180deg); }
+.language-menu { position:absolute; z-index:30; top:calc(100% + 10px); right:0; width:220px; padding:8px; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 24px 70px rgba(55,34,22,.2); opacity:0; visibility:hidden; transform:translateY(-8px) scale(.98); transform-origin:top right; transition:.18s ease; }
+.language-switcher.open .language-menu { opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+.language-button { display:grid; grid-template-columns:1fr auto 18px; align-items:center; gap:10px; width:100%; padding:11px 12px; border:0; border-radius:12px; background:transparent; color:var(--text); font:600 13px/1.2 "Montserrat",sans-serif; text-align:left; cursor:pointer; }
+.language-button small { color:var(--muted); font-size:10px; letter-spacing:.08em; }
+.language-button b { color:var(--accent-dark); opacity:0; }
+.language-button:hover { background:var(--soft); }
+.language-button.active { background:#f1e6da; color:var(--accent-dark); }
+.language-button.active b { opacity:1; }
 
-.language-button:hover,
-.language-button.active { color: var(--accent-dark); }
-
-.language-button.active { text-decoration: underline; text-underline-offset: 4px; }
 
 .account-button {
   display: inline-flex;
@@ -1210,9 +1213,11 @@ body.shop-open { overflow: hidden; }
   .brand span { display: none; }
   .brand img { width: 44px; height: 44px; }
   .language-switcher { margin-left: auto; }
-  .language-switcher span { display:none; }
-  .language-switcher { gap:1px; }
-  .language-button { padding-inline:3px; font-size:10px; }
+  .language-current { display:none; }
+  .language-trigger { width:40px; height:40px; padding:0; justify-content:center; }
+  .language-chevron { display:none; }
+  .language-menu { position:fixed; top:76px; right:14px; left:14px; width:auto; border-radius:20px; transform-origin:top center; }
+  .language-button { padding:13px 14px; font-size:14px; }
   .account-button-text { display:none; }
   .account-button { padding: 7px 10px; }
   .account-panel { padding: 54px 20px 30px; }
