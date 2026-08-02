@@ -1175,9 +1175,10 @@ function renderProductionDashboard(email: string): void {
   document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
   document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
   const selectedPage = document.querySelector<HTMLButtonElement>(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
-  if (!selectedPage || (!isAdmin && (selectedPage === "admin" || selectedPage === "admin-home"))) {
-    switchProductionDashboardPage(isAdmin ? "admin-home" : "toys");
-  }
+  const allowedPage = selectedPage && (isAdmin || (selectedPage !== "admin" && selectedPage !== "admin-home"))
+    ? selectedPage
+    : (isAdmin ? "admin-home" : "toys");
+  switchProductionDashboardPage(allowedPage);
   document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
   document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
     const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
@@ -1237,12 +1238,19 @@ function renderProductionAdmin(): void {
 }
 
 if (supabase) {
+  document.documentElement.dataset.appVersion = "2026-08-02-2";
   document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
   document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
   document.querySelectorAll<HTMLButtonElement>(".dashboard-tab").forEach((tab) => tab.addEventListener("click", () => {
     if (tab.classList.contains("hidden")) return;
     switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
   }));
+  document.querySelector(".dashboard-tabs")?.addEventListener("click", (event) => {
+    const tab = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-dashboard-tab]");
+    if (!tab || tab.classList.contains("hidden")) return;
+    event.preventDefault();
+    switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
+  });
   document.querySelectorAll<HTMLButtonElement>("[data-admin-go]").forEach((button) => button.addEventListener("click", () => {
     if (productionProfile?.role !== "admin") return;
     switchProductionDashboardPage(button.dataset.adminGo || "admin");

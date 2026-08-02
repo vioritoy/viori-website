@@ -21328,9 +21328,8 @@ ${suffix}`;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
     const selectedPage = document.querySelector(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
-    if (!selectedPage || !isAdmin && (selectedPage === "admin" || selectedPage === "admin-home")) {
-      switchProductionDashboardPage(isAdmin ? "admin-home" : "toys");
-    }
+    const allowedPage = selectedPage && (isAdmin || selectedPage !== "admin" && selectedPage !== "admin-home") ? selectedPage : isAdmin ? "admin-home" : "toys";
+    switchProductionDashboardPage(allowedPage);
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
       const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
@@ -21387,12 +21386,19 @@ ${suffix}`;
     if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>\u20AC${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
   }
   if (supabase) {
+    document.documentElement.dataset.appVersion = "2026-08-02-2";
     document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
     document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
     document.querySelectorAll(".dashboard-tab").forEach((tab) => tab.addEventListener("click", () => {
       if (tab.classList.contains("hidden")) return;
       switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
     }));
+    document.querySelector(".dashboard-tabs")?.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-dashboard-tab]");
+      if (!tab || tab.classList.contains("hidden")) return;
+      event.preventDefault();
+      switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
+    });
     document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => {
       if (productionProfile?.role !== "admin") return;
       switchProductionDashboardPage(button.dataset.adminGo || "admin");
