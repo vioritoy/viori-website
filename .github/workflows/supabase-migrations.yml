@@ -29,7 +29,13 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: npx supabase db push --password "$SUPABASE_DB_PASSWORD"
-      - name: Sync Supabase authentication configuration
+      - name: Sync Supabase authentication URLs
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: npx supabase config push --yes
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          curl --fail-with-body --request PATCH \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/config/auth" \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"site_url":"https://vioritoy.github.io/viori-website/","uri_allow_list":"https://vioritoy.github.io/viori-website/,https://vioritoy.github.io/viori-website/**,http://localhost:5173,http://127.0.0.1:5500/**"}'
