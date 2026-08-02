@@ -1210,6 +1210,10 @@ body.shop-open { overflow: hidden; }
   .brand span { display: none; }
   .brand img { width: 44px; height: 44px; }
   .language-switcher { margin-left: auto; }
+  .language-switcher span { display:none; }
+  .language-switcher { gap:1px; }
+  .language-button { padding-inline:3px; font-size:10px; }
+  .account-button-text { display:none; }
   .account-button { padding: 7px 10px; }
   .account-panel { padding: 54px 20px 30px; }
   .account-panel.admin-mode .dashboard-head { margin:-54px -20px 0; padding:48px 20px 25px; }

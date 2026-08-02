@@ -20462,6 +20462,140 @@ ${suffix}`;
     ".admin-activity h3": "Latest orders",
     ".admin-section-title button": "Open all"
   };
+  var regionalTranslations = {
+    nl: {
+      "title": "VIORI \u2014 handgemaakte gehaakte knuffels",
+      'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
+      ".main-nav a:nth-child(1)": "Knuffels",
+      ".main-nav a:nth-child(2)": "Over VIORI",
+      ".main-nav a:nth-child(3)": "Bestellen",
+      ".main-nav a:nth-child(4)": "Contact",
+      ".header-cta": "Bestellen",
+      ".account-button-text": "Mijn account",
+      ".hero-copy .eyebrow": "Elke knuffel heeft een eigen leven",
+      ".hero-copy h1": "Een vriend wiens verhaal <em>net begint</em>",
+      ".hero-text": "Elke VIORI wordt met de hand gemaakt en krijgt een naam, karakter en uniek digitaal paspoort. Tik met je telefoon op de NFC-tag en ontdek het verhaal en de herinneringen.",
+      ".hero-actions .button": "Bekijk de knuffels",
+      ".hero-actions .text-link": "Laat jouw idee maken <span>\u2192</span>",
+      "#catalog .section-heading .eyebrow": "Een kleine collectie",
+      "#catalog .section-heading h2": "VIORI-knuffels",
+      "#catalog .section-heading > p": "Ontdek handgemaakte personages met een eigen digitaal verhaal.",
+      '.filters [data-filter="all"]': "Alles",
+      '.filters [data-filter="animals"]': "Dieren",
+      '.filters [data-filter="dolls"]': "Poppen",
+      '.filters [data-filter="baby"]': "Voor baby's",
+      "#about .eyebrow": "Over het atelier",
+      "#about h2": "Elke steek vertelt een verhaal",
+      "#order .eyebrow": "Eenvoudig bestellen",
+      "#order h2": "Zo bestel je een VIORI",
+      "#contacts .eyebrow": "Neem contact op",
+      "#contacts h2": "Laten we een bijzondere knuffel maken",
+      ".form-submit": "Bericht voorbereiden",
+      ".auth-view > .eyebrow": "VIORI WORLD",
+      "#accountTitle": "Het leven van jouw knuffel",
+      '.auth-tab[data-auth-tab="login"]': "Inloggen",
+      '.auth-tab[data-auth-tab="register"]': "Registreren",
+      "#loginForm .button": "Inloggen",
+      "#registerForm .button": "Account maken",
+      ".dashboard-head .eyebrow": "MIJN ACCOUNT",
+      '.dashboard-tab[data-dashboard-tab="toys"]': "Mijn knuffels",
+      '.dashboard-tab[data-dashboard-tab="orders"]': "Bestellingen",
+      '.dashboard-tab[data-dashboard-tab="profile"]': "Profiel",
+      "#logoutButton": "Uitloggen",
+      ".cart-checkout": "Bestelling afronden",
+      "#cartTitle": "Winkelmand",
+      "#checkoutTitle": "Bestelling afronden",
+      ".checkout-total span": "Totaal"
+    },
+    de: {
+      "title": "VIORI \u2014 handgefertigte H\xE4keltiere",
+      'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
+      ".main-nav a:nth-child(1)": "Kuscheltiere",
+      ".main-nav a:nth-child(2)": "\xDCber VIORI",
+      ".main-nav a:nth-child(3)": "Bestellen",
+      ".main-nav a:nth-child(4)": "Kontakt",
+      ".header-cta": "Bestellen",
+      ".account-button-text": "Mein Konto",
+      ".hero-copy .eyebrow": "Jedes Kuscheltier hat ein eigenes Leben",
+      ".hero-copy h1": "Ein Freund, dessen Geschichte <em>gerade beginnt</em>",
+      ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erh\xE4lt einen Namen, einen Charakter und einen digitalen Pass. Ber\xFChre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
+      ".hero-actions .button": "Kuscheltiere ansehen",
+      ".hero-actions .text-link": "Eigene Idee anfragen <span>\u2192</span>",
+      "#catalog .section-heading .eyebrow": "Eine kleine Kollektion",
+      "#catalog .section-heading h2": "VIORI-Kuscheltiere",
+      "#catalog .section-heading > p": "Entdecke handgefertigte Charaktere mit ihrer eigenen digitalen Geschichte.",
+      '.filters [data-filter="all"]': "Alle",
+      '.filters [data-filter="animals"]': "Tiere",
+      '.filters [data-filter="dolls"]': "Puppen",
+      '.filters [data-filter="baby"]': "F\xFCr Babys",
+      "#about .eyebrow": "\xDCber das Atelier",
+      "#about h2": "Jede Masche erz\xE4hlt eine Geschichte",
+      "#order .eyebrow": "Einfach bestellen",
+      "#order h2": "So bestellst du deine VIORI",
+      "#contacts .eyebrow": "VIORI kontaktieren",
+      "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen",
+      ".form-submit": "Nachricht vorbereiten",
+      ".auth-view > .eyebrow": "VIORI WORLD",
+      "#accountTitle": "Das Leben deines Kuscheltiers",
+      '.auth-tab[data-auth-tab="login"]': "Anmelden",
+      '.auth-tab[data-auth-tab="register"]': "Registrieren",
+      "#loginForm .button": "Anmelden",
+      "#registerForm .button": "Konto erstellen",
+      ".dashboard-head .eyebrow": "MEIN KONTO",
+      '.dashboard-tab[data-dashboard-tab="toys"]': "Meine Kuscheltiere",
+      '.dashboard-tab[data-dashboard-tab="orders"]': "Bestellungen",
+      '.dashboard-tab[data-dashboard-tab="profile"]': "Profil",
+      "#logoutButton": "Abmelden",
+      ".cart-checkout": "Zur Bestellung",
+      "#cartTitle": "Warenkorb",
+      "#checkoutTitle": "Bestellung abschlie\xDFen",
+      ".checkout-total span": "Gesamt"
+    },
+    fr: {
+      "title": "VIORI \u2014 peluches au crochet faites main",
+      'meta[name="description"]': "VIORI cr\xE9e des peluches faites main avec leur propre caract\xE8re, leur histoire et un passeport NFC num\xE9rique.",
+      ".main-nav a:nth-child(1)": "Peluches",
+      ".main-nav a:nth-child(2)": "\xC0 propos",
+      ".main-nav a:nth-child(3)": "Commander",
+      ".main-nav a:nth-child(4)": "Contact",
+      ".header-cta": "Commander",
+      ".account-button-text": "Mon compte",
+      ".hero-copy .eyebrow": "Chaque peluche a sa propre vie",
+      ".hero-copy h1": "Un ami dont l\u2019histoire <em>ne fait que commencer</em>",
+      ".hero-text": "Chaque VIORI est cr\xE9\xE9e \xE0 la main et re\xE7oit un nom, un caract\xE8re et un passeport num\xE9rique unique. Touchez la puce NFC avec votre t\xE9l\xE9phone pour d\xE9couvrir son histoire.",
+      ".hero-actions .button": "Voir les peluches",
+      ".hero-actions .text-link": "Cr\xE9er votre id\xE9e <span>\u2192</span>",
+      "#catalog .section-heading .eyebrow": "Une petite collection",
+      "#catalog .section-heading h2": "Peluches VIORI",
+      "#catalog .section-heading > p": "D\xE9couvrez des personnages faits main avec leur propre histoire num\xE9rique.",
+      '.filters [data-filter="all"]': "Toutes",
+      '.filters [data-filter="animals"]': "Animaux",
+      '.filters [data-filter="dolls"]': "Poup\xE9es",
+      '.filters [data-filter="baby"]': "Pour b\xE9b\xE9s",
+      "#about .eyebrow": "\xC0 propos de l\u2019atelier",
+      "#about h2": "Chaque maille raconte une histoire",
+      "#order .eyebrow": "Commande simple",
+      "#order h2": "Comment commander votre VIORI",
+      "#contacts .eyebrow": "Contacter VIORI",
+      "#contacts h2": "Cr\xE9ons une peluche exceptionnelle",
+      ".form-submit": "Pr\xE9parer le message",
+      ".auth-view > .eyebrow": "VIORI WORLD",
+      "#accountTitle": "La vie de votre peluche",
+      '.auth-tab[data-auth-tab="login"]': "Connexion",
+      '.auth-tab[data-auth-tab="register"]': "Inscription",
+      "#loginForm .button": "Se connecter",
+      "#registerForm .button": "Cr\xE9er un compte",
+      ".dashboard-head .eyebrow": "MON COMPTE",
+      '.dashboard-tab[data-dashboard-tab="toys"]': "Mes peluches",
+      '.dashboard-tab[data-dashboard-tab="orders"]': "Commandes",
+      '.dashboard-tab[data-dashboard-tab="profile"]': "Profil",
+      "#logoutButton": "D\xE9connexion",
+      ".cart-checkout": "Finaliser la commande",
+      "#cartTitle": "Panier",
+      "#checkoutTitle": "Finaliser la commande",
+      ".checkout-total span": "Total"
+    }
+  };
   var translatedElements = /* @__PURE__ */ new Map();
   Object.keys(englishTranslations).forEach((selector) => {
     const element = document.querySelector(selector);
@@ -20474,19 +20608,20 @@ ${suffix}`;
   var languageButtons = document.querySelectorAll(".language-button");
   var currentLanguage = "ru";
   function setLanguage(language) {
-    currentLanguage = language === "en" ? "en" : "ru";
+    currentLanguage = ["ru", "en", "nl", "de", "fr"].includes(language) ? language : "ru";
     document.documentElement.lang = currentLanguage;
     translatedElements.forEach((original, selector) => {
       const element = document.querySelector(selector);
       if (!element) return;
-      const value = currentLanguage === "en" ? englishTranslations[selector] : original.html;
+      const regional = currentLanguage === "nl" || currentLanguage === "de" || currentLanguage === "fr" ? regionalTranslations[currentLanguage][selector] : void 0;
+      const value = currentLanguage === "ru" ? original.html : regional || englishTranslations[selector];
       if (element.matches("meta")) {
-        element.setAttribute("content", currentLanguage === "en" ? englishTranslations[selector] : original.content || "");
+        element.setAttribute("content", currentLanguage === "ru" ? original.content || "" : regional || englishTranslations[selector]);
       } else {
         element.innerHTML = value;
       }
     });
-    const bunnyName = currentLanguage === "en" ? "Mia the Bunny" : translatedElements.get(".product-info h3")?.html;
+    const bunnyName = currentLanguage !== "ru" ? "Mia the Bunny" : translatedElements.get(".product-info h3")?.html;
     document.querySelector(".order-product")?.setAttribute("data-product", bunnyName || "");
     const nameInput = document.querySelector('input[name="name"]');
     const messageInput = document.querySelector('textarea[name="message"]');
