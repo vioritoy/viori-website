@@ -1,0 +1,1094 @@
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+declare global {
+  interface Window { VIORI_CONFIG?: { supabaseUrl?: string; supabaseAnonKey?: string }; }
+}
+
+const backendConfig = window.VIORI_CONFIG;
+const supabase: SupabaseClient | null = backendConfig?.supabaseUrl && backendConfig?.supabaseAnonKey
+  ? createClient(backendConfig.supabaseUrl, backendConfig.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
+  : null;
+document.documentElement.dataset.backend = supabase ? "supabase" : "local-demo";
+
+const menuButton = document.querySelector<HTMLButtonElement>(".menu-button");
+const mainNav = document.querySelector<HTMLElement>(".main-nav");
+
+type Language = "ru" | "en";
+interface Memory { id: string; title: string; text: string; date: string; }
+interface Toy { code: string; name: string; born: string; nameRu?: string; nameEn?: string; memories?: Memory[]; }
+interface Order { product: FormDataEntryValue | string; date: string; status: string; }
+interface Account { name: string; email: string; password: string; toys: Toy[]; orders: Order[]; role?: "admin" | "customer"; }
+type Accounts = Record<string, Account>;
+interface CatalogProduct { id: string; nameRu: string; nameEn: string; category: "animals" | "dolls" | "baby"; price: number; descriptionRu: string; descriptionEn: string; image: string; }
+interface ShopProduct { id: string; name: string; price: number; description: string; image: string; }
+interface CartItem { id: string; quantity: number; }
+interface CheckoutOrder { number: string; createdAt: string; customer: { name: string; email: string; phone: string; address: string; postcode: string; city: string }; items: Array<{ id: string; name: string; price: number; quantity: number }>; delivery: "standard" | "pickup"; deliveryPrice: number; total: number; payment: string; status: "new" | "making" | "shipped" | "completed" | "cancelled"; }
+interface NfcPassport { code: string; nameRu: string; nameEn: string; orderNumber: string; issuedAt: string; ownerEmail: string | null; claimedAt: string | null; }
+interface CancellationRequest { reference: string; orderNumber: string; email: string; reason: string; createdAt: string; }
+
+const englishTranslations: Record<string, string> = {
+  "title": "VIORI — handmade crochet toys",
+  'meta[name="description"]': "VIORI — handmade crochet toys. Unique gifts made with love.",
+  ".main-nav a:nth-child(1)": "Toys",
+  ".main-nav a:nth-child(2)": "About",
+  ".main-nav a:nth-child(3)": "How to order",
+  ".main-nav a:nth-child(4)": "Contacts",
+  ".header-cta": "Order",
+  ".account-button-text": "My account",
+  ".hero-copy .eyebrow": "Every toy has a life of its own",
+  ".hero-copy h1": "A friend whose story <em>is just beginning</em>",
+  ".hero-text": "Every VIORI is handmade and receives a name, a character and a unique digital passport. Tap the NFC tag with your phone to discover her story, memories and new chapters.",
+  ".hero-actions .button": "View toys",
+  ".hero-actions .text-link": "Order your own idea <span>→</span>",
+  ".hero-points span:nth-child(1)": "♡ Handmade",
+  ".hero-points span:nth-child(2)": "♡ Unique character",
+  ".hero-points span:nth-child(3)": "♡ Personal NFC passport",
+  ".tag-two": "Made with care",
+  "#catalog .section-heading .eyebrow": "A small collection",
+  "#catalog .section-heading h2": "VIORI toys",
+  "#catalog .section-heading > p": "This is where you can add real photos, sizes and prices for each toy.",
+  '.filters [data-filter="all"]': "All",
+  '.filters [data-filter="animals"]': "Animals",
+  '.filters [data-filter="dolls"]': "Dolls",
+  '.filters [data-filter="baby"]': "For babies",
+  ".product-image span": "Add a photo",
+  ".product-type": "Crochet toy",
+  ".product-info h3": "Mia the Bunny",
+  ".price": "from €29",
+  ".product-description": "A soft toy with long ears. You can choose the colour of the outfit.",
+  ".order-product": "Order",
+  "#about .eyebrow": "About the studio",
+  "#about h2": "Every stitch tells a story",
+  "#about .story-copy > p:nth-of-type(2)": "VIORI is a small family studio making crochet toys. There is no mass production here: every detail is carefully made by hand.",
+  "#about .story-copy > p:nth-of-type(3)": "You can choose the toy’s colour, size and outfit, and add a personal detail — a name, a small accessory or gift wrapping.",
+  ".stats div:nth-child(1) span": "handmade",
+  ".stats div:nth-child(2) span": "unique toy",
+  ".stats div:nth-child(3) span": "warmth and care",
+  "#order .eyebrow": "A simple process",
+  "#order h2": "How to order a toy",
+  "#order .section-heading > p": "From your first message to a beautiful parcel — in just four steps.",
+  ".step h3": "Choose a toy",
+  ".step p": "Choose a model from the catalogue or send us your own idea.",
+  "#contacts .eyebrow": "Get in touch with VIORI",
+  "#contacts h2": "Let’s create a special toy",
+  "#contacts .contact-copy > p:nth-of-type(2)": "Tell us which toy you like or share your own idea. We’ll reply, discuss the details and calculate the price.",
+  ".contact-link:nth-child(1) small": "Message us on",
+  ".contact-link:nth-child(2) small": "View our",
+  ".small-note": "Before publishing, replace the WhatsApp number and Instagram link with the real ones.",
+  '.form-row .label-text': "Your name",
+  '.order-form > label:nth-of-type(1) .label-text': "What would you like to order?",
+  '.order-form > label:nth-of-type(2) .label-text': "Your wishes",
+  "#productSelect option": "Mia the Bunny",
+  ".form-submit": "Prepare message",
+  ".footer > .container > p": '© <span id="year"></span> VIORI. Handmade crochet toys.',
+  ".auth-view > .eyebrow": "VIORI WORLD",
+  "#accountTitle": "Your toy’s life",
+  ".account-intro": "Create an account to place orders, register toys using their NFC code and keep their stories safe.",
+  '.auth-tab[data-auth-tab="login"]': "Sign in",
+  '.auth-tab[data-auth-tab="register"]': "Register",
+  '#loginForm label:nth-child(1) span': "Email",
+  '#loginForm label:nth-child(2) span': "Password",
+  "#loginForm .button": "Sign in",
+  '#registerForm label:nth-child(1) span': "Your name",
+  '#registerForm label:nth-child(2) span': "Email",
+  '#registerForm label:nth-child(3) span': "Password",
+  "#registerForm .consent span": "I agree to the processing of my data",
+  "#registerForm .button": "Create account",
+  ".dashboard-head .eyebrow": "MY ACCOUNT",
+  ".dashboard-greeting": "Hello,",
+  '.dashboard-tab[data-dashboard-tab="toys"]': "My toys",
+  '.dashboard-tab[data-dashboard-tab="orders"]': "Orders",
+  '.dashboard-tab[data-dashboard-tab="profile"]': "Profile",
+  "#logoutButton": "Sign out",
+  ".toy-empty h3": "This is where her life begins",
+  ".toy-empty p": "Tap the toy’s NFC tag with your phone or enter the code manually.",
+  ".nfc-form label span": "Toy NFC code",
+  ".nfc-form .button": "Add toy",
+  '.dashboard-page[data-dashboard-page="orders"] > .button': "Choose a new toy",
+  '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Name",
+  '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
+  ".privacy-note": "Your account keeps your toys’ stories, orders and access to the personal VIORI world."
+  , '.admin-heading .eyebrow': "VIORI CATALOGUE",
+  '.admin-heading h3': "Add a new toy",
+  '.admin-heading > p:not(.eyebrow)': "Complete the card and upload a photo. The toy will appear on the website immediately.",
+  '.image-upload > span': "Toy photo",
+  '.image-upload small': "JPG, PNG or WebP, up to 1.5 MB",
+  '#adminProductForm > .button': "Publish toy"
+  , '#adminProductForm > label:nth-of-type(1) > span': "Name (RU)"
+  , '#adminProductForm > label:nth-of-type(2) > span': "Name (EN)"
+  , '.admin-form-row label:nth-child(1) > span': "Category"
+  , '.admin-form-row label:nth-child(2) > span': "Price from, €"
+  , '#adminProductForm > label:nth-of-type(3) > span': "Description (RU)"
+  , '#adminProductForm > label:nth-of-type(4) > span': "Description (EN)"
+  , '#adminProductForm select option:nth-child(1)': "Animals"
+  , '#adminProductForm select option:nth-child(2)': "Dolls"
+  , '#adminProductForm select option:nth-child(3)': "For babies"
+  , '.life-intro .eyebrow': "MORE THAN A TOY"
+  , '.life-intro h2': "Her life continues with you"
+  , '.life-intro > p:last-child': "Inside every VIORI is a key to the character’s personal world. NFC keeps it simple: one tap opens everything that matters."
+  , '.life-step:nth-child(1) h3': "She is born"
+  , '.life-step:nth-child(1) p': "The maker creates the toy by hand and writes the first chapter of her story."
+  , '.life-step:nth-child(2) h3': "You meet"
+  , '.life-step:nth-child(2) p': "Activate the protected NFC passport and welcome the character into your family."
+  , '.life-step:nth-child(3) h3': "The story grows"
+  , '.life-step:nth-child(3) p': "Keep photos, family memories, audio stories and special dates."
+  , '.trust-section .section-heading .eyebrow': "PEACE OF MIND FOR PARENTS"
+  , '.trust-section .section-heading h2': "Made with care and transparency"
+  , '.trust-section .section-heading > p': "Know the story of the character and every material used to create it."
+  , '#cartTitle': "Your bag"
+  , '.cart-checkout': "Continue to order"
+  , '.trust-card:nth-child(1) h3': "Handmade"
+  , '.trust-card:nth-child(1) p': "Every detail is made in small batches and checked before shipping."
+  , '.trust-card:nth-child(2) h3': "Clear materials"
+  , '.trust-card:nth-child(2) p': "Composition, filling, care instructions and age guidance are shown on every product page."
+  , '.trust-card:nth-child(3) h3': "Family privacy"
+  , '.trust-card:nth-child(3) p': "NFC does not track the child. The digital passport is available only to the toy’s owner."
+  , '.trust-card:nth-child(4) h3': "A long life"
+  , '.trust-card:nth-child(4) p': "The story can grow, while the toy can be carefully restored or passed to a new owner."
+  , '.faq details:nth-child(1) summary': "How does NFC work?"
+  , '.faq details:nth-child(1) p': "Hold a compatible phone near the tag inside the toy. Her protected digital passport opens without installing an app."
+  , '.faq details:nth-child(2) summary': "Does a child need an account?"
+  , '.faq details:nth-child(2) p': "No. The account and family data are managed by an adult."
+  , '.faq details:nth-child(3) summary': "Can I gift or transfer the toy?"
+  , '.faq details:nth-child(3) p': "Yes. The owner can securely transfer the digital passport to another adult while keeping selected chapters."
+  , '.product-specs div:nth-child(1) span': "Size"
+  , '#productModalSize': "about 32 cm"
+  , '.product-specs div:nth-child(2) span': "Creation"
+  , '#productModalLead': "7–14 days"
+  , '.product-specs div:nth-child(3) span': "Included"
+  , '.product-specs div:nth-child(3) strong': "NFC passport"
+  , '.product-quantity': 'Quantity <input id="productQuantity" type="number" min="1" value="1">'
+  , '#modalAddToCart': "Add to bag"
+  , '.product-care': "Handmade · Personalisation · Gift wrapping"
+  , '.cart-summary span': "Total"
+  , '.cart-note': "Payment will be connected in the next stage. For now, prepare the order through the VIORI form."
+  , '#checkoutFormView > .eyebrow': "ALMOST THERE"
+  , '#checkoutTitle': "Checkout"
+  , '#checkoutForm .checkout-grid label:nth-child(1) span': "Full name"
+  , '#checkoutForm .checkout-grid label:nth-child(2) span': "Email"
+  , '#checkoutForm .checkout-grid label:nth-child(3) span': "Phone"
+  , '#checkoutForm .checkout-grid label:nth-child(4) span': "Street and house number"
+  , '#checkoutForm .checkout-grid label:nth-child(5) span': "Postcode"
+  , '#checkoutForm .checkout-grid label:nth-child(6) span': "City"
+  , '.delivery-options legend': "Delivery"
+  , '.delivery-options label:nth-of-type(1) strong': "Standard delivery"
+  , '.delivery-options label:nth-of-type(1) small': "2–3 working days after production"
+  , '.delivery-options label:nth-of-type(2) strong': "Collection"
+  , '.delivery-options label:nth-of-type(2) small': "By prior arrangement"
+  , '.delivery-options label:nth-of-type(2) b': "Free"
+  , '.checkout-total span': "Total to pay"
+  , '.payment-preview > span': "Payment method"
+  , '.payment-preview small': "Secure online payment will be connected before release."
+  , '.checkout-consent span': "I accept the order terms and privacy policy"
+  , '#checkoutForm > .button': "Create test order"
+  , '#checkoutSuccess .eyebrow': "ORDER CREATED"
+  , '#checkoutSuccess h2': "Thank you!"
+  , '#checkoutSuccess > p:nth-of-type(3)': "The order is saved in your account. After payments are connected, confirmation will also be sent by email."
+  , '#checkoutSuccess > .button': "Continue"
+  , '.admin-orders-heading .eyebrow': "ORDERS"
+  , '.admin-orders-heading h3': "Latest orders"
+  , '.passport-content > .eyebrow': "HER PERSONAL STORY"
+  , '.passport-facts div:nth-child(1) span': "Birthday"
+  , '.passport-facts div:nth-child(2) span': "Status"
+  , '.passport-facts div:nth-child(2) strong': "Part of your family"
+  , '.memory-form h3': "Add a new chapter"
+  , '.memory-form label:nth-of-type(1) span': "Event title"
+  , '.memory-form label:nth-of-type(2) span': "Memory"
+  , '.memory-form .button': "Save to the story"
+  , '.nfc-admin-heading .eyebrow': "NFC PASSPORTS"
+  , '.nfc-admin-heading h3': "Issue a new passport"
+  , '.nfc-admin-heading > p:last-child': "Create a protected code for a specific toy. It can be activated by one customer only."
+  , '.nfc-issue-form .admin-form-row label:nth-child(1) span': "Character name (RU)"
+  , '.nfc-issue-form .admin-form-row label:nth-child(2) span': "Character name (EN)"
+  , '.nfc-issue-form > label span': "Order number (optional)"
+  , '.nfc-issue-form .button': "Create NFC passport"
+  , '#cookieTitle': "Your privacy choice"
+  , '#cookieBanner p': "Essential storage keeps language, bag and sign-in working. Optional analytics will be enabled only with your consent."
+  , '#cookieBanner > div:first-child > a': "Learn more"
+  , '#essentialCookies': "Essential only"
+  , '#acceptCookies': "Allow analytics"
+  , '.footer-legal a:nth-child(1)': "Terms"
+  , '.footer-legal a:nth-child(2)': "Privacy"
+  , '.footer-legal a:nth-child(3)': "Returns"
+  , '.footer-legal a:nth-child(4)': "Safety"
+  , '#openCancellation': "Cancel order"
+  , '#openCookieSettings': "Cookies"
+  , '#cancellationFormView > .eyebrow': "RIGHT TO CANCEL"
+  , '#cancellationTitle': "Cancel an order"
+  , '#cancellationFormView > p:not(.eyebrow)': "Send a request — we will record its date and contact you after checking the order status."
+  , '#cancellationForm label:nth-of-type(1) span': "Order number"
+  , '#cancellationForm label:nth-of-type(2) span': "Order email"
+  , '#cancellationForm label:nth-of-type(3) span': "Reason (optional)"
+  , '#cancellationForm .button': "Send cancellation request"
+  , '#cancellationSuccess .eyebrow': "REQUEST RECEIVED"
+  , '#cancellationSuccess h2': "Cancellation registered"
+  , '#cancellationSuccess .button': "Close"
+  , '.admin-subtitle': "Manage the shop, orders, characters and digital passports in one place."
+  , '.dashboard-tab[data-dashboard-tab="admin-home"]': "Overview"
+  , '.dashboard-tab[data-dashboard-tab="admin"]': "Catalogue & NFC"
+  , '.admin-metrics article:nth-child(1) span': "Products"
+  , '.admin-metrics article:nth-child(1) small': "in the catalogue"
+  , '.admin-metrics article:nth-child(2) span': "Orders"
+  , '.admin-metrics article:nth-child(2) small': "all time"
+  , '.admin-metrics article:nth-child(3) span': "New"
+  , '.admin-metrics article:nth-child(3) small': "need attention"
+  , '.admin-metrics article:nth-child(4) small': "passports issued"
+  , '.admin-focus .eyebrow': "TODAY"
+  , '.admin-focus h3': "VIORI control centre"
+  , '.admin-focus > p:not(.eyebrow)': "Start with new orders, then prepare the characters and issue NFC passports before shipping."
+  , '.admin-quick-actions button:nth-child(1)': "Add a toy"
+  , '.admin-quick-actions button:nth-child(2)': "Issue NFC"
+  , '.admin-quick-actions button:nth-child(3)': "Check orders"
+  , '.admin-activity .eyebrow': "ACTIVITY"
+  , '.admin-activity h3': "Latest orders"
+  , '.admin-section-title button': "Open all"
+};
+
+const translatedElements = new Map<string, { html: string; content: string | null }>();
+Object.keys(englishTranslations).forEach((selector) => {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  translatedElements.set(selector, {
+    html: element.innerHTML,
+    content: element.getAttribute("content")
+  });
+});
+
+const languageButtons = document.querySelectorAll<HTMLButtonElement>(".language-button");
+let currentLanguage: Language = "ru";
+
+function setLanguage(language: string | undefined) {
+  currentLanguage = language === "en" ? "en" : "ru";
+  document.documentElement.lang = currentLanguage;
+
+  translatedElements.forEach((original, selector) => {
+    const element = document.querySelector(selector);
+    if (!element) return;
+    const value = currentLanguage === "en" ? englishTranslations[selector] : original.html;
+    if (element.matches("meta")) {
+      element.setAttribute("content", currentLanguage === "en" ? englishTranslations[selector] : (original.content || ""));
+    } else {
+      element.innerHTML = value;
+    }
+  });
+
+  const bunnyName = currentLanguage === "en" ? "Mia the Bunny" : translatedElements.get(".product-info h3")?.html;
+  document.querySelector(".order-product")?.setAttribute("data-product", bunnyName || "");
+  const nameInput = document.querySelector('input[name="name"]');
+  const messageInput = document.querySelector('textarea[name="message"]');
+  nameInput?.setAttribute("placeholder", currentLanguage === "en" ? "For example, Anna" : "Например, Анна");
+  messageInput?.setAttribute("placeholder", currentLanguage === "en" ? "Tell us your preferred colour, size and any other details" : "Напишите желаемый цвет, размер и другие детали");
+  document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage === "en" ? "At least 6 characters" : "Не менее 6 символов");
+  document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage === "en" ? "At least 6 characters" : "Не менее 6 символов");
+  document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage === "en" ? "For example, Anna" : "Например, Анна");
+  document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage === "en" ? "For example, VIORI-MIA-001" : "Например, VIORI-MIA-001");
+  document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage === "en" ? "VIORI — home" : "VIORI — главная");
+  mainNav?.setAttribute("aria-label", currentLanguage === "en" ? "Main navigation" : "Основная навигация");
+  menuButton?.setAttribute("aria-label", currentLanguage === "en" ? "Open menu" : "Открыть меню");
+  document.querySelector(".language-switcher")?.setAttribute("aria-label", currentLanguage === "en" ? "Choose language" : "Выбор языка");
+
+  languageButtons.forEach((button) => {
+    const active = button.dataset.language === currentLanguage;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  document.getElementById("year")!.textContent = String(new Date().getFullYear());
+  localStorage.setItem("viori-language", currentLanguage);
+  renderCatalogProducts();
+  renderCart();
+  if (getSession()) renderAccount();
+}
+
+languageButtons.forEach((button) => button.addEventListener("click", () => setLanguage(button.dataset.language)));
+
+menuButton?.addEventListener("click", () => {
+  const isOpen = mainNav?.classList.toggle("open") || false;
+  menuButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+mainNav?.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    mainNav?.classList.remove("open");
+    menuButton?.setAttribute("aria-expanded", "false");
+  });
+});
+
+const filters = document.querySelectorAll<HTMLButtonElement>(".filter");
+
+filters.forEach((filterButton) => {
+  filterButton.addEventListener("click", () => {
+    filters.forEach((button) => button.classList.remove("active"));
+    filterButton.classList.add("active");
+
+    const selected = filterButton.dataset.filter;
+    document.querySelectorAll<HTMLElement>(".product-card").forEach((card) => {
+      const show = selected === "all" || card.dataset.category === selected;
+      card.classList.toggle("hidden", !show);
+    });
+  });
+});
+
+const productSelect = document.getElementById("productSelect") as HTMLSelectElement | null;
+document.querySelectorAll<HTMLButtonElement>(".order-product").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (productSelect) productSelect.value = button.dataset.product || "";
+    document.getElementById("contacts")?.scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+const orderForm = document.getElementById("orderForm") as HTMLFormElement | null;
+const formStatus = document.getElementById("formStatus");
+
+// Замените на настоящий номер WhatsApp в международном формате без "+" и пробелов.
+// Пример для Нидерландов: 31612345678
+const WHATSAPP_NUMBER = "31000000000";
+
+orderForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(orderForm);
+
+  const activeEmail = localStorage.getItem("viori-session");
+  if (activeEmail) {
+    const accounts = JSON.parse(localStorage.getItem("viori-accounts") || "{}");
+    const account = accounts[activeEmail];
+    if (account) {
+      account.orders ||= [];
+      account.orders.unshift({ product: data.get("product"), date: new Date().toISOString(), status: "request" });
+      localStorage.setItem("viori-accounts", JSON.stringify(accounts));
+    }
+  }
+
+  const text = currentLanguage === "en" ? [
+    "Hello! I would like to order a VIORI toy.",
+    "",
+    `Name: ${data.get("name")}`,
+    `Toy: ${data.get("product")}`,
+    `Preferences: ${data.get("message") || "not specified"}`
+  ].join("\n") : [
+    "Здравствуйте! Хочу заказать игрушку VIORI.",
+    "",
+    `Имя: ${data.get("name")}`,
+    `Контакт: ${data.get("contact")}`,
+    `Игрушка: ${data.get("product")}`,
+    `Пожелания: ${data.get("message") || "не указаны"}`
+  ].join("\n");
+
+  if (WHATSAPP_NUMBER === "31000000000") {
+    if (formStatus) formStatus.textContent = currentLanguage === "en"
+      ? "The form works. Add the real WhatsApp number in script.js before publishing."
+      : "Форма работает. Перед публикацией укажите настоящий номер WhatsApp в файле script.js.";
+    return;
+  }
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+});
+
+const accountModal = document.getElementById("accountModal");
+const authView = document.getElementById("authView");
+const dashboardView = document.getElementById("dashboardView");
+const accountStatus = document.getElementById("accountStatus");
+let adminLayoutInitialized = false;
+
+function getAccounts(): Accounts {
+  try { return JSON.parse(localStorage.getItem("viori-accounts") || "{}") as Accounts; }
+  catch { return {}; }
+}
+
+function saveAccounts(accounts: Accounts): void { localStorage.setItem("viori-accounts", JSON.stringify(accounts)); }
+function getSession(): string | null { return localStorage.getItem("viori-session"); }
+
+function openAccount() {
+  accountModal?.classList.add("open");
+  accountModal?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("account-open");
+  renderAccount();
+  setTimeout(() => accountModal?.querySelector<HTMLElement>("button, input")?.focus(), 50);
+}
+
+function closeAccount() {
+  accountModal?.classList.remove("open");
+  accountModal?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("account-open");
+  adminLayoutInitialized = false;
+}
+
+document.getElementById("openAccount")?.addEventListener("click", openAccount);
+document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", closeAccount));
+document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeAccount(); });
+
+document.querySelectorAll<HTMLButtonElement>(".auth-tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
+    document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
+    document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
+    if (accountStatus) accountStatus.textContent = "";
+  });
+});
+
+document.getElementById("registerForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const email = String(data.get("email")).trim().toLowerCase();
+  const accounts = getAccounts();
+  if (accounts[email]) {
+    if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "An account with this email already exists." : "Аккаунт с таким email уже существует.";
+    return;
+  }
+  const hasAdmin = Object.values(accounts).some((account) => account.role === "admin");
+  accounts[email] = { name: String(data.get("name")).trim(), email, password: String(data.get("password")), toys: [], orders: [], role: hasAdmin ? "customer" : "admin" };
+  saveAccounts(accounts);
+  localStorage.setItem("viori-session", email);
+  form.reset();
+  renderAccount();
+});
+
+document.getElementById("loginForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const email = String(data.get("email")).trim().toLowerCase();
+  const account = getAccounts()[email];
+  if (!account || account.password !== String(data.get("password"))) {
+    if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Incorrect email or password." : "Неверный email или пароль.";
+    return;
+  }
+  localStorage.setItem("viori-session", email);
+  form.reset();
+  renderAccount();
+});
+
+document.getElementById("logoutButton")?.addEventListener("click", () => {
+  localStorage.removeItem("viori-session");
+  renderAccount();
+});
+
+function switchDashboardPage(pageName: string): void {
+  document.querySelectorAll<HTMLButtonElement>(".dashboard-tab").forEach((item) => item.classList.toggle("active", item.dataset.dashboardTab === pageName));
+  document.querySelectorAll<HTMLElement>("[data-dashboard-page]").forEach((page) => page.classList.toggle("hidden", page.dataset.dashboardPage !== pageName));
+}
+
+document.querySelectorAll<HTMLButtonElement>(".dashboard-tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    switchDashboardPage(tab.dataset.dashboardTab || "toys");
+  });
+});
+
+document.querySelectorAll<HTMLButtonElement>("[data-admin-go]").forEach((button) => button.addEventListener("click", () => switchDashboardPage(button.dataset.adminGo || "admin")));
+
+function getNfcPassports(): NfcPassport[] {
+  try { return JSON.parse(localStorage.getItem("viori-nfc-passports") || "[]") as NfcPassport[]; }
+  catch { return []; }
+}
+
+function saveNfcPassports(passports: NfcPassport[]): void {
+  localStorage.setItem("viori-nfc-passports", JSON.stringify(passports));
+}
+
+function claimNfcPassport(codeValue: string, email: string): "claimed" | "owned" | "taken" | "invalid" {
+  const code = codeValue.trim().toUpperCase();
+  const passports = getNfcPassports();
+  const passport = passports.find((item) => item.code === code);
+  if (!passport) return "invalid";
+  if (passport.ownerEmail && passport.ownerEmail !== email) return "taken";
+  const accounts = getAccounts();
+  const account = accounts[email];
+  if (!account) return "invalid";
+  if (account.toys.some((toy) => toy.code === code)) return "owned";
+  const now = new Date().toISOString();
+  passport.ownerEmail = email;
+  passport.claimedAt = now;
+  account.toys.unshift({ code, name: currentLanguage === "en" ? passport.nameEn : passport.nameRu, nameRu: passport.nameRu, nameEn: passport.nameEn, born: now, memories: [] });
+  saveNfcPassports(passports);
+  saveAccounts(accounts);
+  return "claimed";
+}
+
+document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const email = getSession();
+  if (!email) return;
+  const form = event.currentTarget as HTMLFormElement;
+  const code = String(new FormData(form).get("code")).trim().toUpperCase();
+  const status = document.getElementById("nfcStatus");
+  const result = claimNfcPassport(code, email);
+  const messages = {
+    claimed: currentLanguage === "en" ? "The passport is activated. Welcome to the VIORI world." : "Паспорт активирован. Добро пожаловать в мир VIORI.",
+    owned: currentLanguage === "en" ? "This toy is already in your collection." : "Эта игрушка уже есть в вашей коллекции.",
+    taken: currentLanguage === "en" ? "This passport has already been activated by another owner." : "Этот паспорт уже активирован другим владельцем.",
+    invalid: currentLanguage === "en" ? "Passport not found. Check the code and try again." : "Паспорт не найден. Проверьте код и попробуйте снова."
+  };
+  if (status) status.textContent = messages[result];
+  if (result !== "claimed") return;
+  form.reset();
+  renderAccount();
+});
+
+function safeText(value: unknown): string {
+  const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
+  return String(value).replace(/[&<>'"]/g, (char) => entities[char] || char);
+}
+
+function getCatalogProducts(): CatalogProduct[] {
+  try { return JSON.parse(localStorage.getItem("viori-catalog-products") || "[]") as CatalogProduct[]; }
+  catch { return []; }
+}
+
+function saveCatalogProducts(products: CatalogProduct[]): void {
+  localStorage.setItem("viori-catalog-products", JSON.stringify(products));
+}
+
+function renderCatalogProducts(): void {
+  document.querySelectorAll(".admin-added").forEach((element) => element.remove());
+  document.querySelectorAll("#productSelect option[data-admin-product]").forEach((element) => element.remove());
+  const grid = document.querySelector(".product-grid");
+  const select = document.getElementById("productSelect");
+  if (!grid || !select) return;
+
+  getCatalogProducts().forEach((product) => {
+    const name = currentLanguage === "en" ? product.nameEn : product.nameRu;
+    const description = currentLanguage === "en" ? product.descriptionEn : product.descriptionRu;
+    const card = document.createElement("article");
+    card.className = "product-card admin-added visible";
+    card.dataset.category = product.category;
+    const activeFilter = document.querySelector<HTMLButtonElement>(".filter.active")?.dataset.filter || "all";
+    card.classList.toggle("hidden", activeFilter !== "all" && activeFilter !== product.category);
+    card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage === "en" ? "Crochet toy" : "Вязаная игрушка"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage === "en" ? "from" : "от"} €${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Details" : "Подробнее"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Add to bag" : "В корзину"}</button></div>`;
+    grid.appendChild(card);
+
+    const option = document.createElement("option");
+    option.dataset.adminProduct = product.id;
+    option.value = name;
+    option.textContent = name;
+    select.appendChild(option);
+  });
+}
+
+let activeShopProduct: ShopProduct | null = null;
+
+function resolveShopProduct(button: HTMLElement): ShopProduct | null {
+  if (button.dataset.staticProduct === "mia") {
+    return { id: "static:mia", name: currentLanguage === "en" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.", image: "" };
+  }
+  const id = button.dataset.catalogProduct;
+  const product = getCatalogProducts().find((item) => item.id === id);
+  if (!product) return null;
+  return { id: `catalog:${product.id}`, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image };
+}
+
+function resolveShopProductById(id: string): ShopProduct | null {
+  if (id === "static:mia") return { id, name: currentLanguage === "en" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом.", image: "" };
+  const product = getCatalogProducts().find((item) => `catalog:${item.id}` === id);
+  return product ? { id, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
+}
+
+function getCart(): CartItem[] {
+  try { return JSON.parse(localStorage.getItem("viori-cart") || "[]") as CartItem[]; }
+  catch { return []; }
+}
+
+function saveCart(cart: CartItem[]): void {
+  localStorage.setItem("viori-cart", JSON.stringify(cart));
+  renderCart();
+}
+
+function addProductToCart(product: ShopProduct, quantity = 1): void {
+  const cart = getCart();
+  const existing = cart.find((item) => item.id === product.id);
+  if (existing) existing.quantity += quantity;
+  else cart.push({ id: product.id, quantity });
+  saveCart(cart);
+  openCart();
+}
+
+function openProduct(product: ShopProduct): void {
+  activeShopProduct = product;
+  document.getElementById("productModalName")!.textContent = product.name;
+  document.getElementById("productModalPrice")!.textContent = `${currentLanguage === "en" ? "from" : "от"} €${product.price}`;
+  document.getElementById("productModalDescription")!.textContent = product.description;
+  const image = document.getElementById("productModalImage") as HTMLElement;
+  image.style.backgroundImage = product.image ? `url("${product.image}")` : "linear-gradient(145deg,#e9d6c6,#f9eee5)";
+  document.getElementById("productModal")?.classList.add("open");
+  document.getElementById("productModal")?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("shop-open");
+}
+
+function closeProduct(): void {
+  document.getElementById("productModal")?.classList.remove("open");
+  document.getElementById("productModal")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("shop-open");
+}
+
+function openCart(): void {
+  renderCart();
+  document.getElementById("cartDrawer")?.classList.add("open");
+  document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("shop-open");
+}
+
+function closeCart(): void {
+  document.getElementById("cartDrawer")?.classList.remove("open");
+  document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("shop-open");
+}
+
+function renderCart(): void {
+  const cart = getCart();
+  const items = cart.map((item) => ({ item, product: resolveShopProductById(item.id) })).filter((entry): entry is { item: CartItem; product: ShopProduct } => Boolean(entry.product));
+  document.getElementById("cartCount")!.textContent = String(items.reduce((sum, entry) => sum + entry.item.quantity, 0));
+  document.getElementById("cartTotal")!.textContent = `€${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
+  const container = document.getElementById("cartItems")!;
+  container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} × €${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage === "en" ? "Remove" : "Удалить"}">×</button></article>`).join("") : `<div class="cart-empty">${currentLanguage === "en" ? "Your future character is waiting for you." : "Ваш будущий персонаж ждёт встречи с вами."}</div>`;
+  container.querySelectorAll<HTMLButtonElement>("[data-remove-cart]").forEach((button) => button.addEventListener("click", () => saveCart(cart.filter((item) => item.id !== button.dataset.removeCart))));
+}
+
+document.addEventListener("click", (event) => {
+  const target = event.target as HTMLElement;
+  const productButton = target.closest<HTMLElement>(".view-product, .add-to-cart");
+  if (!productButton) return;
+  const product = resolveShopProduct(productButton);
+  if (!product) return;
+  if (productButton.classList.contains("view-product")) openProduct(product);
+  else addProductToCart(product);
+});
+
+document.getElementById("openCart")?.addEventListener("click", openCart);
+document.querySelectorAll("[data-close-product]").forEach((button) => button.addEventListener("click", closeProduct));
+document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeCart));
+document.getElementById("modalAddToCart")?.addEventListener("click", () => {
+  const quantity = Math.max(1, Number((document.getElementById("productQuantity") as HTMLInputElement).value) || 1);
+  closeProduct();
+  if (activeShopProduct) addProductToCart(activeShopProduct, quantity);
+});
+document.getElementById("cartCheckout")?.addEventListener("click", () => {
+  if (!getCart().length) return;
+  closeCart();
+  openCheckout();
+});
+
+function getCheckoutOrders(): CheckoutOrder[] {
+  try { return JSON.parse(localStorage.getItem("viori-shop-orders") || "[]") as CheckoutOrder[]; }
+  catch { return []; }
+}
+
+function saveCheckoutOrders(orders: CheckoutOrder[]): void {
+  localStorage.setItem("viori-shop-orders", JSON.stringify(orders));
+}
+
+function checkoutAmount(): { subtotal: number; delivery: number; total: number } {
+  const subtotal = getCart().reduce((sum, item) => sum + (resolveShopProductById(item.id)?.price || 0) * item.quantity, 0);
+  const selected = document.querySelector<HTMLInputElement>('#checkoutForm input[name="delivery"]:checked')?.value || "standard";
+  const delivery = selected === "pickup" ? 0 : 4.95;
+  return { subtotal, delivery, total: subtotal + delivery };
+}
+
+function updateCheckoutTotal(): void {
+  document.getElementById("checkoutTotal")!.textContent = `€${checkoutAmount().total.toFixed(2)}`;
+}
+
+function openCheckout(): void {
+  const modal = document.getElementById("checkoutModal");
+  const form = document.getElementById("checkoutForm") as HTMLFormElement;
+  document.getElementById("checkoutFormView")?.classList.remove("hidden");
+  document.getElementById("checkoutSuccess")?.classList.add("hidden");
+  const session = getSession();
+  const account = session ? getAccounts()[session] : undefined;
+  if (account) {
+    (form.elements.namedItem("name") as HTMLInputElement).value = account.name;
+    (form.elements.namedItem("email") as HTMLInputElement).value = account.email;
+  }
+  updateCheckoutTotal();
+  modal?.classList.add("open");
+  modal?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("shop-open");
+}
+
+function closeCheckout(): void {
+  document.getElementById("checkoutModal")?.classList.remove("open");
+  document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("shop-open");
+}
+
+document.querySelectorAll("[data-close-checkout]").forEach((button) => button.addEventListener("click", closeCheckout));
+document.querySelectorAll<HTMLInputElement>('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", updateCheckoutTotal));
+document.querySelectorAll<HTMLButtonElement>(".payment-method").forEach((button) => button.addEventListener("click", () => {
+  document.querySelectorAll(".payment-method").forEach((item) => item.classList.toggle("active", item === button));
+}));
+
+document.getElementById("checkoutForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const cart = getCart();
+  const items = cart.map((item) => {
+    const product = resolveShopProductById(item.id);
+    return product ? { id: item.id, name: product.name, price: product.price, quantity: item.quantity } : null;
+  }).filter((item): item is CheckoutOrder["items"][number] => Boolean(item));
+  if (!items.length) return;
+  const amount = checkoutAmount();
+  const now = new Date();
+  const number = `VIO-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
+  const order: CheckoutOrder = {
+    number,
+    createdAt: now.toISOString(),
+    customer: { name: String(data.get("name")), email: String(data.get("email")), phone: String(data.get("phone")), address: String(data.get("address")), postcode: String(data.get("postcode")).toUpperCase(), city: String(data.get("city")) },
+    items,
+    delivery: String(data.get("delivery")) as CheckoutOrder["delivery"],
+    deliveryPrice: amount.delivery,
+    total: amount.total,
+    payment: document.querySelector(".payment-method.active")?.textContent?.trim() || "iDEAL",
+    status: "new"
+  };
+  const orders = getCheckoutOrders();
+  orders.unshift(order);
+  saveCheckoutOrders(orders);
+
+  const session = getSession();
+  const accounts = getAccounts();
+  let account = session ? accounts[session] : undefined;
+  if (account) {
+    account.orders.unshift({ product: items.map((item) => `${item.name} × ${item.quantity}`).join(", "), date: now.toISOString(), status: order.status });
+    saveAccounts(accounts);
+  }
+
+  saveCart([]);
+  form.reset();
+  document.getElementById("checkoutOrderNumber")!.textContent = number;
+  document.getElementById("checkoutFormView")?.classList.add("hidden");
+  document.getElementById("checkoutSuccess")?.classList.remove("hidden");
+  renderAdminOrders();
+});
+
+function setCookiePreference(preference: "essential" | "analytics"): void {
+  localStorage.setItem("viori-cookie-preference", JSON.stringify({ preference, updatedAt: new Date().toISOString() }));
+  document.getElementById("cookieBanner")?.classList.remove("open");
+}
+
+function openCookieSettings(): void {
+  document.getElementById("cookieBanner")?.classList.add("open");
+}
+
+document.getElementById("essentialCookies")?.addEventListener("click", () => setCookiePreference("essential"));
+document.getElementById("acceptCookies")?.addEventListener("click", () => setCookiePreference("analytics"));
+document.getElementById("openCookieSettings")?.addEventListener("click", openCookieSettings);
+if (!localStorage.getItem("viori-cookie-preference")) openCookieSettings();
+
+function getCancellationRequests(): CancellationRequest[] {
+  try { return JSON.parse(localStorage.getItem("viori-cancellation-requests") || "[]") as CancellationRequest[]; }
+  catch { return []; }
+}
+
+function openCancellation(): void {
+  document.getElementById("cancellationFormView")?.classList.remove("hidden");
+  document.getElementById("cancellationSuccess")?.classList.add("hidden");
+  document.getElementById("cancellationModal")?.classList.add("open");
+  document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("shop-open");
+}
+
+function closeCancellation(): void {
+  document.getElementById("cancellationModal")?.classList.remove("open");
+  document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("shop-open");
+}
+
+document.getElementById("openCancellation")?.addEventListener("click", openCancellation);
+document.querySelectorAll("[data-close-cancellation]").forEach((button) => button.addEventListener("click", closeCancellation));
+document.getElementById("cancellationForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const orderNumber = String(data.get("orderNumber")).trim().toUpperCase();
+  const email = String(data.get("email")).trim().toLowerCase();
+  const orders = getCheckoutOrders();
+  const order = orders.find((item) => item.number === orderNumber && item.customer.email.toLowerCase() === email);
+  const status = document.getElementById("cancellationStatus");
+  if (!order) {
+    if (status) status.textContent = currentLanguage === "en" ? "No matching order was found." : "Заказ с такими данными не найден.";
+    return;
+  }
+  const requests = getCancellationRequests();
+  const reference = `CAN-${String(Date.now()).slice(-8)}`;
+  requests.unshift({ reference, orderNumber, email, reason: String(data.get("reason")).trim(), createdAt: new Date().toISOString() });
+  localStorage.setItem("viori-cancellation-requests", JSON.stringify(requests));
+  order.status = "cancelled";
+  saveCheckoutOrders(orders);
+  form.reset();
+  document.getElementById("cancellationReference")!.textContent = `${currentLanguage === "en" ? "Reference" : "Номер обращения"}: ${reference}`;
+  document.getElementById("cancellationFormView")?.classList.add("hidden");
+  document.getElementById("cancellationSuccess")?.classList.remove("hidden");
+  renderAdminOrders();
+  renderAccount();
+});
+
+if (new URLSearchParams(window.location.search).has("cancel")) {
+  openCancellation();
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete("cancel");
+  history.replaceState({}, "", cleanUrl);
+}
+
+const adminProductForm = document.getElementById("adminProductForm") as HTMLFormElement | null;
+adminProductForm?.querySelector<HTMLInputElement>('input[name="image"]')?.addEventListener("change", (event) => {
+  const file = (event.currentTarget as HTMLInputElement).files?.[0];
+  const preview = document.getElementById("adminImagePreview");
+  if (!file || !preview) return;
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    preview.style.backgroundImage = `url("${String(reader.result)}")`;
+    preview.classList.remove("hidden");
+  });
+  reader.readAsDataURL(file);
+});
+
+adminProductForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const session = getSession();
+  const account = session ? getAccounts()[session] : undefined;
+  const status = document.getElementById("adminStatus");
+  if (account?.role !== "admin") return;
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const file = data.get("image");
+  if (!(file instanceof File) || !file.size) return;
+  if (file.size > 1.5 * 1024 * 1024) {
+    if (status) status.textContent = currentLanguage === "en" ? "The image is larger than 1.5 MB." : "Изображение больше 1,5 МБ.";
+    return;
+  }
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    const products = getCatalogProducts();
+    products.unshift({
+      id: crypto.randomUUID?.() || `${Date.now()}`,
+      nameRu: String(data.get("nameRu")).trim(),
+      nameEn: String(data.get("nameEn")).trim(),
+      category: String(data.get("category")) as CatalogProduct["category"],
+      price: Number(data.get("price")),
+      descriptionRu: String(data.get("descriptionRu")).trim(),
+      descriptionEn: String(data.get("descriptionEn")).trim(),
+      image: String(reader.result)
+    });
+    try {
+      saveCatalogProducts(products);
+      form.reset();
+      document.getElementById("adminImagePreview")?.classList.add("hidden");
+      if (status) status.textContent = currentLanguage === "en" ? "The toy has been published." : "Игрушка опубликована.";
+      renderCatalogProducts();
+      renderAdminProducts();
+      renderAdminOverview();
+    } catch {
+      if (status) status.textContent = currentLanguage === "en" ? "Browser storage is full. Use a smaller image." : "Хранилище браузера заполнено. Загрузите изображение меньшего размера.";
+    }
+  });
+  reader.readAsDataURL(file);
+});
+
+function renderAdminProducts(): void {
+  const container = document.getElementById("adminProducts");
+  if (!container) return;
+  container.innerHTML = getCatalogProducts().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage === "en" ? product.nameEn : product.nameRu)}</strong><span>€${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage === "en" ? "Delete" : "Удалить"}</button></div>`).join("");
+  container.querySelectorAll<HTMLButtonElement>("[data-delete-product]").forEach((button) => {
+    button.addEventListener("click", () => {
+      saveCatalogProducts(getCatalogProducts().filter((product) => product.id !== button.dataset.deleteProduct));
+      renderCatalogProducts();
+      renderAdminProducts();
+      renderAdminOverview();
+    });
+  });
+}
+
+function orderStatusLabel(status: CheckoutOrder["status"]): string {
+  const labels: Record<CheckoutOrder["status"], [string, string]> = {
+    new: ["Новый", "New"], making: ["Создаётся", "Making"], shipped: ["Отправлен", "Shipped"], completed: ["Завершён", "Completed"], cancelled: ["Отменён", "Cancelled"]
+  };
+  return labels[status][currentLanguage === "en" ? 1 : 0];
+}
+
+function renderAdminOrders(): void {
+  const container = document.getElementById("adminOrders");
+  if (!container) return;
+  const orders = getCheckoutOrders();
+  container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>€${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} · ${safeText(order.customer.city)} · ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${(["new", "making", "shipped", "completed", "cancelled"] as CheckoutOrder["status"][]).map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
+  container.querySelectorAll<HTMLSelectElement>("[data-order-number]").forEach((select) => select.addEventListener("change", () => {
+    const currentOrders = getCheckoutOrders();
+    const order = currentOrders.find((item) => item.number === select.dataset.orderNumber);
+    if (!order) return;
+    order.status = select.value as CheckoutOrder["status"];
+    saveCheckoutOrders(currentOrders);
+    renderAdminOrders();
+    renderAdminOverview();
+  }));
+}
+
+function renderAdminOverview(): void {
+  const products = getCatalogProducts();
+  const orders = getCheckoutOrders();
+  const passports = getNfcPassports();
+  document.getElementById("adminMetricProducts")!.textContent = String(products.length + 1);
+  document.getElementById("adminMetricOrders")!.textContent = String(orders.length);
+  document.getElementById("adminMetricNewOrders")!.textContent = String(orders.filter((order) => order.status === "new").length);
+  document.getElementById("adminMetricPassports")!.textContent = String(passports.length);
+  const container = document.getElementById("adminOverviewOrders");
+  if (!container) return;
+  container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} · €${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
+}
+
+function generateNfcCode(): string {
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  const token = Array.from(bytes, (byte) => byte.toString(36).padStart(2, "0")).join("").toUpperCase();
+  return `VIO-${token.slice(0, 4)}-${token.slice(4, 8)}-${token.slice(8, 12)}`;
+}
+
+document.getElementById("nfcIssueForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const session = getSession();
+  const account = session ? getAccounts()[session] : undefined;
+  if (account?.role !== "admin") return;
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const passports = getNfcPassports();
+  let code = generateNfcCode();
+  while (passports.some((item) => item.code === code)) code = generateNfcCode();
+  passports.unshift({ code, nameRu: String(data.get("nameRu")).trim(), nameEn: String(data.get("nameEn")).trim(), orderNumber: String(data.get("orderNumber")).trim(), issuedAt: new Date().toISOString(), ownerEmail: null, claimedAt: null });
+  saveNfcPassports(passports);
+  form.reset();
+  const activationUrl = `${window.location.href.split("?")[0]}?nfc=${encodeURIComponent(code)}`;
+  const status = document.getElementById("nfcIssueStatus");
+  if (status) status.textContent = `${currentLanguage === "en" ? "Passport created" : "Паспорт создан"}: ${activationUrl}`;
+  renderNfcPassports();
+  renderAdminOverview();
+});
+
+function renderNfcPassports(): void {
+  const container = document.getElementById("nfcPassports");
+  if (!container) return;
+  const passports = getNfcPassports();
+  container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` · ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : (currentLanguage === "en" ? "Ready for activation" : "Готов к активации")}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? (currentLanguage === "en" ? "Activated" : "Активирован") : (currentLanguage === "en" ? "New" : "Новый")}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No passports issued yet." : "Паспорта ещё не выпускались."}</p></div>`;
+}
+
+let activePassportCode: string | null = null;
+
+function openPassport(code: string): void {
+  const session = getSession();
+  const account = session ? getAccounts()[session] : undefined;
+  const toy = account?.toys.find((item) => item.code === code);
+  if (!toy) return;
+  activePassportCode = code;
+  const name = currentLanguage === "en" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
+  document.getElementById("passportName")!.textContent = name;
+  document.getElementById("passportCode")!.textContent = toy.code;
+  document.getElementById("passportBorn")!.textContent = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+  renderPassportTimeline(toy);
+  document.getElementById("passportModal")?.classList.add("open");
+  document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("shop-open");
+}
+
+function closePassport(): void {
+  document.getElementById("passportModal")?.classList.remove("open");
+  document.getElementById("passportModal")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("shop-open");
+}
+
+function renderPassportTimeline(toy: Toy): void {
+  const born = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+  const memories = toy.memories || [];
+  document.getElementById("passportTimeline")!.innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage === "en" ? "The story begins" : "История начинается"}</h3><p>${currentLanguage === "en" ? "The day this character became part of your family." : "День, когда персонаж стал частью вашей семьи."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
+}
+
+document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", closePassport));
+document.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-open-passport]");
+  if (button?.dataset.openPassport) openPassport(button.dataset.openPassport);
+});
+
+document.getElementById("memoryForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const session = getSession();
+  const accounts = getAccounts();
+  const account = session ? accounts[session] : undefined;
+  const toy = account?.toys.find((item) => item.code === activePassportCode);
+  if (!account || !toy) return;
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  toy.memories ||= [];
+  toy.memories.push({ id: crypto.randomUUID(), title: String(data.get("title")).trim(), text: String(data.get("text")).trim(), date: new Date().toISOString() });
+  saveAccounts(accounts);
+  form.reset();
+  renderPassportTimeline(toy);
+  renderDashboard(account);
+});
+
+function renderDashboard(account: Account): void {
+  document.getElementById("profileName")!.textContent = account.name;
+  document.getElementById("profileCardName")!.textContent = account.name;
+  document.getElementById("profileEmail")!.textContent = account.email;
+  document.querySelectorAll(".admin-only").forEach((element) => element.classList.toggle("hidden", account.role !== "admin"));
+  document.querySelector(".account-panel")?.classList.toggle("admin-mode", account.role === "admin");
+  if (account.role === "admin") {
+    renderAdminProducts(); renderAdminOrders(); renderNfcPassports(); renderAdminOverview();
+    if (!adminLayoutInitialized) { switchDashboardPage("admin-home"); adminLayoutInitialized = true; }
+  } else {
+    const activePage = document.querySelector<HTMLButtonElement>(".dashboard-tab.active")?.dataset.dashboardTab;
+    if (activePage === "admin" || activePage === "admin-home") switchDashboardPage("toys");
+  }
+  const toys = account.toys || [];
+  document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
+  document.getElementById("toyList")!.innerHTML = toys.map((toy) => {
+    const date = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+    const name = currentLanguage === "en" ? (toy.nameEn || toy.name) : (toy.nameRu || toy.name);
+    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage === "en" ? "The story begins" : "История начинается"}</strong>${currentLanguage === "en" ? `Joined your family on ${date}` : `Стала частью вашей семьи ${date}`}</div><div class="life-event"><strong>${currentLanguage === "en" ? "Saved chapters" : "Сохранённые главы"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage === "en" ? "Open passport" : "Открыть паспорт"}</button></article>`;
+  }).join("");
+  const shopOrders = getCheckoutOrders().filter((order) => order.customer.email.toLowerCase() === account.email.toLowerCase());
+  const legacyOrders = account.orders || [];
+  document.getElementById("ordersList")!.innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} · €${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} · ${orderStatusLabel(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "Заказов пока нет"}</h3><p>${currentLanguage === "en" ? "Your future characters will appear here." : "Здесь появятся ваши будущие персонажи."}</p></div>`;
+}
+
+function renderAccount() {
+  const accounts = getAccounts();
+  const session = getSession();
+  let account = session ? accounts[session] : undefined;
+  if (account && !Object.values(accounts).some((item) => item.role === "admin")) {
+    account.role = "admin";
+    saveAccounts(accounts);
+  }
+  const nfcFromUrl = new URLSearchParams(window.location.search).get("nfc");
+  if (account && nfcFromUrl) {
+    const result = claimNfcPassport(nfcFromUrl, account.email);
+    account = session ? getAccounts()[session] : undefined;
+    setTimeout(() => {
+      const status = document.getElementById("nfcStatus");
+      if (status) status.textContent = result === "claimed" ? (currentLanguage === "en" ? "The passport is activated." : "Паспорт активирован.") : result === "taken" ? (currentLanguage === "en" ? "This passport belongs to another owner." : "Этот паспорт принадлежит другому владельцу.") : result === "invalid" ? (currentLanguage === "en" ? "Passport not found." : "Паспорт не найден.") : "";
+    }, 0);
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("nfc");
+    history.replaceState({}, "", cleanUrl);
+  }
+  authView?.classList.toggle("hidden", Boolean(account));
+  dashboardView?.classList.toggle("hidden", !account);
+  if (!account) document.querySelector(".account-panel")?.classList.remove("admin-mode");
+  if (account) renderDashboard(account);
+}
+
+document.getElementById("year")!.textContent = String(new Date().getFullYear());
+
+setLanguage(localStorage.getItem("viori-language") || "ru");
+
+if (new URLSearchParams(window.location.search).has("nfc")) openAccount();
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.12 }
+);
+
+document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));

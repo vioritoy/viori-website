@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VIORI — вязаные игрушки ручной работы. Уникальные подарки, связанные с любовью." />
+  <title>VIORI — вязаные игрушки ручной работы</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="VIORI — главная">
+        <img src="assets/viori-logo.png" alt="Логотип VIORI" />
+        <span>VIORI</span>
+      </a>
+
+      <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#catalog">Игрушки</a>
+        <a href="#about">О бренде</a>
+        <a href="#order">Как заказать</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="language-switcher" role="group" aria-label="Выбор языка">
+        <button class="language-button active" type="button" data-language="ru" aria-pressed="true">RU</button>
+        <span aria-hidden="true">/</span>
+        <button class="language-button" type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="account-button" id="openAccount" type="button">
+        <span class="account-icon" aria-hidden="true">♡</span>
+        <span class="account-button-text">Личный кабинет</span>
+      </button>
+
+      <button class="cart-button" id="openCart" type="button" aria-label="Открыть корзину">
+        <span aria-hidden="true">Bag</span><strong id="cartCount">0</strong>
+      </button>
+
+      <a class="button button-small header-cta" href="#contacts">Заказать</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow hero-glow-one"></div>
+      <div class="hero-glow hero-glow-two"></div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">Каждая игрушка имеет собственную жизнь</p>
+          <h1>Друг, чья история <em>только начинается</em></h1>
+          <p class="hero-text">
+            VIORI создаётся вручную, получает имя, характер и уникальный цифровой паспорт.
+            Прикоснитесь телефоном к NFC-метке — и откройте её историю, воспоминания и новые главы.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#catalog">Посмотреть игрушки</a>
+            <a class="text-link" href="#contacts">Заказать свою идею <span>→</span></a>
+          </div>
+          <div class="hero-points">
+            <span>♡ Ручная работа</span>
+            <span>♡ Уникальный персонаж</span>
+            <span>♡ Личный NFC-паспорт</span>
+          </div>
+        </div>
+
+        <div class="hero-art reveal">
+          <div class="logo-card">
+            <div class="logo-ring"></div>
+            <img src="assets/viori-logo.png" alt="VIORI — вязаные игрушки" />
+          </div>
+          <span class="floating-tag tag-one">100% handmade</span>
+          <span class="floating-tag tag-two">Сделано с заботой</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="life-section" id="viori-world">
+      <div class="container life-intro reveal">
+        <p class="eyebrow">НЕ ПРОСТО ИГРУШКА</p>
+        <h2>Её жизнь продолжается вместе с вами</h2>
+        <p>Внутри каждой VIORI — ключ к персональному миру персонажа. NFC ничего не усложняет: одно прикосновение открывает всё важное.</p>
+      </div>
+      <div class="container life-steps">
+        <article class="life-step reveal"><span>01</span><h3>Она рождается</h3><p>Мастер создаёт игрушку вручную и записывает первую главу её истории.</p></article>
+        <article class="life-step reveal"><span>02</span><h3>Вы знакомитесь</h3><p>Активируйте защищённый NFC-паспорт и дайте персонажу место в своей семье.</p></article>
+        <article class="life-step reveal"><span>03</span><h3>История растёт</h3><p>Сохраняйте фотографии, семейные воспоминания, аудиосказки и особенные даты.</p></article>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="catalog">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">Небольшая коллекция</p>
+            <h2>Игрушки VIORI</h2>
+          </div>
+          <p>Здесь можно разместить настоящие фотографии, размеры и цены каждой игрушки.</p>
+        </div>
+
+        <div class="filters reveal" aria-label="Фильтры каталога">
+          <button class="filter active" data-filter="all">Все</button>
+          <button class="filter" data-filter="animals">Животные</button>
+          <button class="filter" data-filter="dolls">Куклы</button>
+          <button class="filter" data-filter="baby">Для малышей</button>
+        </div>
+
+        <div class="product-grid">
+          <article class="product-card reveal" data-category="animals">
+            <div class="product-image placeholder bunny">
+              <span>Добавьте фото</span>
+            </div>
+            <div class="product-info">
+              <div>
+                <p class="product-type">Вязаная игрушка</p>
+                <h3>Зайка Мия</h3>
+              </div>
+              <p class="price">от €29</p>
+            </div>
+            <p class="product-description">Мягкая игрушка с длинными ушками. Цвет одежды можно выбрать.</p>
+            <div class="card-actions"><button class="card-button view-product" type="button" data-static-product="mia">Подробнее</button><button class="card-button add-to-cart" type="button" data-static-product="mia">В корзину</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section trust-section" id="trust">
+      <div class="container">
+        <div class="section-heading reveal"><div><p class="eyebrow">СПОКОЙСТВИЕ ДЛЯ РОДИТЕЛЕЙ</p><h2>Создано бережно и прозрачно</h2></div><p>Мы хотим, чтобы вы знали историю не только персонажа, но и каждого материала, из которого он создан.</p></div>
+        <div class="trust-grid">
+          <article class="trust-card reveal"><span>01</span><h3>Ручная работа</h3><p>Каждая деталь создаётся небольшими партиями и проходит проверку перед отправкой.</p></article>
+          <article class="trust-card reveal"><span>02</span><h3>Понятные материалы</h3><p>Состав, наполнитель, рекомендации по уходу и возрастная маркировка указаны на странице товара.</p></article>
+          <article class="trust-card reveal"><span>03</span><h3>Приватность семьи</h3><p>NFC не отслеживает ребёнка. Цифровой паспорт доступен только владельцу игрушки.</p></article>
+          <article class="trust-card reveal"><span>04</span><h3>Долгая жизнь</h3><p>Историю можно продолжать, а игрушку — бережно восстановить или передать новому владельцу.</p></article>
+        </div>
+        <div class="faq reveal">
+          <details><summary>Как работает NFC?</summary><p>Поднесите совместимый телефон к метке внутри игрушки. Откроется защищённая страница её цифрового паспорта — приложение устанавливать не нужно.</p></details>
+          <details><summary>Нужно ли ребёнку создавать аккаунт?</summary><p>Нет. Кабинетом и семейными данными управляет взрослый владелец аккаунта.</p></details>
+          <details><summary>Можно ли подарить или передать игрушку?</summary><p>Да. Владелец сможет безопасно передать цифровой паспорт другому взрослому, сохранив выбранные главы истории.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container story-grid">
+        <div class="story-image reveal">
+          <div class="story-card">
+            <img src="assets/viori-logo.png" alt="Логотип мастерской VIORI" />
+          </div>
+        </div>
+        <div class="story-copy reveal">
+          <p class="eyebrow">О мастерской</p>
+          <h2>У каждой петли есть история</h2>
+          <p>
+            VIORI — небольшая семейная мастерская вязаных игрушек. Здесь нет массового производства:
+            каждая деталь создаётся вручную, аккуратно и с вниманием.
+          </p>
+          <p>
+            Можно выбрать цвет, размер, одежду игрушки и добавить персональную деталь —
+            имя, маленький аксессуар или подарочную упаковку.
+          </p>
+          <div class="stats">
+            <div><strong>100%</strong><span>ручная работа</span></div>
+            <div><strong>1</strong><span>уникальная игрушка</span></div>
+            <div><strong>∞</strong><span>тепла и заботы</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="order">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <p class="eyebrow">Простой процесс</p>
+          <h2>Как заказать игрушку</h2>
+          <p>От первого сообщения до красивой посылки — всего четыре шага.</p>
+        </div>
+
+        <div class="steps">
+          <article class="step reveal">
+            <span class="step-number">01</span>
+            <h3>Выберите игрушку</h3>
+            <p>Выберите модель из каталога или пришлите свою идею.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contacts">
+      <div class="container contact-grid">
+        <div class="contact-copy reveal">
+          <p class="eyebrow">Связаться с VIORI</p>
+          <h2>Давайте создадим особенную игрушку</h2>
+          <p>
+            Напишите, какая игрушка вам понравилась, или расскажите свою идею.
+            Мы ответим, уточним детали и рассчитаем стоимость.
+          </p>
+          <div class="contact-links">
+            <a class="contact-link" href="https://wa.me/31000000000" target="_blank" rel="noreferrer">
+              <span class="contact-icon">WA</span>
+              <span><small>Написать в</small><strong>WhatsApp</strong></span>
+            </a>
+            <a class="contact-link" href="https://instagram.com/" target="_blank" rel="noreferrer">
+              <span class="contact-icon">IG</span>
+              <span><small>Посмотреть</small><strong>Instagram</strong></span>
+            </a>
+          </div>
+          <p class="small-note">Перед публикацией замените номер WhatsApp и ссылку Instagram на настоящие.</p>
+        </div>
+
+        <form class="order-form reveal" id="orderForm">
+          <div class="form-row">
+            <label>
+              <span class="label-text">Ваше имя</span>
+              <input type="text" name="name" placeholder="Например, Анна" required />
+            </label>
+          </div>
+
+          <label>
+            <span class="label-text">Что хотите заказать?</span>
+            <select name="product" id="productSelect">
+              <option>Зайка Мия</option>
+            </select>
+          </label>
+
+          <label>
+            <span class="label-text">Пожелания</span>
+            <textarea name="message" rows="5" placeholder="Напишите желаемый цвет, размер и другие детали"></textarea>
+          </label>
+
+          <button class="button form-submit" type="submit">Подготовить сообщение</button>
+          <p class="form-status" id="formStatus" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="product-modal" id="productModal" aria-hidden="true">
+    <button class="shop-backdrop" type="button" data-close-product aria-label="Закрыть"></button>
+    <section class="product-dialog" role="dialog" aria-modal="true" aria-labelledby="productModalName">
+      <button class="shop-close" type="button" data-close-product aria-label="Закрыть">×</button>
+      <div class="product-dialog-image" id="productModalImage"></div>
+      <div class="product-dialog-copy">
+        <p class="eyebrow">VIORI CHARACTER</p><h2 id="productModalName"></h2><p class="product-modal-price" id="productModalPrice"></p><p id="productModalDescription"></p>
+        <div class="product-specs"><div><span>Размер</span><strong id="productModalSize">около 32 см</strong></div><div><span>Создание</span><strong id="productModalLead">7–14 дней</strong></div><div><span>В комплекте</span><strong>NFC-паспорт</strong></div></div>
+        <label class="product-quantity">Количество<input id="productQuantity" type="number" min="1" value="1"></label>
+        <button class="button" id="modalAddToCart" type="button">Добавить в корзину</button>
+        <p class="product-care">Ручная работа · Персонализация · Подарочная упаковка</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <button class="shop-backdrop" type="button" data-close-cart aria-label="Закрыть"></button>
+    <aside class="cart-panel" aria-labelledby="cartTitle">
+      <button class="shop-close" type="button" data-close-cart aria-label="Закрыть">×</button>
+      <p class="eyebrow">ВАШИ ПЕРСОНАЖИ</p><h2 id="cartTitle">Корзина</h2>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary"><span>Итого</span><strong id="cartTotal">€0</strong></div>
+      <button class="button cart-checkout" id="cartCheckout" type="button">Перейти к оформлению</button>
+      <p class="cart-note">Оплата будет подключена на следующем этапе. Сейчас заказ можно подготовить через форму VIORI.</p>
+    </aside>
+  </div>
+
+  <div class="checkout-modal" id="checkoutModal" aria-hidden="true">
+    <button class="shop-backdrop" type="button" data-close-checkout aria-label="Закрыть"></button>
+    <section class="checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <button class="shop-close" type="button" data-close-checkout aria-label="Закрыть">×</button>
+      <div id="checkoutFormView">
+        <p class="eyebrow">ПОЧТИ ГОТОВО</p><h2 id="checkoutTitle">Оформление заказа</h2>
+        <form class="checkout-form" id="checkoutForm">
+          <div class="checkout-grid">
+            <label><span>Имя и фамилия</span><input type="text" name="name" autocomplete="name" required></label>
+            <label><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+            <label><span>Телефон</span><input type="tel" name="phone" autocomplete="tel" required></label>
+            <label><span>Улица и номер дома</span><input type="text" name="address" autocomplete="street-address" required></label>
+            <label><span>Почтовый индекс</span><input type="text" name="postcode" autocomplete="postal-code" pattern="[0-9]{4}\s?[A-Za-z]{2}" placeholder="1234 AB" required></label>
+            <label><span>Город</span><input type="text" name="city" autocomplete="address-level2" required></label>
+          </div>
+          <fieldset class="delivery-options"><legend>Доставка</legend><label><input type="radio" name="delivery" value="standard" checked><span><strong>Стандартная доставка</strong><small>2–3 рабочих дня после изготовления</small></span><b>€4.95</b></label><label><input type="radio" name="delivery" value="pickup"><span><strong>Самовывоз</strong><small>По предварительной договорённости</small></span><b>Бесплатно</b></label></fieldset>
+          <div class="checkout-total"><span>К оплате</span><strong id="checkoutTotal">€0</strong></div>
+          <div class="payment-preview"><span>Способ оплаты</span><div><button class="payment-method active" type="button">iDEAL</button><button class="payment-method" type="button">Card</button></div><small>Безопасная онлайн-оплата будет подключена перед релизом.</small></div>
+          <label class="checkout-consent"><input type="checkbox" required><span>Я принимаю условия заказа и политику конфиденциальности</span></label>
+          <button class="button" type="submit">Создать тестовый заказ</button>
+          <p class="account-status" id="checkoutStatus" aria-live="polite"></p>
+        </form>
+      </div>
+      <div class="checkout-success hidden" id="checkoutSuccess"><div>✓</div><p class="eyebrow">ЗАКАЗ СОЗДАН</p><h2>Спасибо!</h2><p>Номер вашего заказа: <strong id="checkoutOrderNumber"></strong></p><p>Заказ сохранён в личном кабинете. После подключения оплаты подтверждение также будет приходить на email.</p><button class="button" type="button" data-close-checkout>Продолжить</button></div>
+    </section>
+  </div>
+
+  <div class="passport-modal" id="passportModal" aria-hidden="true">
+    <button class="shop-backdrop" type="button" data-close-passport aria-label="Закрыть"></button>
+    <section class="passport-dialog" role="dialog" aria-modal="true" aria-labelledby="passportName">
+      <button class="shop-close" type="button" data-close-passport aria-label="Закрыть">×</button>
+      <div class="passport-cover"><p>VIORI</p><span>Digital character passport</span><div class="passport-seal">♡</div><small id="passportCode"></small></div>
+      <div class="passport-content">
+        <p class="eyebrow">ЕЁ ЛИЧНАЯ ИСТОРИЯ</p><h2 id="passportName"></h2>
+        <div class="passport-facts"><div><span>День рождения</span><strong id="passportBorn"></strong></div><div><span>Статус</span><strong>Часть вашей семьи</strong></div></div>
+        <div class="passport-timeline" id="passportTimeline"></div>
+        <form class="memory-form" id="memoryForm"><h3>Добавить новую главу</h3><label><span>Название события</span><input type="text" name="title" placeholder="Например, Первая поездка к морю" required></label><label><span>Воспоминание</span><textarea name="text" rows="3" placeholder="Что особенного произошло в этот день?" required></textarea></label><button class="button" type="submit">Сохранить в истории</button></form>
+      </div>
+    </section>
+  </div>
+
+  <div class="account-modal" id="accountModal" aria-hidden="true">
+    <button class="account-backdrop" type="button" data-close-account aria-label="Закрыть"></button>
+    <section class="account-panel" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+      <button class="account-close" type="button" data-close-account aria-label="Закрыть">×</button>
+
+      <div class="auth-view" id="authView">
+        <p class="eyebrow">VIORI WORLD</p>
+        <h2 id="accountTitle">Жизнь вашей игрушки</h2>
+        <p class="account-intro">Создайте личный кабинет, чтобы оформлять заказы, регистрировать игрушки по NFC-коду и хранить их истории.</p>
+
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" type="button" data-auth-tab="login">Войти</button>
+          <button class="auth-tab" type="button" data-auth-tab="register">Регистрация</button>
+        </div>
+
+        <form class="account-form" id="loginForm">
+          <label><span>Email</span><input type="email" name="email" placeholder="name@example.com" required></label>
+          <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
+          <button class="button" type="submit">Войти</button>
+        </form>
+
+        <form class="account-form hidden" id="registerForm">
+          <label><span>Ваше имя</span><input type="text" name="name" placeholder="Например, Анна" required></label>
+          <label><span>Email</span><input type="email" name="email" placeholder="name@example.com" required></label>
+          <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
+          <label class="consent"><input type="checkbox" required><span>Я согласен(на) с обработкой данных</span></label>
+          <button class="button" type="submit">Создать кабинет</button>
+        </form>
+        <p class="account-status" id="accountStatus" aria-live="polite"></p>
+      </div>
+
+      <div class="dashboard-view hidden" id="dashboardView">
+        <div class="dashboard-head">
+          <div><div class="admin-identity admin-only hidden"><span>ADMIN</span><strong>VIORI CONTROL ROOM</strong></div><p class="eyebrow client-heading">ЛИЧНЫЙ КАБИНЕТ</p><h2><span class="dashboard-greeting">Здравствуйте,</span> <span id="profileName"></span></h2><p class="admin-subtitle admin-only hidden">Управляйте магазином, заказами, персонажами и цифровыми паспортами из одного места.</p></div>
+          <button class="logout-button" id="logoutButton" type="button">Выйти</button>
+        </div>
+
+        <div class="dashboard-tabs" role="tablist">
+          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-home">Обзор</button>
+          <button class="dashboard-tab active" type="button" data-dashboard-tab="toys">Мои игрушки</button>
+          <button class="dashboard-tab" type="button" data-dashboard-tab="orders">Заказы</button>
+          <button class="dashboard-tab" type="button" data-dashboard-tab="profile">Профиль</button>
+          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin">Управление</button>
+        </div>
+
+        <div class="dashboard-page admin-overview admin-only hidden" data-dashboard-page="admin-home">
+          <div class="admin-metrics">
+            <article><span>Товары</span><strong id="adminMetricProducts">0</strong><small>в каталоге</small></article>
+            <article><span>Заказы</span><strong id="adminMetricOrders">0</strong><small>за всё время</small></article>
+            <article><span>Новые</span><strong id="adminMetricNewOrders">0</strong><small>требуют внимания</small></article>
+            <article><span>NFC</span><strong id="adminMetricPassports">0</strong><small>паспортов выпущено</small></article>
+          </div>
+          <div class="admin-overview-grid">
+            <section class="admin-focus"><p class="eyebrow">СЕГОДНЯ</p><h3>Центр управления VIORI</h3><p>Начните с новых заказов, затем подготовьте персонажей и выпустите NFC-паспорта перед отправкой.</p><div class="admin-quick-actions"><button type="button" data-admin-go="admin">Добавить игрушку</button><button type="button" data-admin-go="admin">Выпустить NFC</button><button type="button" data-admin-go="admin">Проверить заказы</button></div></section>
+            <section class="admin-activity"><div class="admin-section-title"><div><p class="eyebrow">АКТИВНОСТЬ</p><h3>Последние заказы</h3></div><button type="button" data-admin-go="admin">Открыть все</button></div><div id="adminOverviewOrders"></div></section>
+          </div>
+        </div>
+
+        <div class="dashboard-page" data-dashboard-page="toys">
+          <div class="toy-empty" id="toyEmpty">
+            <div class="toy-empty-mark">♡</div>
+            <h3>Здесь начинается её жизнь</h3>
+            <p>Приложите телефон к NFC-метке игрушки или введите код вручную.</p>
+          </div>
+          <div class="toy-list" id="toyList"></div>
+          <form class="nfc-form" id="nfcForm">
+            <label><span>NFC-код игрушки</span><input type="text" name="code" placeholder="Например, VIORI-MIA-001" required></label>
+            <button class="button" type="submit">Добавить игрушку</button>
+          </form>
+          <p class="account-status" id="nfcStatus" aria-live="polite"></p>
+        </div>
+
+        <div class="dashboard-page hidden" data-dashboard-page="orders">
+          <div class="orders-list" id="ordersList"></div>
+          <a class="button" href="#catalog" data-close-account>Выбрать новую игрушку</a>
+        </div>
+
+        <div class="dashboard-page hidden" data-dashboard-page="profile">
+          <div class="profile-card"><span>Имя</span><strong id="profileCardName"></strong></div>
+          <div class="profile-card"><span>Email</span><strong id="profileEmail"></strong></div>
+          <p class="privacy-note">Ваш кабинет хранит истории игрушек, заказы и доступ к персональному миру VIORI.</p>
+        </div>
+
+        <div class="dashboard-page admin-only hidden" data-dashboard-page="admin">
+          <div class="admin-heading">
+            <p class="eyebrow">КАТАЛОГ VIORI</p>
+            <h3>Добавить новую игрушку</h3>
+            <p>Заполните карточку и загрузите фотографию. Игрушка сразу появится на сайте.</p>
+          </div>
+          <form class="account-form admin-product-form" id="adminProductForm">
+            <label><span>Название (RU)</span><input type="text" name="nameRu" placeholder="Например, Мишка Тео" required></label>
+            <label><span>Название (EN)</span><input type="text" name="nameEn" placeholder="For example, Theo the Bear" required></label>
+            <div class="admin-form-row">
+              <label><span>Категория</span><select name="category" required><option value="animals">Животные</option><option value="dolls">Куклы</option><option value="baby">Для малышей</option></select></label>
+              <label><span>Цена от, €</span><input type="number" name="price" min="1" step="1" placeholder="39" required></label>
+            </div>
+            <label><span>Описание (RU)</span><textarea name="descriptionRu" rows="3" placeholder="Расскажите об игрушке" required></textarea></label>
+            <label><span>Описание (EN)</span><textarea name="descriptionEn" rows="3" placeholder="Tell the toy’s story" required></textarea></label>
+            <label class="image-upload"><span>Фотография игрушки</span><input type="file" name="image" accept="image/jpeg,image/png,image/webp" required><small>JPG, PNG или WebP, не более 1,5 МБ</small></label>
+            <div class="image-preview hidden" id="adminImagePreview"></div>
+            <button class="button" type="submit">Опубликовать игрушку</button>
+          </form>
+          <p class="account-status" id="adminStatus" aria-live="polite"></p>
+          <div class="admin-products" id="adminProducts"></div>
+          <div class="admin-orders-heading"><p class="eyebrow">ЗАКАЗЫ</p><h3>Последние заказы</h3></div>
+          <div class="admin-orders" id="adminOrders"></div>
+          <div class="admin-orders-heading nfc-admin-heading"><p class="eyebrow">NFC-ПАСПОРТА</p><h3>Выпустить новый паспорт</h3><p>Создайте защищённый код для конкретной игрушки. Активировать его сможет только один клиент.</p></div>
+          <form class="account-form nfc-issue-form" id="nfcIssueForm"><div class="admin-form-row"><label><span>Имя персонажа (RU)</span><input type="text" name="nameRu" placeholder="Зайка Мия" required></label><label><span>Имя персонажа (EN)</span><input type="text" name="nameEn" placeholder="Mia the Bunny" required></label></div><label><span>Номер заказа (необязательно)</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001"></label><button class="button" type="submit">Создать NFC-паспорт</button></form>
+          <p class="account-status" id="nfcIssueStatus" aria-live="polite"></p>
+          <div class="nfc-passports" id="nfcPassports"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="assets/viori-logo.png" alt="" />
+        <div>
+          <strong>VIORI</strong>
+          <span>Made stitch by stitch</span>
+        </div>
+      </div>
+      <p>© <span id="year"></span> VIORI. Вязаные игрушки ручной работы.</p>
+      <nav class="footer-legal"><a href="legal.html#terms">Условия</a><a href="legal.html#privacy">Приватность</a><a href="legal.html#returns">Возврат</a><a href="legal.html#safety">Безопасность</a><button id="openCancellation" type="button">Отменить заказ</button><button id="openCookieSettings" type="button">Cookies</button></nav>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-labelledby="cookieTitle" aria-live="polite">
+    <div><strong id="cookieTitle">Ваш выбор приватности</strong><p>Необходимые данные обеспечивают язык, корзину и вход. Необязательную аналитику мы включим только с вашего согласия.</p><a href="legal.html#cookies">Подробнее</a></div>
+    <div class="cookie-actions"><button class="card-button" id="essentialCookies" type="button">Только необходимые</button><button class="button" id="acceptCookies" type="button">Разрешить аналитику</button></div>
+  </div>
+
+  <div class="cancellation-modal" id="cancellationModal" aria-hidden="true"><button class="shop-backdrop" type="button" data-close-cancellation aria-label="Закрыть"></button><section class="cancellation-dialog" role="dialog" aria-modal="true" aria-labelledby="cancellationTitle"><button class="shop-close" type="button" data-close-cancellation aria-label="Закрыть">×</button><div id="cancellationFormView"><p class="eyebrow">ПРАВО НА ОТМЕНУ</p><h2 id="cancellationTitle">Отменить заказ</h2><p>Отправьте запрос — мы сохраним дату обращения и свяжемся с вами после проверки статуса заказа.</p><form class="checkout-form" id="cancellationForm"><label><span>Номер заказа</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001" required></label><label><span>Email заказа</span><input type="email" name="email" required></label><label><span>Причина (необязательно)</span><textarea name="reason" rows="3"></textarea></label><button class="button" type="submit">Отправить запрос на отмену</button><p class="account-status" id="cancellationStatus" aria-live="polite"></p></form></div><div class="checkout-success hidden" id="cancellationSuccess"><div>✓</div><p class="eyebrow">ЗАПРОС ПРИНЯТ</p><h2>Отмена зарегистрирована</h2><p id="cancellationReference"></p><button class="button" type="button" data-close-cancellation>Закрыть</button></div></section></div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
