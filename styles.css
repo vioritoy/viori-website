@@ -1164,6 +1164,14 @@ body.shop-open { overflow: hidden; }
   border-color: var(--line);
   background: white;
   color: var(--text);
+  caret-color: var(--accent-dark);
+}
+.account-form input:-webkit-autofill,
+.account-form input:-webkit-autofill:hover,
+.account-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px #fff inset;
+  transition: background-color 9999s ease-out 0s;
 }
 .account-form input::placeholder, .nfc-form input::placeholder { color: #aa978a; }
 .account-form .button, .nfc-form .button { width: 100%; }
