@@ -42,6 +42,14 @@ NFC-паспорта:
 - Перед запуском обязательно заполните юридическое имя, адрес, email, KVK и BTW-id.
 - Нельзя менять статус безопасности на подтверждённый до реальных испытаний и CE-документации.
 
+GitHub + Supabase:
+1. Создайте пустой GitHub-репозиторий и добавьте его как remote origin.
+2. Добавьте GitHub Secrets: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD, SUPABASE_PROJECT_REF.
+3. Workflow CI проверяет каждый push, Deploy website публикует ветку main на GitHub Pages.
+4. Workflow Apply Supabase migrations запускается только вручную и применяет файлы из supabase/migrations.
+5. Для локального подключения скопируйте config.example.js в config.js и укажите URL проекта и public anon key.
+6. Никогда не добавляйте service_role key или пароль базы в config.js, исходный код либо Git.
+
 Что нужно заменить перед публикацией:
 1. Номер WhatsApp:
    - Откройте script.ts, затем выполните npm run build.
