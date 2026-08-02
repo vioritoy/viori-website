@@ -1078,6 +1078,7 @@ body.shop-open { overflow: hidden; }
 .account-panel h2 { margin-bottom: 14px; font-size: clamp(38px, 6vw, 58px); }
 .account-intro { margin: 0 0 28px; color: var(--muted); }
 .auth-tabs, .dashboard-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+.auth-help { align-self:center; margin-top:2px; border:0; background:transparent; cursor:pointer; }
 .auth-tab, .dashboard-tab {
   padding: 10px 12px 12px;
   border: 0;

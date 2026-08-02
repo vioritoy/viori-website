@@ -1080,8 +1080,56 @@ function renderAccount() {
 
 function getSession(): string | null { return productionProfile?.id || null; }
 function renderAccount(): void { if (supabase) void loadProductionAccount(); }
-function renderCart(): void { /* Checkout is intentionally disabled until verified payments are connected. */ }
 function openAccount(): void { if (supabase) productionOpenAccount(); }
+
+function getProductionCart(): CartItem[] {
+  try { return JSON.parse(localStorage.getItem("viori-cart") || "[]") as CartItem[]; } catch { return []; }
+}
+
+function saveProductionCart(cart: CartItem[]): void {
+  localStorage.setItem("viori-cart", JSON.stringify(cart));
+  renderCart();
+}
+
+function renderCart(): void {
+  if (!supabase) return;
+  const cart = getProductionCart().filter((item) => productionProducts.some((product) => product.id === item.id));
+  const items = cart.map((item) => ({ item, product: productionProducts.find((product) => product.id === item.id)! }));
+  document.getElementById("cartCount")!.textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
+  document.getElementById("cartTotal")!.textContent = `€${items.reduce((sum, row) => sum + row.product.price_cents * row.item.quantity, 0) / 100}`;
+  const container = document.getElementById("cartItems");
+  if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage === "en" ? product.name_en : product.name_ru)}</strong><span>€${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "Your bag is empty." : "Корзина пока пуста."}</p></div>`;
+  const checkout = document.getElementById("cartCheckout") as HTMLButtonElement | null;
+  if (checkout) checkout.disabled = !items.length;
+}
+
+function openProductionCart(): void {
+  renderCart(); document.getElementById("cartDrawer")?.classList.add("open"); document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false"); document.body.classList.add("shop-open");
+}
+
+function closeProductionCart(): void {
+  document.getElementById("cartDrawer")?.classList.remove("open"); document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "true"); document.body.classList.remove("shop-open");
+}
+
+function productionCheckoutTotal(): number {
+  const subtotal = getProductionCart().reduce((sum, item) => sum + (productionProducts.find((p) => p.id === item.id)?.price_cents || 0) * item.quantity, 0);
+  const delivery = document.querySelector<HTMLInputElement>('#checkoutForm input[name="delivery"]:checked')?.value === "pickup" ? 0 : 695;
+  return subtotal + delivery;
+}
+
+async function openProductionCheckout(): Promise<void> {
+  if (!supabase) return;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) { closeProductionCart(); productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in before checkout." : "Войдите в аккаунт перед оформлением заказа."; return; }
+  closeProductionCart();
+  const form = document.getElementById("checkoutForm") as HTMLFormElement;
+  (form.elements.namedItem("email") as HTMLInputElement).value = user.email || "";
+  (form.elements.namedItem("email") as HTMLInputElement).readOnly = true;
+  (form.elements.namedItem("name") as HTMLInputElement).value ||= productionProfile?.display_name || "";
+  document.getElementById("checkoutTotal")!.textContent = `€${(productionCheckoutTotal() / 100).toFixed(2)}`;
+  document.getElementById("checkoutFormView")?.classList.remove("hidden"); document.getElementById("checkoutSuccess")?.classList.add("hidden");
+  document.getElementById("checkoutModal")?.classList.add("open"); document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "false");
+}
 
 async function renderCatalogProducts(): Promise<void> {
   if (!supabase) return;
@@ -1098,8 +1146,9 @@ async function renderCatalogProducts(): Promise<void> {
     const description = currentLanguage === "en" ? product.description_en : product.description_ru;
     const path = product.product_images?.[0]?.storage_path;
     const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
-    return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><p class="small-note">${currentLanguage === "en" ? "Ordering opens after product compliance approval." : "Заказ откроется после подтверждения соответствия товара."}</p></article>`;
+    return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage === "en" ? "Add to bag" : "В корзину"}</button></div></article>`;
   }).join("");
+  renderCart();
 }
 
 type DbProfile = { id: string; display_name: string; role: "customer" | "admin" };
@@ -1125,6 +1174,11 @@ function productionOpenAccount(): void {
   document.getElementById("accountModal")?.classList.add("open");
   document.getElementById("accountModal")?.setAttribute("aria-hidden", "false");
   document.body.classList.add("account-open");
+}
+
+function showProductionAuthForm(formId: "loginForm" | "registerForm" | "forgotPasswordForm" | "resetPasswordForm"): void {
+  ["loginForm", "registerForm", "forgotPasswordForm", "resetPasswordForm"].forEach((id) => document.getElementById(id)?.classList.toggle("hidden", id !== formId));
+  document.querySelector(".auth-tabs")?.classList.toggle("hidden", formId === "forgotPasswordForm" || formId === "resetPasswordForm");
 }
 
 function productionCloseAccount(): void {
@@ -1164,6 +1218,13 @@ async function loadProductionAccount(): Promise<void> {
   renderProductionDashboard(user.email || "");
   const token = new URLSearchParams(location.search).get("nfc");
   if (token) await claimProductionPassport(token);
+  const transferToken = new URLSearchParams(location.search).get("transfer");
+  if (transferToken) {
+    const { error } = await supabase.rpc("accept_passport_transfer", { transfer_token: transferToken });
+    const clean = new URL(location.href); clean.searchParams.delete("transfer"); history.replaceState({}, "", clean);
+    if (accountStatus) accountStatus.textContent = error ? (currentLanguage === "en" ? "Transfer link is invalid or expired." : "Ссылка передачи недействительна или устарела.") : (currentLanguage === "en" ? "The toy is now in your account." : "Игрушка передана в ваш кабинет.");
+    if (!error) { productionOpenAccount(); await loadProductionAccount(); }
+  }
 }
 
 function renderProductionDashboard(email: string): void {
@@ -1240,6 +1301,46 @@ function renderProductionAdmin(): void {
 if (supabase) {
   document.documentElement.dataset.appVersion = "2026-08-02-2";
   document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
+  document.getElementById("openCart")?.addEventListener("click", openProductionCart);
+  document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeProductionCart));
+  document.querySelectorAll("[data-close-checkout]").forEach((button) => button.addEventListener("click", () => { document.getElementById("checkoutModal")?.classList.remove("open"); document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "true"); }));
+  document.getElementById("cartCheckout")?.addEventListener("click", () => void openProductionCheckout());
+  document.querySelectorAll<HTMLInputElement>('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", () => { document.getElementById("checkoutTotal")!.textContent = `€${(productionCheckoutTotal() / 100).toFixed(2)}`; }));
+  document.addEventListener("click", (event) => {
+    const add = (event.target as HTMLElement).closest<HTMLElement>("[data-db-add-cart]");
+    if (add?.dataset.dbAddCart) { const cart = getProductionCart(); const existing = cart.find((item) => item.id === add.dataset.dbAddCart); if (existing) existing.quantity = Math.min(20, existing.quantity + 1); else cart.push({ id: add.dataset.dbAddCart, quantity: 1 }); saveProductionCart(cart); openProductionCart(); return; }
+    const change = (event.target as HTMLElement).closest<HTMLElement>("[data-cart-change]");
+    if (change?.dataset.cartId) { const cart = getProductionCart(); const item = cart.find((entry) => entry.id === change.dataset.cartId); if (!item) return; item.quantity += Number(change.dataset.cartChange); saveProductionCart(cart.filter((entry) => entry.quantity > 0)); }
+  });
+  document.getElementById("checkoutForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("checkoutStatus");
+    const cart = getProductionCart();
+    const { data: result, error } = await supabase.rpc("create_order", {
+      customer_name: String(data.get("name")).trim(), customer_phone: String(data.get("phone")).trim(),
+      shipping_address: { street: String(data.get("address")).trim(), postcode: String(data.get("postcode")).trim().toUpperCase(), city: String(data.get("city")).trim(), country: "NL" },
+      delivery_method: String(data.get("delivery")), cart_items: cart.map((item) => ({ product_id: item.id, quantity: item.quantity }))
+    });
+    if (error || !result?.[0]) { if (status) status.textContent = productionMessage(error); return; }
+    saveProductionCart([]); document.getElementById("checkoutOrderNumber")!.textContent = result[0].order_number;
+    document.getElementById("checkoutFormView")?.classList.add("hidden"); document.getElementById("checkoutSuccess")?.classList.remove("hidden");
+    await loadProductionAccount();
+  });
+  document.getElementById("openCancellation")?.addEventListener("click", async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { productionOpenAccount(); if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in to request a cancellation." : "Войдите, чтобы запросить отмену."; return; }
+    const form = document.getElementById("cancellationForm") as HTMLFormElement;
+    (form.elements.namedItem("email") as HTMLInputElement).value = user.email || "";
+    (form.elements.namedItem("email") as HTMLInputElement).readOnly = true;
+    document.getElementById("cancellationModal")?.classList.add("open"); document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "false");
+  });
+  document.querySelectorAll("[data-close-cancellation]").forEach((button) => button.addEventListener("click", () => { document.getElementById("cancellationModal")?.classList.remove("open"); document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "true"); }));
+  document.getElementById("cancellationForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("cancellationStatus");
+    const { data: reference, error } = await supabase.rpc("request_order_cancellation", { target_order_number: String(data.get("orderNumber")).trim(), cancellation_reason: String(data.get("reason")).trim() });
+    if (error || !reference) { if (status) status.textContent = currentLanguage === "en" ? "This order cannot be cancelled online." : "Этот заказ нельзя отменить онлайн."; return; }
+    document.getElementById("cancellationReference")!.textContent = `${currentLanguage === "en" ? "Reference" : "Номер обращения"}: ${String(reference).slice(0, 8).toUpperCase()}`;
+    document.getElementById("cancellationFormView")?.classList.add("hidden"); document.getElementById("cancellationSuccess")?.classList.remove("hidden");
+  });
   document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
   document.querySelectorAll<HTMLButtonElement>(".dashboard-tab").forEach((tab) => tab.addEventListener("click", () => {
     if (tab.classList.contains("hidden")) return;
@@ -1264,9 +1365,23 @@ if (supabase) {
   });
   document.querySelectorAll<HTMLButtonElement>(".auth-tab").forEach((tab) => tab.addEventListener("click", () => {
     document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
-    document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
-    document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
+    showProductionAuthForm(tab.dataset.authTab === "register" ? "registerForm" : "loginForm");
   }));
+  document.getElementById("forgotPasswordButton")?.addEventListener("click", () => showProductionAuthForm("forgotPasswordForm"));
+  document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+  document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);
+    const { error } = await supabase.auth.resetPasswordForEmail(String(data.get("email")).trim(), { redirectTo: `${location.origin}${location.pathname}?reset-password=1` });
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Check your email for the reset link." : "Проверьте почту — ссылка для смены пароля отправлена.");
+  });
+  document.getElementById("resetPasswordForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
+    const password = String(data.get("password")); const confirmation = String(data.get("passwordConfirm"));
+    if (password !== confirmation) { if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Passwords do not match." : "Пароли не совпадают."; return; }
+    const { error } = await supabase.auth.updateUser({ password });
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Password updated." : "Новый пароль сохранён.");
+    if (!error) { history.replaceState({}, "", location.pathname); showProductionAuthForm("loginForm"); }
+  });
   document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
     const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
@@ -1287,6 +1402,14 @@ if (supabase) {
     const { data: { user } } = await supabase.auth.getUser(); if (!user) return;
     const { error } = await supabase.from("toy_memories").insert({ passport_id: activePassportId, owner_id: user.id, title: String(data.get("title")).trim(), body: String(data.get("text")).trim() });
     if (!error) { form.reset(); await openProductionPassport(activePassportId); }
+  });
+  document.getElementById("passportTransferForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); if (!activePassportId) return; const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("passportTransferStatus");
+    const { data: token, error } = await supabase.rpc("create_passport_transfer", { target_passport: activePassportId, recipient_email: String(data.get("email")).trim() });
+    if (error || !token) { if (status) status.textContent = currentLanguage === "en" ? "Recipient must have a different registered VIORI account." : "Получатель должен иметь другой зарегистрированный аккаунт VIORI."; return; }
+    const url = `${location.origin}${location.pathname}?transfer=${encodeURIComponent(token)}`;
+    if (status) status.textContent = `${currentLanguage === "en" ? "Send this one-time link" : "Отправьте одноразовую ссылку"}: ${url}`;
+    form.reset();
   });
   document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("nfcIssueStatus");
@@ -1317,7 +1440,10 @@ if (supabase) {
     if (error) { select.value = productionOrders.find((order) => order.id === select.dataset.dbOrder)?.status || "new"; return; }
     await loadProductionAccount();
   });
-  supabase.auth.onAuthStateChange(() => { window.setTimeout(() => void loadProductionAccount(), 0); });
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === "PASSWORD_RECOVERY") { productionOpenAccount(); authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden"); showProductionAuthForm("resetPasswordForm"); return; }
+    window.setTimeout(() => void loadProductionAccount(), 0);
+  });
   void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); });
 }
 

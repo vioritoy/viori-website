@@ -21239,10 +21239,67 @@ ${suffix}`;
   function renderAccount() {
     if (supabase) void loadProductionAccount();
   }
-  function renderCart() {
-  }
   function openAccount() {
     if (supabase) productionOpenAccount();
+  }
+  function getProductionCart() {
+    try {
+      return JSON.parse(localStorage.getItem("viori-cart") || "[]");
+    } catch {
+      return [];
+    }
+  }
+  function saveProductionCart(cart) {
+    localStorage.setItem("viori-cart", JSON.stringify(cart));
+    renderCart();
+  }
+  function renderCart() {
+    if (!supabase) return;
+    const cart = getProductionCart().filter((item) => productionProducts.some((product) => product.id === item.id));
+    const items = cart.map((item) => ({ item, product: productionProducts.find((product) => product.id === item.id) }));
+    document.getElementById("cartCount").textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
+    document.getElementById("cartTotal").textContent = `\u20AC${items.reduce((sum, row) => sum + row.product.price_cents * row.item.quantity, 0) / 100}`;
+    const container = document.getElementById("cartItems");
+    if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage === "en" ? product.name_en : product.name_ru)}</strong><span>\u20AC${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">\u2212</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "Your bag is empty." : "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u0430."}</p></div>`;
+    const checkout = document.getElementById("cartCheckout");
+    if (checkout) checkout.disabled = !items.length;
+  }
+  function openProductionCart() {
+    renderCart();
+    document.getElementById("cartDrawer")?.classList.add("open");
+    document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false");
+    document.body.classList.add("shop-open");
+  }
+  function closeProductionCart() {
+    document.getElementById("cartDrawer")?.classList.remove("open");
+    document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("shop-open");
+  }
+  function productionCheckoutTotal() {
+    const subtotal = getProductionCart().reduce((sum, item) => sum + (productionProducts.find((p) => p.id === item.id)?.price_cents || 0) * item.quantity, 0);
+    const delivery = document.querySelector('#checkoutForm input[name="delivery"]:checked')?.value === "pickup" ? 0 : 695;
+    return subtotal + delivery;
+  }
+  async function openProductionCheckout() {
+    var _a;
+    if (!supabase) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      closeProductionCart();
+      productionOpenAccount();
+      if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in before checkout." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 \u043F\u0435\u0440\u0435\u0434 \u043E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435\u043C \u0437\u0430\u043A\u0430\u0437\u0430.";
+      return;
+    }
+    closeProductionCart();
+    const form = document.getElementById("checkoutForm");
+    form.elements.namedItem("email").value = user.email || "";
+    form.elements.namedItem("email").readOnly = true;
+    (_a = form.elements.namedItem("name")).value || (_a.value = productionProfile?.display_name || "");
+    document.getElementById("checkoutTotal").textContent = `\u20AC${(productionCheckoutTotal() / 100).toFixed(2)}`;
+    document.getElementById("checkoutFormView")?.classList.remove("hidden");
+    document.getElementById("checkoutSuccess")?.classList.add("hidden");
+    document.getElementById("checkoutModal")?.classList.add("open");
+    document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "false");
   }
   async function renderCatalogProducts() {
     if (!supabase) return;
@@ -21259,8 +21316,9 @@ ${suffix}`;
       const description = currentLanguage === "en" ? product.description_en : product.description_ru;
       const path = product.product_images?.[0]?.storage_path;
       const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
-      return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">\u20AC${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><p class="small-note">${currentLanguage === "en" ? "Ordering opens after product compliance approval." : "\u0417\u0430\u043A\u0430\u0437 \u043E\u0442\u043A\u0440\u043E\u0435\u0442\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0442\u043E\u0432\u0430\u0440\u0430."}</p></article>`;
+      return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">\u20AC${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage === "en" ? "Add to bag" : "\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"}</button></div></article>`;
     }).join("");
+    renderCart();
   }
   var productionProfile = null;
   var productionPassports = [];
@@ -21278,6 +21336,10 @@ ${suffix}`;
     document.getElementById("accountModal")?.classList.add("open");
     document.getElementById("accountModal")?.setAttribute("aria-hidden", "false");
     document.body.classList.add("account-open");
+  }
+  function showProductionAuthForm(formId) {
+    ["loginForm", "registerForm", "forgotPasswordForm", "resetPasswordForm"].forEach((id) => document.getElementById(id)?.classList.toggle("hidden", id !== formId));
+    document.querySelector(".auth-tabs")?.classList.toggle("hidden", formId === "forgotPasswordForm" || formId === "resetPasswordForm");
   }
   function productionCloseAccount() {
     document.getElementById("accountModal")?.classList.remove("open");
@@ -21318,6 +21380,18 @@ ${suffix}`;
     renderProductionDashboard(user.email || "");
     const token = new URLSearchParams(location.search).get("nfc");
     if (token) await claimProductionPassport(token);
+    const transferToken = new URLSearchParams(location.search).get("transfer");
+    if (transferToken) {
+      const { error } = await supabase.rpc("accept_passport_transfer", { transfer_token: transferToken });
+      const clean = new URL(location.href);
+      clean.searchParams.delete("transfer");
+      history.replaceState({}, "", clean);
+      if (accountStatus) accountStatus.textContent = error ? currentLanguage === "en" ? "Transfer link is invalid or expired." : "\u0421\u0441\u044B\u043B\u043A\u0430 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0438 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0430 \u0438\u043B\u0438 \u0443\u0441\u0442\u0430\u0440\u0435\u043B\u0430." : currentLanguage === "en" ? "The toy is now in your account." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043F\u0435\u0440\u0435\u0434\u0430\u043D\u0430 \u0432 \u0432\u0430\u0448 \u043A\u0430\u0431\u0438\u043D\u0435\u0442.";
+      if (!error) {
+        productionOpenAccount();
+        await loadProductionAccount();
+      }
+    }
   }
   function renderProductionDashboard(email) {
     if (!productionProfile) return;
@@ -21388,6 +21462,90 @@ ${suffix}`;
   if (supabase) {
     document.documentElement.dataset.appVersion = "2026-08-02-2";
     document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
+    document.getElementById("openCart")?.addEventListener("click", openProductionCart);
+    document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeProductionCart));
+    document.querySelectorAll("[data-close-checkout]").forEach((button) => button.addEventListener("click", () => {
+      document.getElementById("checkoutModal")?.classList.remove("open");
+      document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "true");
+    }));
+    document.getElementById("cartCheckout")?.addEventListener("click", () => void openProductionCheckout());
+    document.querySelectorAll('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", () => {
+      document.getElementById("checkoutTotal").textContent = `\u20AC${(productionCheckoutTotal() / 100).toFixed(2)}`;
+    }));
+    document.addEventListener("click", (event) => {
+      const add = event.target.closest("[data-db-add-cart]");
+      if (add?.dataset.dbAddCart) {
+        const cart = getProductionCart();
+        const existing = cart.find((item) => item.id === add.dataset.dbAddCart);
+        if (existing) existing.quantity = Math.min(20, existing.quantity + 1);
+        else cart.push({ id: add.dataset.dbAddCart, quantity: 1 });
+        saveProductionCart(cart);
+        openProductionCart();
+        return;
+      }
+      const change = event.target.closest("[data-cart-change]");
+      if (change?.dataset.cartId) {
+        const cart = getProductionCart();
+        const item = cart.find((entry) => entry.id === change.dataset.cartId);
+        if (!item) return;
+        item.quantity += Number(change.dataset.cartChange);
+        saveProductionCart(cart.filter((entry) => entry.quantity > 0));
+      }
+    });
+    document.getElementById("checkoutForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const status = document.getElementById("checkoutStatus");
+      const cart = getProductionCart();
+      const { data: result, error } = await supabase.rpc("create_order", {
+        customer_name: String(data.get("name")).trim(),
+        customer_phone: String(data.get("phone")).trim(),
+        shipping_address: { street: String(data.get("address")).trim(), postcode: String(data.get("postcode")).trim().toUpperCase(), city: String(data.get("city")).trim(), country: "NL" },
+        delivery_method: String(data.get("delivery")),
+        cart_items: cart.map((item) => ({ product_id: item.id, quantity: item.quantity }))
+      });
+      if (error || !result?.[0]) {
+        if (status) status.textContent = productionMessage(error);
+        return;
+      }
+      saveProductionCart([]);
+      document.getElementById("checkoutOrderNumber").textContent = result[0].order_number;
+      document.getElementById("checkoutFormView")?.classList.add("hidden");
+      document.getElementById("checkoutSuccess")?.classList.remove("hidden");
+      await loadProductionAccount();
+    });
+    document.getElementById("openCancellation")?.addEventListener("click", async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        productionOpenAccount();
+        if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Sign in to request a cancellation." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u043D\u0443.";
+        return;
+      }
+      const form = document.getElementById("cancellationForm");
+      form.elements.namedItem("email").value = user.email || "";
+      form.elements.namedItem("email").readOnly = true;
+      document.getElementById("cancellationModal")?.classList.add("open");
+      document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "false");
+    });
+    document.querySelectorAll("[data-close-cancellation]").forEach((button) => button.addEventListener("click", () => {
+      document.getElementById("cancellationModal")?.classList.remove("open");
+      document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "true");
+    }));
+    document.getElementById("cancellationForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const status = document.getElementById("cancellationStatus");
+      const { data: reference, error } = await supabase.rpc("request_order_cancellation", { target_order_number: String(data.get("orderNumber")).trim(), cancellation_reason: String(data.get("reason")).trim() });
+      if (error || !reference) {
+        if (status) status.textContent = currentLanguage === "en" ? "This order cannot be cancelled online." : "\u042D\u0442\u043E\u0442 \u0437\u0430\u043A\u0430\u0437 \u043D\u0435\u043B\u044C\u0437\u044F \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u043D\u043B\u0430\u0439\u043D.";
+        return;
+      }
+      document.getElementById("cancellationReference").textContent = `${currentLanguage === "en" ? "Reference" : "\u041D\u043E\u043C\u0435\u0440 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F"}: ${String(reference).slice(0, 8).toUpperCase()}`;
+      document.getElementById("cancellationFormView")?.classList.add("hidden");
+      document.getElementById("cancellationSuccess")?.classList.remove("hidden");
+    });
     document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
     document.querySelectorAll(".dashboard-tab").forEach((tab) => tab.addEventListener("click", () => {
       if (tab.classList.contains("hidden")) return;
@@ -21412,9 +21570,33 @@ ${suffix}`;
     });
     document.querySelectorAll(".auth-tab").forEach((tab) => tab.addEventListener("click", () => {
       document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
-      document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
-      document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
+      showProductionAuthForm(tab.dataset.authTab === "register" ? "registerForm" : "loginForm");
     }));
+    document.getElementById("forgotPasswordButton")?.addEventListener("click", () => showProductionAuthForm("forgotPasswordForm"));
+    document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+    document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const { error } = await supabase.auth.resetPasswordForEmail(String(data.get("email")).trim(), { redirectTo: `${location.origin}${location.pathname}?reset-password=1` });
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage === "en" ? "Check your email for the reset link." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0447\u0442\u0443 \u2014 \u0441\u0441\u044B\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u043C\u0435\u043D\u044B \u043F\u0430\u0440\u043E\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430.";
+    });
+    document.getElementById("resetPasswordForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const password = String(data.get("password"));
+      const confirmation = String(data.get("passwordConfirm"));
+      if (password !== confirmation) {
+        if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Passwords do not match." : "\u041F\u0430\u0440\u043E\u043B\u0438 \u043D\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0442.";
+        return;
+      }
+      const { error } = await supabase.auth.updateUser({ password });
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage === "en" ? "Password updated." : "\u041D\u043E\u0432\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D.";
+      if (!error) {
+        history.replaceState({}, "", location.pathname);
+        showProductionAuthForm("loginForm");
+      }
+    });
     document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();
       const form = event.currentTarget;
@@ -21455,6 +21637,21 @@ ${suffix}`;
         form.reset();
         await openProductionPassport(activePassportId);
       }
+    });
+    document.getElementById("passportTransferForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!activePassportId) return;
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const status = document.getElementById("passportTransferStatus");
+      const { data: token, error } = await supabase.rpc("create_passport_transfer", { target_passport: activePassportId, recipient_email: String(data.get("email")).trim() });
+      if (error || !token) {
+        if (status) status.textContent = currentLanguage === "en" ? "Recipient must have a different registered VIORI account." : "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C \u0434\u043E\u043B\u0436\u0435\u043D \u0438\u043C\u0435\u0442\u044C \u0434\u0440\u0443\u0433\u043E\u0439 \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 VIORI.";
+        return;
+      }
+      const url = `${location.origin}${location.pathname}?transfer=${encodeURIComponent(token)}`;
+      if (status) status.textContent = `${currentLanguage === "en" ? "Send this one-time link" : "\u041E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043E\u0434\u043D\u043E\u0440\u0430\u0437\u043E\u0432\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443"}: ${url}`;
+      form.reset();
     });
     document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -21508,7 +21705,14 @@ ${suffix}`;
       }
       await loadProductionAccount();
     });
-    supabase.auth.onAuthStateChange(() => {
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        productionOpenAccount();
+        authView?.classList.remove("hidden");
+        dashboardView?.classList.add("hidden");
+        showProductionAuthForm("resetPasswordForm");
+        return;
+      }
       window.setTimeout(() => void loadProductionAccount(), 0);
     });
     void loadProductionAccount().catch((error) => {

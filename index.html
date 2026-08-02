@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260802-3" />
+  <link rel="stylesheet" href="styles.css?v=20260803-1" />
 </head>
 <body>
   <header class="site-header">
@@ -285,11 +285,11 @@
             <label><span>Почтовый индекс</span><input type="text" name="postcode" autocomplete="postal-code" pattern="[0-9]{4}\s?[A-Za-z]{2}" placeholder="1234 AB" required></label>
             <label><span>Город</span><input type="text" name="city" autocomplete="address-level2" required></label>
           </div>
-          <fieldset class="delivery-options"><legend>Доставка</legend><label><input type="radio" name="delivery" value="standard" checked><span><strong>Стандартная доставка</strong><small>2–3 рабочих дня после изготовления</small></span><b>€4.95</b></label><label><input type="radio" name="delivery" value="pickup"><span><strong>Самовывоз</strong><small>По предварительной договорённости</small></span><b>Бесплатно</b></label></fieldset>
+          <fieldset class="delivery-options"><legend>Доставка</legend><label><input type="radio" name="delivery" value="standard" checked><span><strong>Стандартная доставка</strong><small>2–3 рабочих дня после изготовления</small></span><b>€6.95</b></label><label><input type="radio" name="delivery" value="pickup"><span><strong>Самовывоз</strong><small>По предварительной договорённости</small></span><b>Бесплатно</b></label></fieldset>
           <div class="checkout-total"><span>К оплате</span><strong id="checkoutTotal">€0</strong></div>
           <div class="payment-preview"><span>Способ оплаты</span><div><button class="payment-method active" type="button">iDEAL</button><button class="payment-method" type="button">Card</button></div><small>Безопасная онлайн-оплата будет подключена перед релизом.</small></div>
           <label class="checkout-consent"><input type="checkbox" required><span>Я принимаю условия заказа и политику конфиденциальности</span></label>
-          <button class="button" type="submit">Создать тестовый заказ</button>
+          <button class="button" type="submit">Подтвердить заказ без оплаты</button>
           <p class="account-status" id="checkoutStatus" aria-live="polite"></p>
         </form>
       </div>
@@ -307,6 +307,7 @@
         <div class="passport-facts"><div><span>День рождения</span><strong id="passportBorn"></strong></div><div><span>Статус</span><strong>Часть вашей семьи</strong></div></div>
         <div class="passport-timeline" id="passportTimeline"></div>
         <form class="memory-form" id="memoryForm"><h3>Добавить новую главу</h3><label><span>Название события</span><input type="text" name="title" placeholder="Например, Первая поездка к морю" required></label><label><span>Воспоминание</span><textarea name="text" rows="3" placeholder="Что особенного произошло в этот день?" required></textarea></label><button class="button" type="submit">Сохранить в истории</button></form>
+        <form class="memory-form passport-transfer-form" id="passportTransferForm"><h3>Передать игрушку</h3><p>Получатель должен заранее создать взрослый аккаунт VIORI. Семейные воспоминания не передаются автоматически.</p><label><span>Email нового владельца</span><input type="email" name="email" autocomplete="email" required></label><button class="card-button" type="submit">Создать ссылку передачи</button><p class="account-status" id="passportTransferStatus" aria-live="polite"></p></form>
       </div>
     </section>
   </div>
@@ -330,6 +331,7 @@
           <label><span>Email</span><input type="email" name="email" placeholder="name@example.com" required></label>
           <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
           <button class="button" type="submit">Войти</button>
+          <button class="text-link auth-help" id="forgotPasswordButton" type="button">Забыли пароль?</button>
         </form>
 
         <form class="account-form hidden" id="registerForm">
@@ -338,6 +340,18 @@
           <label><span>Пароль</span><input type="password" name="password" minlength="6" placeholder="Не менее 6 символов" required></label>
           <label class="consent"><input type="checkbox" required><span>Я согласен(на) с обработкой данных</span></label>
           <button class="button" type="submit">Создать кабинет</button>
+        </form>
+        <form class="account-form hidden" id="forgotPasswordForm">
+          <p class="account-intro">Укажите email — мы отправим защищённую ссылку для смены пароля.</p>
+          <label><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <button class="button" type="submit">Отправить ссылку</button>
+          <button class="text-link" id="backToLoginButton" type="button">Вернуться ко входу</button>
+        </form>
+        <form class="account-form hidden" id="resetPasswordForm">
+          <p class="account-intro">Придумайте новый пароль длиной не менее 8 символов.</p>
+          <label><span>Новый пароль</span><input type="password" name="password" minlength="8" autocomplete="new-password" required></label>
+          <label><span>Повторите пароль</span><input type="password" name="passwordConfirm" minlength="8" autocomplete="new-password" required></label>
+          <button class="button" type="submit">Сохранить новый пароль</button>
         </form>
         <p class="account-status" id="accountStatus" aria-live="polite"></p>
       </div>
@@ -448,6 +462,6 @@
   <div class="cancellation-modal" id="cancellationModal" aria-hidden="true"><button class="shop-backdrop" type="button" data-close-cancellation aria-label="Закрыть"></button><section class="cancellation-dialog" role="dialog" aria-modal="true" aria-labelledby="cancellationTitle"><button class="shop-close" type="button" data-close-cancellation aria-label="Закрыть">×</button><div id="cancellationFormView"><p class="eyebrow">ПРАВО НА ОТМЕНУ</p><h2 id="cancellationTitle">Отменить заказ</h2><p>Отправьте запрос — мы сохраним дату обращения и свяжемся с вами после проверки статуса заказа.</p><form class="checkout-form" id="cancellationForm"><label><span>Номер заказа</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001" required></label><label><span>Email заказа</span><input type="email" name="email" required></label><label><span>Причина (необязательно)</span><textarea name="reason" rows="3"></textarea></label><button class="button" type="submit">Отправить запрос на отмену</button><p class="account-status" id="cancellationStatus" aria-live="polite"></p></form></div><div class="checkout-success hidden" id="cancellationSuccess"><div>✓</div><p class="eyebrow">ЗАПРОС ПРИНЯТ</p><h2>Отмена зарегистрирована</h2><p id="cancellationReference"></p><button class="button" type="button" data-close-cancellation>Закрыть</button></div></section></div>
 
   <script src="config.js"></script>
-  <script src="script.js?v=20260802-3"></script>
+  <script src="script.js?v=20260803-1"></script>
 </body>
 </html>
