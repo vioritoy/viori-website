@@ -35,6 +35,9 @@ const englishTranslations: Record<string, string> = {
   ".main-nav a:nth-child(4)": "Contacts",
   ".header-cta": "Order",
   ".account-button-text": "My account",
+  ".auth-home-button": '<span aria-hidden="true">←</span> Home',
+  ".google-auth-button span": "Continue with Google",
+  ".auth-divider span": "or use email",
   ".hero-copy .eyebrow": "VIORI · MADE BY HAND",
   ".hero-copy h1": "Every toy <em>has a life of its own</em>",
   ".hero-text": "Every VIORI is handmade and receives a name, a character and a unique digital passport. Tap the NFC tag with your phone to discover her story, memories and new chapters.",
@@ -406,6 +409,18 @@ mainNav?.querySelectorAll("a").forEach((link) => {
     menuButton?.setAttribute("aria-expanded", "false");
   });
 });
+
+function closeMobileMenu(): void {
+  mainNav?.classList.remove("open");
+  menuButton?.setAttribute("aria-expanded", "false");
+}
+document.addEventListener("click", (event) => {
+  const target = event.target as Node;
+  if (mainNav?.classList.contains("open") && !mainNav.contains(target) && !menuButton?.contains(target)) closeMobileMenu();
+});
+document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeMobileMenu(); });
+window.addEventListener("resize", () => { if (window.innerWidth > 980) closeMobileMenu(); });
+window.addEventListener("scroll", closeMobileMenu, { passive: true });
 
 const filters = document.querySelectorAll<HTMLButtonElement>(".filter");
 
@@ -1464,6 +1479,11 @@ if (supabase) {
   document.getElementById("forgotPasswordButton")?.addEventListener("click", () => showProductionAuthForm("forgotPasswordForm"));
   document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
   document.getElementById("registrationSuccessLogin")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
+  document.getElementById("googleAuthButton")?.addEventListener("click", async () => {
+    if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Opening Google…" : "Открываем Google…";
+    const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${location.origin}${location.pathname}` } });
+    if (error && accountStatus) accountStatus.textContent = productionMessage(error);
+  });
   document.querySelectorAll<HTMLButtonElement>(".password-toggle").forEach((button) => button.addEventListener("click", () => {
     const input = button.parentElement?.querySelector<HTMLInputElement>('input[type="password"],input[type="text"]');
     if (!input) return;
