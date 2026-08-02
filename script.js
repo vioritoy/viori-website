@@ -21328,7 +21328,7 @@ ${suffix}`;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
     const selectedPage = document.querySelector(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
-    const allowedPage = selectedPage && (isAdmin || selectedPage !== "admin" && selectedPage !== "admin-home") ? selectedPage : isAdmin ? "admin-home" : "toys";
+    const allowedPage = isAdmin ? selectedPage === "admin" || selectedPage === "admin-home" ? selectedPage : "admin-home" : selectedPage && selectedPage !== "admin" && selectedPage !== "admin-home" ? selectedPage : "toys";
     switchProductionDashboardPage(allowedPage);
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {

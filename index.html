@@ -344,15 +344,15 @@
 
       <div class="dashboard-view hidden" id="dashboardView">
         <div class="dashboard-head">
-          <div><div class="admin-identity admin-only hidden"><span>ADMIN</span><strong>VIORI CONTROL ROOM</strong></div><p class="eyebrow client-heading">ЛИЧНЫЙ КАБИНЕТ</p><h2><span class="dashboard-greeting">Здравствуйте,</span> <span id="profileName"></span></h2><p class="admin-subtitle admin-only hidden">Управляйте магазином, заказами, персонажами и цифровыми паспортами из одного места.</p></div>
+          <div><div class="admin-identity admin-only hidden"><span>ADMIN</span><strong>VIORI CONTROL ROOM</strong></div><p class="eyebrow client-heading customer-only">ЛИЧНЫЙ КАБИНЕТ</p><h2 class="customer-only"><span class="dashboard-greeting">Здравствуйте,</span> <span id="profileName"></span></h2><div class="admin-welcome admin-only hidden"><h2>Панель управления</h2><p>Каталог, заказы и цифровые паспорта VIORI</p></div></div>
           <button class="logout-button" id="logoutButton" type="button">Выйти</button>
         </div>
 
         <div class="dashboard-tabs" role="tablist">
           <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-home">Обзор</button>
-          <button class="dashboard-tab active" type="button" data-dashboard-tab="toys">Мои игрушки</button>
-          <button class="dashboard-tab" type="button" data-dashboard-tab="orders">Заказы</button>
-          <button class="dashboard-tab" type="button" data-dashboard-tab="profile">Профиль</button>
+          <button class="dashboard-tab active customer-only" type="button" data-dashboard-tab="toys">Мои игрушки</button>
+          <button class="dashboard-tab customer-only" type="button" data-dashboard-tab="orders">Заказы</button>
+          <button class="dashboard-tab customer-only" type="button" data-dashboard-tab="profile">Профиль</button>
           <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin">Управление</button>
         </div>
 
@@ -369,7 +369,7 @@
           </div>
         </div>
 
-        <div class="dashboard-page" data-dashboard-page="toys">
+        <div class="dashboard-page customer-only" data-dashboard-page="toys">
           <div class="toy-empty" id="toyEmpty">
             <div class="toy-empty-mark">♡</div>
             <h3>Здесь начинается её жизнь</h3>
@@ -383,12 +383,12 @@
           <p class="account-status" id="nfcStatus" aria-live="polite"></p>
         </div>
 
-        <div class="dashboard-page hidden" data-dashboard-page="orders">
+        <div class="dashboard-page customer-only hidden" data-dashboard-page="orders">
           <div class="orders-list" id="ordersList"></div>
           <a class="button" href="#catalog" data-close-account>Выбрать новую игрушку</a>
         </div>
 
-        <div class="dashboard-page hidden" data-dashboard-page="profile">
+        <div class="dashboard-page customer-only hidden" data-dashboard-page="profile">
           <div class="profile-card"><span>Имя</span><strong id="profileCardName"></strong></div>
           <div class="profile-card"><span>Email</span><strong id="profileEmail"></strong></div>
           <p class="privacy-note">Ваш кабинет хранит истории игрушек, заказы и доступ к персональному миру VIORI.</p>

@@ -1023,15 +1023,25 @@ body.shop-open { overflow: hidden; }
   transition: transform .3s ease;
 }
 .account-panel.admin-mode { width:min(1120px,100vw); background:#f4eee8; }
+.account-panel:not(.admin-mode) { background:linear-gradient(180deg,#fffdf9 0%,#f8f0e7 100%); }
+.account-panel.admin-mode .customer-only { display:none !important; }
+.account-panel:not(.admin-mode) .admin-only { display:none !important; }
 .account-panel.admin-mode .dashboard-head { margin:-58px -48px 0; padding:42px 48px 30px; background:linear-gradient(125deg,#302018,#583725); color:white; }
 .account-panel.admin-mode .dashboard-head h2 { margin-bottom:8px; }
 .account-panel.admin-mode .logout-button { color:rgba(255,255,255,.7); }
 .account-panel.admin-mode .client-heading { display:none; }
+.admin-welcome h2 { margin:8px 0 2px; font-size:44px; }
+.admin-welcome p { margin:0; color:rgba(255,255,255,.68); }
 .admin-identity { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
 .admin-identity span { padding:4px 8px; border-radius:999px; background:#efc5a9; color:#44291b; font-size:9px; font-weight:900; letter-spacing:.14em; }
 .admin-identity strong { color:rgba(255,255,255,.65); font-size:10px; letter-spacing:.15em; }
 .admin-subtitle { max-width:650px; margin:0; color:rgba(255,255,255,.6); font-size:12px; }
-.account-panel.admin-mode .dashboard-tabs { position:sticky; top:-58px; z-index:4; margin-inline:-48px; padding:10px 48px 0; background:#f4eee8; }
+.account-panel.admin-mode .dashboard-view { display:grid; grid-template-columns:210px minmax(0,1fr); column-gap:28px; }
+.account-panel.admin-mode .dashboard-head { grid-column:1/-1; }
+.account-panel.admin-mode .dashboard-tabs { grid-column:1; align-self:start; position:sticky; top:24px; z-index:4; flex-direction:column; gap:6px; margin:24px 0 0; padding:18px; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 18px 45px rgba(70,43,28,.07); }
+.account-panel.admin-mode .dashboard-tab { width:100%; padding:13px 14px; border:0; border-radius:12px; text-align:left; }
+.account-panel.admin-mode .dashboard-tab.active { background:#4a2d20; color:#fff; }
+.account-panel.admin-mode .dashboard-page { grid-column:2; grid-row:2; margin-top:24px; }
 .admin-overview { padding-top:8px; }
 .admin-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
 .admin-metrics article { padding:20px; border:1px solid var(--line); border-radius:18px; background:white; box-shadow:0 10px 30px rgba(70,43,28,.05); }
@@ -1202,7 +1212,10 @@ body.shop-open { overflow: hidden; }
   .account-button { padding: 7px 10px; }
   .account-panel { padding: 54px 20px 30px; }
   .account-panel.admin-mode .dashboard-head { margin:-54px -20px 0; padding:48px 20px 25px; }
-  .account-panel.admin-mode .dashboard-tabs { margin-inline:-20px; padding-inline:20px; top:-54px; }
+  .account-panel.admin-mode .dashboard-view { display:block; }
+  .account-panel.admin-mode .dashboard-tabs { position:sticky; top:0; flex-direction:row; margin:0 -20px 18px; padding:10px 20px; border-width:0 0 1px; border-radius:0; overflow-x:auto; }
+  .account-panel.admin-mode .dashboard-tab { width:auto; min-width:max-content; text-align:center; }
+  .account-panel.admin-mode .dashboard-page { margin-top:0; }
   .dashboard-head { display: block; }
   .dashboard-tabs { overflow-x: auto; }
   .admin-form-row { grid-template-columns: 1fr; }
