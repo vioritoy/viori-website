@@ -20583,655 +20583,897 @@ ${suffix}`;
   var dashboardView = document.getElementById("dashboardView");
   var accountStatus = document.getElementById("accountStatus");
   var adminLayoutInitialized = false;
-  function getAccounts() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-accounts") || "{}");
-    } catch {
-      return {};
+  function safeText(value) {
+    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
+    return String(value ?? "").replace(/[&<>'"]/g, (char) => entities[char] || char);
+  }
+  if (!supabase) {
+    let getAccounts2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-accounts") || "{}");
+      } catch {
+        return {};
+      }
+    }, saveAccounts2 = function(accounts) {
+      localStorage.setItem("viori-accounts", JSON.stringify(accounts));
+    }, getSession2 = function() {
+      return localStorage.getItem("viori-session");
+    }, openAccount2 = function() {
+      accountModal?.classList.add("open");
+      accountModal?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("account-open");
+      renderAccount2();
+      setTimeout(() => accountModal?.querySelector("button, input")?.focus(), 50);
+    }, closeAccount2 = function() {
+      accountModal?.classList.remove("open");
+      accountModal?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("account-open");
+      adminLayoutInitialized = false;
+    }, switchDashboardPage2 = function(pageName) {
+      document.querySelectorAll(".dashboard-tab").forEach((item) => item.classList.toggle("active", item.dataset.dashboardTab === pageName));
+      document.querySelectorAll("[data-dashboard-page]").forEach((page) => page.classList.toggle("hidden", page.dataset.dashboardPage !== pageName));
+    }, getNfcPassports2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-nfc-passports") || "[]");
+      } catch {
+        return [];
+      }
+    }, saveNfcPassports2 = function(passports) {
+      localStorage.setItem("viori-nfc-passports", JSON.stringify(passports));
+    }, claimNfcPassport2 = function(codeValue, email) {
+      const code = codeValue.trim().toUpperCase();
+      const passports = getNfcPassports2();
+      const passport = passports.find((item) => item.code === code);
+      if (!passport) return "invalid";
+      if (passport.ownerEmail && passport.ownerEmail !== email) return "taken";
+      const accounts = getAccounts2();
+      const account = accounts[email];
+      if (!account) return "invalid";
+      if (account.toys.some((toy) => toy.code === code)) return "owned";
+      const now = (/* @__PURE__ */ new Date()).toISOString();
+      passport.ownerEmail = email;
+      passport.claimedAt = now;
+      account.toys.unshift({ code, name: currentLanguage === "en" ? passport.nameEn : passport.nameRu, nameRu: passport.nameRu, nameEn: passport.nameEn, born: now, memories: [] });
+      saveNfcPassports2(passports);
+      saveAccounts2(accounts);
+      return "claimed";
+    }, getCatalogProducts2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-catalog-products") || "[]");
+      } catch {
+        return [];
+      }
+    }, saveCatalogProducts2 = function(products) {
+      localStorage.setItem("viori-catalog-products", JSON.stringify(products));
+    }, renderCatalogProducts2 = function() {
+      document.querySelectorAll(".admin-added").forEach((element) => element.remove());
+      document.querySelectorAll("#productSelect option[data-admin-product]").forEach((element) => element.remove());
+      const grid = document.querySelector(".product-grid");
+      const select = document.getElementById("productSelect");
+      if (!grid || !select) return;
+      getCatalogProducts2().forEach((product) => {
+        const name = currentLanguage === "en" ? product.nameEn : product.nameRu;
+        const description = currentLanguage === "en" ? product.descriptionEn : product.descriptionRu;
+        const card = document.createElement("article");
+        card.className = "product-card admin-added visible";
+        card.dataset.category = product.category;
+        const activeFilter = document.querySelector(".filter.active")?.dataset.filter || "all";
+        card.classList.toggle("hidden", activeFilter !== "all" && activeFilter !== product.category);
+        card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage === "en" ? "Crochet toy" : "\u0412\u044F\u0437\u0430\u043D\u0430\u044F \u0438\u0433\u0440\u0443\u0448\u043A\u0430"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage === "en" ? "from" : "\u043E\u0442"} \u20AC${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Details" : "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Add to bag" : "\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"}</button></div>`;
+        grid.appendChild(card);
+        const option = document.createElement("option");
+        option.dataset.adminProduct = product.id;
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }, resolveShopProduct2 = function(button) {
+      if (button.dataset.staticProduct === "mia") {
+        return { id: "static:mia", name: currentLanguage === "en" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0441\u0434\u0435\u043B\u0430\u0439\u0442\u0435 \u0435\u0451 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0432\u043E\u0435\u0439.", image: "" };
+      }
+      const id = button.dataset.catalogProduct;
+      const product = getCatalogProducts2().find((item) => item.id === id);
+      if (!product) return null;
+      return { id: `catalog:${product.id}`, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image };
+    }, resolveShopProductById2 = function(id) {
+      if (id === "static:mia") return { id, name: currentLanguage === "en" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C.", image: "" };
+      const product = getCatalogProducts2().find((item) => `catalog:${item.id}` === id);
+      return product ? { id, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
+    }, getCart2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-cart") || "[]");
+      } catch {
+        return [];
+      }
+    }, saveCart2 = function(cart) {
+      localStorage.setItem("viori-cart", JSON.stringify(cart));
+      renderCart2();
+    }, addProductToCart2 = function(product, quantity = 1) {
+      const cart = getCart2();
+      const existing = cart.find((item) => item.id === product.id);
+      if (existing) existing.quantity += quantity;
+      else cart.push({ id: product.id, quantity });
+      saveCart2(cart);
+      openCart2();
+    }, openProduct2 = function(product) {
+      activeShopProduct = product;
+      document.getElementById("productModalName").textContent = product.name;
+      document.getElementById("productModalPrice").textContent = `${currentLanguage === "en" ? "from" : "\u043E\u0442"} \u20AC${product.price}`;
+      document.getElementById("productModalDescription").textContent = product.description;
+      const image = document.getElementById("productModalImage");
+      image.style.backgroundImage = product.image ? `url("${product.image}")` : "linear-gradient(145deg,#e9d6c6,#f9eee5)";
+      document.getElementById("productModal")?.classList.add("open");
+      document.getElementById("productModal")?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("shop-open");
+    }, closeProduct2 = function() {
+      document.getElementById("productModal")?.classList.remove("open");
+      document.getElementById("productModal")?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("shop-open");
+    }, openCart2 = function() {
+      renderCart2();
+      document.getElementById("cartDrawer")?.classList.add("open");
+      document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("shop-open");
+    }, closeCart2 = function() {
+      document.getElementById("cartDrawer")?.classList.remove("open");
+      document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("shop-open");
+    }, renderCart2 = function() {
+      const cart = getCart2();
+      const items = cart.map((item) => ({ item, product: resolveShopProductById2(item.id) })).filter((entry) => Boolean(entry.product));
+      document.getElementById("cartCount").textContent = String(items.reduce((sum, entry) => sum + entry.item.quantity, 0));
+      document.getElementById("cartTotal").textContent = `\u20AC${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
+      const container = document.getElementById("cartItems");
+      container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} \xD7 \u20AC${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage === "en" ? "Remove" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}">\xD7</button></article>`).join("") : `<div class="cart-empty">${currentLanguage === "en" ? "Your future character is waiting for you." : "\u0412\u0430\u0448 \u0431\u0443\u0434\u0443\u0449\u0438\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0436\u0434\u0451\u0442 \u0432\u0441\u0442\u0440\u0435\u0447\u0438 \u0441 \u0432\u0430\u043C\u0438."}</div>`;
+      container.querySelectorAll("[data-remove-cart]").forEach((button) => button.addEventListener("click", () => saveCart2(cart.filter((item) => item.id !== button.dataset.removeCart))));
+    }, getCheckoutOrders2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-shop-orders") || "[]");
+      } catch {
+        return [];
+      }
+    }, saveCheckoutOrders2 = function(orders) {
+      localStorage.setItem("viori-shop-orders", JSON.stringify(orders));
+    }, checkoutAmount2 = function() {
+      const subtotal = getCart2().reduce((sum, item) => sum + (resolveShopProductById2(item.id)?.price || 0) * item.quantity, 0);
+      const selected = document.querySelector('#checkoutForm input[name="delivery"]:checked')?.value || "standard";
+      const delivery = selected === "pickup" ? 0 : 4.95;
+      return { subtotal, delivery, total: subtotal + delivery };
+    }, updateCheckoutTotal2 = function() {
+      document.getElementById("checkoutTotal").textContent = `\u20AC${checkoutAmount2().total.toFixed(2)}`;
+    }, openCheckout2 = function() {
+      const modal = document.getElementById("checkoutModal");
+      const form = document.getElementById("checkoutForm");
+      document.getElementById("checkoutFormView")?.classList.remove("hidden");
+      document.getElementById("checkoutSuccess")?.classList.add("hidden");
+      const session = getSession2();
+      const account = session ? getAccounts2()[session] : void 0;
+      if (account) {
+        form.elements.namedItem("name").value = account.name;
+        form.elements.namedItem("email").value = account.email;
+      }
+      updateCheckoutTotal2();
+      modal?.classList.add("open");
+      modal?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("shop-open");
+    }, closeCheckout2 = function() {
+      document.getElementById("checkoutModal")?.classList.remove("open");
+      document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("shop-open");
+    }, setCookiePreference2 = function(preference) {
+      localStorage.setItem("viori-cookie-preference", JSON.stringify({ preference, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
+      document.getElementById("cookieBanner")?.classList.remove("open");
+    }, openCookieSettings2 = function() {
+      document.getElementById("cookieBanner")?.classList.add("open");
+    }, getCancellationRequests2 = function() {
+      try {
+        return JSON.parse(localStorage.getItem("viori-cancellation-requests") || "[]");
+      } catch {
+        return [];
+      }
+    }, openCancellation2 = function() {
+      document.getElementById("cancellationFormView")?.classList.remove("hidden");
+      document.getElementById("cancellationSuccess")?.classList.add("hidden");
+      document.getElementById("cancellationModal")?.classList.add("open");
+      document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("shop-open");
+    }, closeCancellation2 = function() {
+      document.getElementById("cancellationModal")?.classList.remove("open");
+      document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("shop-open");
+    }, renderAdminProducts2 = function() {
+      const container = document.getElementById("adminProducts");
+      if (!container) return;
+      container.innerHTML = getCatalogProducts2().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage === "en" ? product.nameEn : product.nameRu)}</strong><span>\u20AC${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage === "en" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
+      container.querySelectorAll("[data-delete-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          saveCatalogProducts2(getCatalogProducts2().filter((product) => product.id !== button.dataset.deleteProduct));
+          renderCatalogProducts2();
+          renderAdminProducts2();
+          renderAdminOverview2();
+        });
+      });
+    }, orderStatusLabel2 = function(status) {
+      const labels = {
+        new: ["\u041D\u043E\u0432\u044B\u0439", "New"],
+        making: ["\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", "Making"],
+        shipped: ["\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", "Shipped"],
+        completed: ["\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", "Completed"],
+        cancelled: ["\u041E\u0442\u043C\u0435\u043D\u0451\u043D", "Cancelled"]
+      };
+      return labels[status][currentLanguage === "en" ? 1 : 0];
+    }, renderAdminOrders2 = function() {
+      const container = document.getElementById("adminOrders");
+      if (!container) return;
+      const orders = getCheckoutOrders2();
+      container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} \xB7 ${safeText(order.customer.city)} \xB7 ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${["new", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel2(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
+      container.querySelectorAll("[data-order-number]").forEach((select) => select.addEventListener("change", () => {
+        const currentOrders = getCheckoutOrders2();
+        const order = currentOrders.find((item) => item.number === select.dataset.orderNumber);
+        if (!order) return;
+        order.status = select.value;
+        saveCheckoutOrders2(currentOrders);
+        renderAdminOrders2();
+        renderAdminOverview2();
+      }));
+    }, renderAdminOverview2 = function() {
+      const products = getCatalogProducts2();
+      const orders = getCheckoutOrders2();
+      const passports = getNfcPassports2();
+      document.getElementById("adminMetricProducts").textContent = String(products.length + 1);
+      document.getElementById("adminMetricOrders").textContent = String(orders.length);
+      document.getElementById("adminMetricNewOrders").textContent = String(orders.filter((order) => order.status === "new").length);
+      document.getElementById("adminMetricPassports").textContent = String(passports.length);
+      const container = document.getElementById("adminOverviewOrders");
+      if (!container) return;
+      container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} \xB7 \u20AC${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel2(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
+    }, generateNfcCode2 = function() {
+      const bytes = new Uint8Array(6);
+      crypto.getRandomValues(bytes);
+      const token = Array.from(bytes, (byte) => byte.toString(36).padStart(2, "0")).join("").toUpperCase();
+      return `VIO-${token.slice(0, 4)}-${token.slice(4, 8)}-${token.slice(8, 12)}`;
+    }, renderNfcPassports2 = function() {
+      const container = document.getElementById("nfcPassports");
+      if (!container) return;
+      const passports = getNfcPassports2();
+      container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` \xB7 ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : currentLanguage === "en" ? "Ready for activation" : "\u0413\u043E\u0442\u043E\u0432 \u043A \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438"}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? currentLanguage === "en" ? "Activated" : "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D" : currentLanguage === "en" ? "New" : "\u041D\u043E\u0432\u044B\u0439"}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No passports issued yet." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u044B\u043F\u0443\u0441\u043A\u0430\u043B\u0438\u0441\u044C."}</p></div>`;
+    }, openPassport2 = function(code) {
+      const session = getSession2();
+      const account = session ? getAccounts2()[session] : void 0;
+      const toy = account?.toys.find((item) => item.code === code);
+      if (!toy) return;
+      activePassportCode = code;
+      const name = currentLanguage === "en" ? toy.nameEn || toy.name : toy.nameRu || toy.name;
+      document.getElementById("passportName").textContent = name;
+      document.getElementById("passportCode").textContent = toy.code;
+      document.getElementById("passportBorn").textContent = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+      renderPassportTimeline2(toy);
+      document.getElementById("passportModal")?.classList.add("open");
+      document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
+      document.body.classList.add("shop-open");
+    }, closePassport2 = function() {
+      document.getElementById("passportModal")?.classList.remove("open");
+      document.getElementById("passportModal")?.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("shop-open");
+    }, renderPassportTimeline2 = function(toy) {
+      const born = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+      const memories = toy.memories || [];
+      document.getElementById("passportTimeline").innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage === "en" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3><p>${currentLanguage === "en" ? "The day this character became part of your family." : "\u0414\u0435\u043D\u044C, \u043A\u043E\u0433\u0434\u0430 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0441\u0442\u0430\u043B \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
+    }, renderDashboard2 = function(account) {
+      document.getElementById("profileName").textContent = account.name;
+      document.getElementById("profileCardName").textContent = account.name;
+      document.getElementById("profileEmail").textContent = account.email;
+      document.querySelectorAll(".admin-only").forEach((element) => element.classList.toggle("hidden", account.role !== "admin"));
+      document.querySelector(".account-panel")?.classList.toggle("admin-mode", account.role === "admin");
+      if (account.role === "admin") {
+        renderAdminProducts2();
+        renderAdminOrders2();
+        renderNfcPassports2();
+        renderAdminOverview2();
+        if (!adminLayoutInitialized) {
+          switchDashboardPage2("admin-home");
+          adminLayoutInitialized = true;
+        }
+      } else {
+        const activePage = document.querySelector(".dashboard-tab.active")?.dataset.dashboardTab;
+        if (activePage === "admin" || activePage === "admin-home") switchDashboardPage2("toys");
+      }
+      const toys = account.toys || [];
+      document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
+      document.getElementById("toyList").innerHTML = toys.map((toy) => {
+        const date = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
+        const name = currentLanguage === "en" ? toy.nameEn || toy.name : toy.nameRu || toy.name;
+        return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage === "en" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</strong>${currentLanguage === "en" ? `Joined your family on ${date}` : `\u0421\u0442\u0430\u043B\u0430 \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438 ${date}`}</div><div class="life-event"><strong>${currentLanguage === "en" ? "Saved chapters" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0433\u043B\u0430\u0432\u044B"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage === "en" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
+      }).join("");
+      const shopOrders = getCheckoutOrders2().filter((order) => order.customer.email.toLowerCase() === account.email.toLowerCase());
+      const legacyOrders = account.orders || [];
+      document.getElementById("ordersList").innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} \xB7 \u20AC${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} \xB7 ${orderStatusLabel2(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3><p>${currentLanguage === "en" ? "Your future characters will appear here." : "\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0432\u0430\u0448\u0438 \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0438."}</p></div>`;
+    }, renderAccount2 = function() {
+      const accounts = getAccounts2();
+      const session = getSession2();
+      let account = session ? accounts[session] : void 0;
+      if (account && !Object.values(accounts).some((item) => item.role === "admin")) {
+        account.role = "admin";
+        saveAccounts2(accounts);
+      }
+      const nfcFromUrl = new URLSearchParams(window.location.search).get("nfc");
+      if (account && nfcFromUrl) {
+        const result = claimNfcPassport2(nfcFromUrl, account.email);
+        account = session ? getAccounts2()[session] : void 0;
+        setTimeout(() => {
+          const status = document.getElementById("nfcStatus");
+          if (status) status.textContent = result === "claimed" ? currentLanguage === "en" ? "The passport is activated." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D." : result === "taken" ? currentLanguage === "en" ? "This passport belongs to another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u0438\u0442 \u0434\u0440\u0443\u0433\u043E\u043C\u0443 \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0443." : result === "invalid" ? currentLanguage === "en" ? "Passport not found." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D." : "";
+        }, 0);
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("nfc");
+        history.replaceState({}, "", cleanUrl);
+      }
+      authView?.classList.toggle("hidden", Boolean(account));
+      dashboardView?.classList.toggle("hidden", !account);
+      if (!account) document.querySelector(".account-panel")?.classList.remove("admin-mode");
+      if (account) renderDashboard2(account);
+    };
+    getAccounts = getAccounts2, saveAccounts = saveAccounts2, getSession = getSession2, openAccount = openAccount2, closeAccount = closeAccount2, switchDashboardPage = switchDashboardPage2, getNfcPassports = getNfcPassports2, saveNfcPassports = saveNfcPassports2, claimNfcPassport = claimNfcPassport2, getCatalogProducts = getCatalogProducts2, saveCatalogProducts = saveCatalogProducts2, renderCatalogProducts = renderCatalogProducts2, resolveShopProduct = resolveShopProduct2, resolveShopProductById = resolveShopProductById2, getCart = getCart2, saveCart = saveCart2, addProductToCart = addProductToCart2, openProduct = openProduct2, closeProduct = closeProduct2, openCart = openCart2, closeCart = closeCart2, renderCart = renderCart2, getCheckoutOrders = getCheckoutOrders2, saveCheckoutOrders = saveCheckoutOrders2, checkoutAmount = checkoutAmount2, updateCheckoutTotal = updateCheckoutTotal2, openCheckout = openCheckout2, closeCheckout = closeCheckout2, setCookiePreference = setCookiePreference2, openCookieSettings = openCookieSettings2, getCancellationRequests = getCancellationRequests2, openCancellation = openCancellation2, closeCancellation = closeCancellation2, renderAdminProducts = renderAdminProducts2, orderStatusLabel = orderStatusLabel2, renderAdminOrders = renderAdminOrders2, renderAdminOverview = renderAdminOverview2, generateNfcCode = generateNfcCode2, renderNfcPassports = renderNfcPassports2, openPassport = openPassport2, closePassport = closePassport2, renderPassportTimeline = renderPassportTimeline2, renderDashboard = renderDashboard2, renderAccount = renderAccount2;
+    document.getElementById("openAccount")?.addEventListener("click", openAccount2);
+    document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", closeAccount2));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAccount2();
+    });
+    document.querySelectorAll(".auth-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
+        document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
+        document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
+        if (accountStatus) accountStatus.textContent = "";
+      });
+    });
+    document.getElementById("registerForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const email = String(data.get("email")).trim().toLowerCase();
+      const accounts = getAccounts2();
+      if (accounts[email]) {
+        if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "An account with this email already exists." : "\u0410\u043A\u043A\u0430\u0443\u043D\u0442 \u0441 \u0442\u0430\u043A\u0438\u043C email \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442.";
+        return;
+      }
+      const hasAdmin = Object.values(accounts).some((account) => account.role === "admin");
+      accounts[email] = { name: String(data.get("name")).trim(), email, password: String(data.get("password")), toys: [], orders: [], role: hasAdmin ? "customer" : "admin" };
+      saveAccounts2(accounts);
+      localStorage.setItem("viori-session", email);
+      form.reset();
+      renderAccount2();
+    });
+    document.getElementById("loginForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const email = String(data.get("email")).trim().toLowerCase();
+      const account = getAccounts2()[email];
+      if (!account || account.password !== String(data.get("password"))) {
+        if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
+        return;
+      }
+      localStorage.setItem("viori-session", email);
+      form.reset();
+      renderAccount2();
+    });
+    document.getElementById("logoutButton")?.addEventListener("click", () => {
+      localStorage.removeItem("viori-session");
+      renderAccount2();
+    });
+    document.querySelectorAll(".dashboard-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        switchDashboardPage2(tab.dataset.dashboardTab || "toys");
+      });
+    });
+    document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => switchDashboardPage2(button.dataset.adminGo || "admin")));
+    document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const email = getSession2();
+      if (!email) return;
+      const form = event.currentTarget;
+      const code = String(new FormData(form).get("code")).trim().toUpperCase();
+      const status = document.getElementById("nfcStatus");
+      const result = claimNfcPassport2(code, email);
+      const messages = {
+        claimed: currentLanguage === "en" ? "The passport is activated. Welcome to the VIORI world." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D. \u0414\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u043C\u0438\u0440 VIORI.",
+        owned: currentLanguage === "en" ? "This toy is already in your collection." : "\u042D\u0442\u0430 \u0438\u0433\u0440\u0443\u0448\u043A\u0430 \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u0432 \u0432\u0430\u0448\u0435\u0439 \u043A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u0438.",
+        taken: currentLanguage === "en" ? "This passport has already been activated by another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D \u0434\u0440\u0443\u0433\u0438\u043C \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0435\u043C.",
+        invalid: currentLanguage === "en" ? "Passport not found. Check the code and try again." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u043E\u0434 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430."
+      };
+      if (status) status.textContent = messages[result];
+      if (result !== "claimed") return;
+      form.reset();
+      renderAccount2();
+    });
+    let activeShopProduct = null;
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      const productButton = target.closest(".view-product, .add-to-cart");
+      if (!productButton) return;
+      const product = resolveShopProduct2(productButton);
+      if (!product) return;
+      if (productButton.classList.contains("view-product")) openProduct2(product);
+      else addProductToCart2(product);
+    });
+    document.getElementById("openCart")?.addEventListener("click", openCart2);
+    document.querySelectorAll("[data-close-product]").forEach((button) => button.addEventListener("click", closeProduct2));
+    document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeCart2));
+    document.getElementById("modalAddToCart")?.addEventListener("click", () => {
+      const quantity = Math.max(1, Number(document.getElementById("productQuantity").value) || 1);
+      closeProduct2();
+      if (activeShopProduct) addProductToCart2(activeShopProduct, quantity);
+    });
+    document.getElementById("cartCheckout")?.addEventListener("click", () => {
+      if (!getCart2().length) return;
+      closeCart2();
+      openCheckout2();
+    });
+    document.querySelectorAll("[data-close-checkout]").forEach((button) => button.addEventListener("click", closeCheckout2));
+    document.querySelectorAll('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", updateCheckoutTotal2));
+    document.querySelectorAll(".payment-method").forEach((button) => button.addEventListener("click", () => {
+      document.querySelectorAll(".payment-method").forEach((item) => item.classList.toggle("active", item === button));
+    }));
+    document.getElementById("checkoutForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const cart = getCart2();
+      const items = cart.map((item) => {
+        const product = resolveShopProductById2(item.id);
+        return product ? { id: item.id, name: product.name, price: product.price, quantity: item.quantity } : null;
+      }).filter((item) => Boolean(item));
+      if (!items.length) return;
+      const amount = checkoutAmount2();
+      const now = /* @__PURE__ */ new Date();
+      const number = `VIO-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
+      const order = {
+        number,
+        createdAt: now.toISOString(),
+        customer: { name: String(data.get("name")), email: String(data.get("email")), phone: String(data.get("phone")), address: String(data.get("address")), postcode: String(data.get("postcode")).toUpperCase(), city: String(data.get("city")) },
+        items,
+        delivery: String(data.get("delivery")),
+        deliveryPrice: amount.delivery,
+        total: amount.total,
+        payment: document.querySelector(".payment-method.active")?.textContent?.trim() || "iDEAL",
+        status: "new"
+      };
+      const orders = getCheckoutOrders2();
+      orders.unshift(order);
+      saveCheckoutOrders2(orders);
+      const session = getSession2();
+      const accounts = getAccounts2();
+      let account = session ? accounts[session] : void 0;
+      if (account) {
+        account.orders.unshift({ product: items.map((item) => `${item.name} \xD7 ${item.quantity}`).join(", "), date: now.toISOString(), status: order.status });
+        saveAccounts2(accounts);
+      }
+      saveCart2([]);
+      form.reset();
+      document.getElementById("checkoutOrderNumber").textContent = number;
+      document.getElementById("checkoutFormView")?.classList.add("hidden");
+      document.getElementById("checkoutSuccess")?.classList.remove("hidden");
+      renderAdminOrders2();
+    });
+    document.getElementById("essentialCookies")?.addEventListener("click", () => setCookiePreference2("essential"));
+    document.getElementById("acceptCookies")?.addEventListener("click", () => setCookiePreference2("analytics"));
+    document.getElementById("openCookieSettings")?.addEventListener("click", openCookieSettings2);
+    if (!localStorage.getItem("viori-cookie-preference")) openCookieSettings2();
+    document.getElementById("openCancellation")?.addEventListener("click", openCancellation2);
+    document.querySelectorAll("[data-close-cancellation]").forEach((button) => button.addEventListener("click", closeCancellation2));
+    document.getElementById("cancellationForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const orderNumber = String(data.get("orderNumber")).trim().toUpperCase();
+      const email = String(data.get("email")).trim().toLowerCase();
+      const orders = getCheckoutOrders2();
+      const order = orders.find((item) => item.number === orderNumber && item.customer.email.toLowerCase() === email);
+      const status = document.getElementById("cancellationStatus");
+      if (!order) {
+        if (status) status.textContent = currentLanguage === "en" ? "No matching order was found." : "\u0417\u0430\u043A\u0430\u0437 \u0441 \u0442\u0430\u043A\u0438\u043C\u0438 \u0434\u0430\u043D\u043D\u044B\u043C\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D.";
+        return;
+      }
+      const requests = getCancellationRequests2();
+      const reference = `CAN-${String(Date.now()).slice(-8)}`;
+      requests.unshift({ reference, orderNumber, email, reason: String(data.get("reason")).trim(), createdAt: (/* @__PURE__ */ new Date()).toISOString() });
+      localStorage.setItem("viori-cancellation-requests", JSON.stringify(requests));
+      order.status = "cancelled";
+      saveCheckoutOrders2(orders);
+      form.reset();
+      document.getElementById("cancellationReference").textContent = `${currentLanguage === "en" ? "Reference" : "\u041D\u043E\u043C\u0435\u0440 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F"}: ${reference}`;
+      document.getElementById("cancellationFormView")?.classList.add("hidden");
+      document.getElementById("cancellationSuccess")?.classList.remove("hidden");
+      renderAdminOrders2();
+      renderAccount2();
+    });
+    if (new URLSearchParams(window.location.search).has("cancel")) {
+      openCancellation2();
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete("cancel");
+      history.replaceState({}, "", cleanUrl);
     }
+    const adminProductForm = document.getElementById("adminProductForm");
+    adminProductForm?.querySelector('input[name="image"]')?.addEventListener("change", (event) => {
+      const file = event.currentTarget.files?.[0];
+      const preview = document.getElementById("adminImagePreview");
+      if (!file || !preview) return;
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        preview.style.backgroundImage = `url("${String(reader.result)}")`;
+        preview.classList.remove("hidden");
+      });
+      reader.readAsDataURL(file);
+    });
+    adminProductForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const session = getSession2();
+      const account = session ? getAccounts2()[session] : void 0;
+      const status = document.getElementById("adminStatus");
+      if (account?.role !== "admin") return;
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const file = data.get("image");
+      if (!(file instanceof File) || !file.size) return;
+      if (file.size > 1.5 * 1024 * 1024) {
+        if (status) status.textContent = currentLanguage === "en" ? "The image is larger than 1.5 MB." : "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 1,5 \u041C\u0411.";
+        return;
+      }
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        const products = getCatalogProducts2();
+        products.unshift({
+          id: crypto.randomUUID?.() || `${Date.now()}`,
+          nameRu: String(data.get("nameRu")).trim(),
+          nameEn: String(data.get("nameEn")).trim(),
+          category: String(data.get("category")),
+          price: Number(data.get("price")),
+          descriptionRu: String(data.get("descriptionRu")).trim(),
+          descriptionEn: String(data.get("descriptionEn")).trim(),
+          image: String(reader.result)
+        });
+        try {
+          saveCatalogProducts2(products);
+          form.reset();
+          document.getElementById("adminImagePreview")?.classList.add("hidden");
+          if (status) status.textContent = currentLanguage === "en" ? "The toy has been published." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u0430.";
+          renderCatalogProducts2();
+          renderAdminProducts2();
+          renderAdminOverview2();
+        } catch {
+          if (status) status.textContent = currentLanguage === "en" ? "Browser storage is full. Use a smaller image." : "\u0425\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E. \u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043C\u0435\u043D\u044C\u0448\u0435\u0433\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0430.";
+        }
+      });
+      reader.readAsDataURL(file);
+    });
+    document.getElementById("nfcIssueForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const session = getSession2();
+      const account = session ? getAccounts2()[session] : void 0;
+      if (account?.role !== "admin") return;
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const passports = getNfcPassports2();
+      let code = generateNfcCode2();
+      while (passports.some((item) => item.code === code)) code = generateNfcCode2();
+      passports.unshift({ code, nameRu: String(data.get("nameRu")).trim(), nameEn: String(data.get("nameEn")).trim(), orderNumber: String(data.get("orderNumber")).trim(), issuedAt: (/* @__PURE__ */ new Date()).toISOString(), ownerEmail: null, claimedAt: null });
+      saveNfcPassports2(passports);
+      form.reset();
+      const activationUrl = `${window.location.href.split("?")[0]}?nfc=${encodeURIComponent(code)}`;
+      const status = document.getElementById("nfcIssueStatus");
+      if (status) status.textContent = `${currentLanguage === "en" ? "Passport created" : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0441\u043E\u0437\u0434\u0430\u043D"}: ${activationUrl}`;
+      renderNfcPassports2();
+      renderAdminOverview2();
+    });
+    let activePassportCode = null;
+    document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", closePassport2));
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-open-passport]");
+      if (button?.dataset.openPassport) openPassport2(button.dataset.openPassport);
+    });
+    document.getElementById("memoryForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const session = getSession2();
+      const accounts = getAccounts2();
+      const account = session ? accounts[session] : void 0;
+      const toy = account?.toys.find((item) => item.code === activePassportCode);
+      if (!account || !toy) return;
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      toy.memories || (toy.memories = []);
+      toy.memories.push({ id: crypto.randomUUID(), title: String(data.get("title")).trim(), text: String(data.get("text")).trim(), date: (/* @__PURE__ */ new Date()).toISOString() });
+      saveAccounts2(accounts);
+      form.reset();
+      renderPassportTimeline2(toy);
+      renderDashboard2(account);
+    });
   }
-  function saveAccounts(accounts) {
-    localStorage.setItem("viori-accounts", JSON.stringify(accounts));
-  }
+  var getAccounts;
+  var saveAccounts;
+  var getSession;
+  var openAccount;
+  var closeAccount;
+  var switchDashboardPage;
+  var getNfcPassports;
+  var saveNfcPassports;
+  var claimNfcPassport;
+  var getCatalogProducts;
+  var saveCatalogProducts;
+  var renderCatalogProducts;
+  var resolveShopProduct;
+  var resolveShopProductById;
+  var getCart;
+  var saveCart;
+  var addProductToCart;
+  var openProduct;
+  var closeProduct;
+  var openCart;
+  var closeCart;
+  var renderCart;
+  var getCheckoutOrders;
+  var saveCheckoutOrders;
+  var checkoutAmount;
+  var updateCheckoutTotal;
+  var openCheckout;
+  var closeCheckout;
+  var setCookiePreference;
+  var openCookieSettings;
+  var getCancellationRequests;
+  var openCancellation;
+  var closeCancellation;
+  var renderAdminProducts;
+  var orderStatusLabel;
+  var renderAdminOrders;
+  var renderAdminOverview;
+  var generateNfcCode;
+  var renderNfcPassports;
+  var openPassport;
+  var closePassport;
+  var renderPassportTimeline;
+  var renderDashboard;
+  var renderAccount;
   function getSession() {
-    return localStorage.getItem("viori-session");
+    return productionProfile?.id || null;
+  }
+  function renderAccount() {
+    if (supabase) void loadProductionAccount();
+  }
+  function renderCart() {
   }
   function openAccount() {
-    accountModal?.classList.add("open");
-    accountModal?.setAttribute("aria-hidden", "false");
+    if (supabase) productionOpenAccount();
+  }
+  async function renderCatalogProducts() {
+    if (!supabase) return;
+    const { data, error } = await supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").eq("is_active", true).order("created_at");
+    const grid = document.querySelector(".product-grid");
+    if (!grid || error) return;
+    productionProducts = data || [];
+    if (!productionProducts.length) {
+      grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage === "en" ? "The collection is being prepared" : "\u041A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u044F \u0433\u043E\u0442\u043E\u0432\u0438\u0442\u0441\u044F"}</h3><p>${currentLanguage === "en" ? "Products will appear after safety documentation is complete." : "\u0422\u043E\u0432\u0430\u0440\u044B \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043F\u043E \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u0438."}</p></div>`;
+      return;
+    }
+    grid.innerHTML = productionProducts.map((product) => {
+      const name = currentLanguage === "en" ? product.name_en : product.name_ru;
+      const description = currentLanguage === "en" ? product.description_en : product.description_ru;
+      const path = product.product_images?.[0]?.storage_path;
+      const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
+      return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">\u20AC${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><p class="small-note">${currentLanguage === "en" ? "Ordering opens after product compliance approval." : "\u0417\u0430\u043A\u0430\u0437 \u043E\u0442\u043A\u0440\u043E\u0435\u0442\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0442\u043E\u0432\u0430\u0440\u0430."}</p></article>`;
+    }).join("");
+  }
+  var productionProfile = null;
+  var productionPassports = [];
+  var productionOrders = [];
+  var productionProducts = [];
+  var activePassportId = null;
+  function productionMessage(error) {
+    const message = error instanceof Error ? error.message : String(error || "");
+    if (message.includes("Invalid login credentials")) return currentLanguage === "en" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
+    if (message.includes("Email not confirmed")) return currentLanguage === "en" ? "Confirm your email first." : "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email.";
+    if (message.includes("User already registered")) return currentLanguage === "en" ? "This email is already registered." : "\u042D\u0442\u043E\u0442 email \u0443\u0436\u0435 \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D.";
+    return currentLanguage === "en" ? "Something went wrong. Please try again." : "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.";
+  }
+  function productionOpenAccount() {
+    document.getElementById("accountModal")?.classList.add("open");
+    document.getElementById("accountModal")?.setAttribute("aria-hidden", "false");
     document.body.classList.add("account-open");
-    renderAccount();
-    setTimeout(() => accountModal?.querySelector("button, input")?.focus(), 50);
   }
-  function closeAccount() {
-    accountModal?.classList.remove("open");
-    accountModal?.setAttribute("aria-hidden", "true");
+  function productionCloseAccount() {
+    document.getElementById("accountModal")?.classList.remove("open");
+    document.getElementById("accountModal")?.setAttribute("aria-hidden", "true");
     document.body.classList.remove("account-open");
-    adminLayoutInitialized = false;
   }
-  document.getElementById("openAccount")?.addEventListener("click", openAccount);
-  document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", closeAccount));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeAccount();
-  });
-  document.querySelectorAll(".auth-tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
+  async function loadProductionAccount() {
+    if (!supabase) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      productionProfile = null;
+      productionPassports = [];
+      productionOrders = [];
+      authView?.classList.remove("hidden");
+      dashboardView?.classList.add("hidden");
+      document.querySelector(".account-panel")?.classList.remove("admin-mode");
+      return;
+    }
+    const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
+      supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+      supabase.from("orders").select("id,order_number,total_cents,status,created_at").order("created_at", { ascending: false })
+    ]);
+    if (profileError) throw profileError;
+    productionProfile = profile;
+    productionPassports = passports || [];
+    productionOrders = orders || [];
+    authView?.classList.add("hidden");
+    dashboardView?.classList.remove("hidden");
+    renderProductionDashboard(user.email || "");
+    const token = new URLSearchParams(location.search).get("nfc");
+    if (token) await claimProductionPassport(token);
+  }
+  function renderProductionDashboard(email) {
+    if (!productionProfile) return;
+    const isAdmin = productionProfile.role === "admin";
+    document.getElementById("profileName").textContent = productionProfile.display_name || email;
+    document.getElementById("profileCardName").textContent = productionProfile.display_name || "\u2014";
+    document.getElementById("profileEmail").textContent = email;
+    document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
+    document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
+    document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
+    document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
+      const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
+      return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage === "en" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
+    }).join("");
+    document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} \xB7 \u20AC${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} \xB7 ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3></div>`;
+    if (isAdmin) void loadProductionAdmin();
+  }
+  async function claimProductionPassport(token) {
+    if (!supabase) return;
+    const status = document.getElementById("nfcStatus");
+    const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
+    if (status) status.textContent = error ? currentLanguage === "en" ? "Invalid or already activated passport." : "\u041A\u043E\u0434 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u0435\u043D \u0438\u043B\u0438 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D." : currentLanguage === "en" ? "Passport activated." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D.";
+    const clean = new URL(location.href);
+    clean.searchParams.delete("nfc");
+    history.replaceState({}, "", clean);
+    if (!error) await loadProductionAccount();
+  }
+  async function openProductionPassport(id) {
+    if (!supabase) return;
+    const passport = productionPassports.find((item) => item.id === id);
+    if (!passport) return;
+    activePassportId = id;
+    document.getElementById("passportName").textContent = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
+    document.getElementById("passportCode").textContent = passport.public_code;
+    document.getElementById("passportBorn").textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
+    const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
+    document.getElementById("passportTimeline").innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage === "en" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3></article>`;
+    document.getElementById("passportModal")?.classList.add("open");
+    document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
+  }
+  async function loadProductionAdmin() {
+    if (!supabase || productionProfile?.role !== "admin") return;
+    const [{ data: products }, { data: passports }] = await Promise.all([
+      supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false })
+    ]);
+    productionProducts = products || [];
+    productionPassports = passports || [];
+    renderProductionAdmin();
+  }
+  function renderProductionAdmin() {
+    const productContainer = document.getElementById("adminProducts");
+    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage === "en" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage === "en" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
+    const passportContainer = document.getElementById("nfcPassports");
+    if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+    document.getElementById("adminMetricProducts").textContent = String(productionProducts.length);
+    document.getElementById("adminMetricOrders").textContent = String(productionOrders.length);
+    document.getElementById("adminMetricNewOrders").textContent = String(productionOrders.filter((o) => o.status === "new").length);
+    document.getElementById("adminMetricPassports").textContent = String(productionPassports.length);
+  }
+  if (supabase) {
+    document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
+    document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
+    document.querySelectorAll(".auth-tab").forEach((tab) => tab.addEventListener("click", () => {
       document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
       document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
       document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
-      if (accountStatus) accountStatus.textContent = "";
-    });
-  });
-  document.getElementById("registerForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const email = String(data.get("email")).trim().toLowerCase();
-    const accounts = getAccounts();
-    if (accounts[email]) {
-      if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "An account with this email already exists." : "\u0410\u043A\u043A\u0430\u0443\u043D\u0442 \u0441 \u0442\u0430\u043A\u0438\u043C email \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442.";
-      return;
-    }
-    const hasAdmin = Object.values(accounts).some((account) => account.role === "admin");
-    accounts[email] = { name: String(data.get("name")).trim(), email, password: String(data.get("password")), toys: [], orders: [], role: hasAdmin ? "customer" : "admin" };
-    saveAccounts(accounts);
-    localStorage.setItem("viori-session", email);
-    form.reset();
-    renderAccount();
-  });
-  document.getElementById("loginForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const email = String(data.get("email")).trim().toLowerCase();
-    const account = getAccounts()[email];
-    if (!account || account.password !== String(data.get("password"))) {
-      if (accountStatus) accountStatus.textContent = currentLanguage === "en" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
-      return;
-    }
-    localStorage.setItem("viori-session", email);
-    form.reset();
-    renderAccount();
-  });
-  document.getElementById("logoutButton")?.addEventListener("click", () => {
-    localStorage.removeItem("viori-session");
-    renderAccount();
-  });
-  function switchDashboardPage(pageName) {
-    document.querySelectorAll(".dashboard-tab").forEach((item) => item.classList.toggle("active", item.dataset.dashboardTab === pageName));
-    document.querySelectorAll("[data-dashboard-page]").forEach((page) => page.classList.toggle("hidden", page.dataset.dashboardPage !== pageName));
-  }
-  document.querySelectorAll(".dashboard-tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      switchDashboardPage(tab.dataset.dashboardTab || "toys");
-    });
-  });
-  document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => switchDashboardPage(button.dataset.adminGo || "admin")));
-  function getNfcPassports() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-nfc-passports") || "[]");
-    } catch {
-      return [];
-    }
-  }
-  function saveNfcPassports(passports) {
-    localStorage.setItem("viori-nfc-passports", JSON.stringify(passports));
-  }
-  function claimNfcPassport(codeValue, email) {
-    const code = codeValue.trim().toUpperCase();
-    const passports = getNfcPassports();
-    const passport = passports.find((item) => item.code === code);
-    if (!passport) return "invalid";
-    if (passport.ownerEmail && passport.ownerEmail !== email) return "taken";
-    const accounts = getAccounts();
-    const account = accounts[email];
-    if (!account) return "invalid";
-    if (account.toys.some((toy) => toy.code === code)) return "owned";
-    const now = (/* @__PURE__ */ new Date()).toISOString();
-    passport.ownerEmail = email;
-    passport.claimedAt = now;
-    account.toys.unshift({ code, name: currentLanguage === "en" ? passport.nameEn : passport.nameRu, nameRu: passport.nameRu, nameEn: passport.nameEn, born: now, memories: [] });
-    saveNfcPassports(passports);
-    saveAccounts(accounts);
-    return "claimed";
-  }
-  document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const email = getSession();
-    if (!email) return;
-    const form = event.currentTarget;
-    const code = String(new FormData(form).get("code")).trim().toUpperCase();
-    const status = document.getElementById("nfcStatus");
-    const result = claimNfcPassport(code, email);
-    const messages = {
-      claimed: currentLanguage === "en" ? "The passport is activated. Welcome to the VIORI world." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D. \u0414\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u043C\u0438\u0440 VIORI.",
-      owned: currentLanguage === "en" ? "This toy is already in your collection." : "\u042D\u0442\u0430 \u0438\u0433\u0440\u0443\u0448\u043A\u0430 \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u0432 \u0432\u0430\u0448\u0435\u0439 \u043A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u0438.",
-      taken: currentLanguage === "en" ? "This passport has already been activated by another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D \u0434\u0440\u0443\u0433\u0438\u043C \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0435\u043C.",
-      invalid: currentLanguage === "en" ? "Passport not found. Check the code and try again." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u043E\u0434 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430."
-    };
-    if (status) status.textContent = messages[result];
-    if (result !== "claimed") return;
-    form.reset();
-    renderAccount();
-  });
-  function safeText(value) {
-    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
-    return String(value).replace(/[&<>'"]/g, (char) => entities[char] || char);
-  }
-  function getCatalogProducts() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-catalog-products") || "[]");
-    } catch {
-      return [];
-    }
-  }
-  function saveCatalogProducts(products) {
-    localStorage.setItem("viori-catalog-products", JSON.stringify(products));
-  }
-  function renderCatalogProducts() {
-    document.querySelectorAll(".admin-added").forEach((element) => element.remove());
-    document.querySelectorAll("#productSelect option[data-admin-product]").forEach((element) => element.remove());
-    const grid = document.querySelector(".product-grid");
-    const select = document.getElementById("productSelect");
-    if (!grid || !select) return;
-    getCatalogProducts().forEach((product) => {
-      const name = currentLanguage === "en" ? product.nameEn : product.nameRu;
-      const description = currentLanguage === "en" ? product.descriptionEn : product.descriptionRu;
-      const card = document.createElement("article");
-      card.className = "product-card admin-added visible";
-      card.dataset.category = product.category;
-      const activeFilter = document.querySelector(".filter.active")?.dataset.filter || "all";
-      card.classList.toggle("hidden", activeFilter !== "all" && activeFilter !== product.category);
-      card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage === "en" ? "Crochet toy" : "\u0412\u044F\u0437\u0430\u043D\u0430\u044F \u0438\u0433\u0440\u0443\u0448\u043A\u0430"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage === "en" ? "from" : "\u043E\u0442"} \u20AC${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Details" : "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage === "en" ? "Add to bag" : "\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"}</button></div>`;
-      grid.appendChild(card);
-      const option = document.createElement("option");
-      option.dataset.adminProduct = product.id;
-      option.value = name;
-      option.textContent = name;
-      select.appendChild(option);
-    });
-  }
-  var activeShopProduct = null;
-  function resolveShopProduct(button) {
-    if (button.dataset.staticProduct === "mia") {
-      return { id: "static:mia", name: currentLanguage === "en" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0441\u0434\u0435\u043B\u0430\u0439\u0442\u0435 \u0435\u0451 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0432\u043E\u0435\u0439.", image: "" };
-    }
-    const id = button.dataset.catalogProduct;
-    const product = getCatalogProducts().find((item) => item.id === id);
-    if (!product) return null;
-    return { id: `catalog:${product.id}`, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image };
-  }
-  function resolveShopProductById(id) {
-    if (id === "static:mia") return { id, name: currentLanguage === "en" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage === "en" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C.", image: "" };
-    const product = getCatalogProducts().find((item) => `catalog:${item.id}` === id);
-    return product ? { id, name: currentLanguage === "en" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage === "en" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
-  }
-  function getCart() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-cart") || "[]");
-    } catch {
-      return [];
-    }
-  }
-  function saveCart(cart) {
-    localStorage.setItem("viori-cart", JSON.stringify(cart));
-    renderCart();
-  }
-  function addProductToCart(product, quantity = 1) {
-    const cart = getCart();
-    const existing = cart.find((item) => item.id === product.id);
-    if (existing) existing.quantity += quantity;
-    else cart.push({ id: product.id, quantity });
-    saveCart(cart);
-    openCart();
-  }
-  function openProduct(product) {
-    activeShopProduct = product;
-    document.getElementById("productModalName").textContent = product.name;
-    document.getElementById("productModalPrice").textContent = `${currentLanguage === "en" ? "from" : "\u043E\u0442"} \u20AC${product.price}`;
-    document.getElementById("productModalDescription").textContent = product.description;
-    const image = document.getElementById("productModalImage");
-    image.style.backgroundImage = product.image ? `url("${product.image}")` : "linear-gradient(145deg,#e9d6c6,#f9eee5)";
-    document.getElementById("productModal")?.classList.add("open");
-    document.getElementById("productModal")?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("shop-open");
-  }
-  function closeProduct() {
-    document.getElementById("productModal")?.classList.remove("open");
-    document.getElementById("productModal")?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("shop-open");
-  }
-  function openCart() {
-    renderCart();
-    document.getElementById("cartDrawer")?.classList.add("open");
-    document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("shop-open");
-  }
-  function closeCart() {
-    document.getElementById("cartDrawer")?.classList.remove("open");
-    document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("shop-open");
-  }
-  function renderCart() {
-    const cart = getCart();
-    const items = cart.map((item) => ({ item, product: resolveShopProductById(item.id) })).filter((entry) => Boolean(entry.product));
-    document.getElementById("cartCount").textContent = String(items.reduce((sum, entry) => sum + entry.item.quantity, 0));
-    document.getElementById("cartTotal").textContent = `\u20AC${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
-    const container = document.getElementById("cartItems");
-    container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} \xD7 \u20AC${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage === "en" ? "Remove" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}">\xD7</button></article>`).join("") : `<div class="cart-empty">${currentLanguage === "en" ? "Your future character is waiting for you." : "\u0412\u0430\u0448 \u0431\u0443\u0434\u0443\u0449\u0438\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0436\u0434\u0451\u0442 \u0432\u0441\u0442\u0440\u0435\u0447\u0438 \u0441 \u0432\u0430\u043C\u0438."}</div>`;
-    container.querySelectorAll("[data-remove-cart]").forEach((button) => button.addEventListener("click", () => saveCart(cart.filter((item) => item.id !== button.dataset.removeCart))));
-  }
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    const productButton = target.closest(".view-product, .add-to-cart");
-    if (!productButton) return;
-    const product = resolveShopProduct(productButton);
-    if (!product) return;
-    if (productButton.classList.contains("view-product")) openProduct(product);
-    else addProductToCart(product);
-  });
-  document.getElementById("openCart")?.addEventListener("click", openCart);
-  document.querySelectorAll("[data-close-product]").forEach((button) => button.addEventListener("click", closeProduct));
-  document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeCart));
-  document.getElementById("modalAddToCart")?.addEventListener("click", () => {
-    const quantity = Math.max(1, Number(document.getElementById("productQuantity").value) || 1);
-    closeProduct();
-    if (activeShopProduct) addProductToCart(activeShopProduct, quantity);
-  });
-  document.getElementById("cartCheckout")?.addEventListener("click", () => {
-    if (!getCart().length) return;
-    closeCart();
-    openCheckout();
-  });
-  function getCheckoutOrders() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-shop-orders") || "[]");
-    } catch {
-      return [];
-    }
-  }
-  function saveCheckoutOrders(orders) {
-    localStorage.setItem("viori-shop-orders", JSON.stringify(orders));
-  }
-  function checkoutAmount() {
-    const subtotal = getCart().reduce((sum, item) => sum + (resolveShopProductById(item.id)?.price || 0) * item.quantity, 0);
-    const selected = document.querySelector('#checkoutForm input[name="delivery"]:checked')?.value || "standard";
-    const delivery = selected === "pickup" ? 0 : 4.95;
-    return { subtotal, delivery, total: subtotal + delivery };
-  }
-  function updateCheckoutTotal() {
-    document.getElementById("checkoutTotal").textContent = `\u20AC${checkoutAmount().total.toFixed(2)}`;
-  }
-  function openCheckout() {
-    const modal = document.getElementById("checkoutModal");
-    const form = document.getElementById("checkoutForm");
-    document.getElementById("checkoutFormView")?.classList.remove("hidden");
-    document.getElementById("checkoutSuccess")?.classList.add("hidden");
-    const session = getSession();
-    const account = session ? getAccounts()[session] : void 0;
-    if (account) {
-      form.elements.namedItem("name").value = account.name;
-      form.elements.namedItem("email").value = account.email;
-    }
-    updateCheckoutTotal();
-    modal?.classList.add("open");
-    modal?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("shop-open");
-  }
-  function closeCheckout() {
-    document.getElementById("checkoutModal")?.classList.remove("open");
-    document.getElementById("checkoutModal")?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("shop-open");
-  }
-  document.querySelectorAll("[data-close-checkout]").forEach((button) => button.addEventListener("click", closeCheckout));
-  document.querySelectorAll('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", updateCheckoutTotal));
-  document.querySelectorAll(".payment-method").forEach((button) => button.addEventListener("click", () => {
-    document.querySelectorAll(".payment-method").forEach((item) => item.classList.toggle("active", item === button));
-  }));
-  document.getElementById("checkoutForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const cart = getCart();
-    const items = cart.map((item) => {
-      const product = resolveShopProductById(item.id);
-      return product ? { id: item.id, name: product.name, price: product.price, quantity: item.quantity } : null;
-    }).filter((item) => Boolean(item));
-    if (!items.length) return;
-    const amount = checkoutAmount();
-    const now = /* @__PURE__ */ new Date();
-    const number = `VIO-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
-    const order = {
-      number,
-      createdAt: now.toISOString(),
-      customer: { name: String(data.get("name")), email: String(data.get("email")), phone: String(data.get("phone")), address: String(data.get("address")), postcode: String(data.get("postcode")).toUpperCase(), city: String(data.get("city")) },
-      items,
-      delivery: String(data.get("delivery")),
-      deliveryPrice: amount.delivery,
-      total: amount.total,
-      payment: document.querySelector(".payment-method.active")?.textContent?.trim() || "iDEAL",
-      status: "new"
-    };
-    const orders = getCheckoutOrders();
-    orders.unshift(order);
-    saveCheckoutOrders(orders);
-    const session = getSession();
-    const accounts = getAccounts();
-    let account = session ? accounts[session] : void 0;
-    if (account) {
-      account.orders.unshift({ product: items.map((item) => `${item.name} \xD7 ${item.quantity}`).join(", "), date: now.toISOString(), status: order.status });
-      saveAccounts(accounts);
-    }
-    saveCart([]);
-    form.reset();
-    document.getElementById("checkoutOrderNumber").textContent = number;
-    document.getElementById("checkoutFormView")?.classList.add("hidden");
-    document.getElementById("checkoutSuccess")?.classList.remove("hidden");
-    renderAdminOrders();
-  });
-  function setCookiePreference(preference) {
-    localStorage.setItem("viori-cookie-preference", JSON.stringify({ preference, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
-    document.getElementById("cookieBanner")?.classList.remove("open");
-  }
-  function openCookieSettings() {
-    document.getElementById("cookieBanner")?.classList.add("open");
-  }
-  document.getElementById("essentialCookies")?.addEventListener("click", () => setCookiePreference("essential"));
-  document.getElementById("acceptCookies")?.addEventListener("click", () => setCookiePreference("analytics"));
-  document.getElementById("openCookieSettings")?.addEventListener("click", openCookieSettings);
-  if (!localStorage.getItem("viori-cookie-preference")) openCookieSettings();
-  function getCancellationRequests() {
-    try {
-      return JSON.parse(localStorage.getItem("viori-cancellation-requests") || "[]");
-    } catch {
-      return [];
-    }
-  }
-  function openCancellation() {
-    document.getElementById("cancellationFormView")?.classList.remove("hidden");
-    document.getElementById("cancellationSuccess")?.classList.add("hidden");
-    document.getElementById("cancellationModal")?.classList.add("open");
-    document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("shop-open");
-  }
-  function closeCancellation() {
-    document.getElementById("cancellationModal")?.classList.remove("open");
-    document.getElementById("cancellationModal")?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("shop-open");
-  }
-  document.getElementById("openCancellation")?.addEventListener("click", openCancellation);
-  document.querySelectorAll("[data-close-cancellation]").forEach((button) => button.addEventListener("click", closeCancellation));
-  document.getElementById("cancellationForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const orderNumber = String(data.get("orderNumber")).trim().toUpperCase();
-    const email = String(data.get("email")).trim().toLowerCase();
-    const orders = getCheckoutOrders();
-    const order = orders.find((item) => item.number === orderNumber && item.customer.email.toLowerCase() === email);
-    const status = document.getElementById("cancellationStatus");
-    if (!order) {
-      if (status) status.textContent = currentLanguage === "en" ? "No matching order was found." : "\u0417\u0430\u043A\u0430\u0437 \u0441 \u0442\u0430\u043A\u0438\u043C\u0438 \u0434\u0430\u043D\u043D\u044B\u043C\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D.";
-      return;
-    }
-    const requests = getCancellationRequests();
-    const reference = `CAN-${String(Date.now()).slice(-8)}`;
-    requests.unshift({ reference, orderNumber, email, reason: String(data.get("reason")).trim(), createdAt: (/* @__PURE__ */ new Date()).toISOString() });
-    localStorage.setItem("viori-cancellation-requests", JSON.stringify(requests));
-    order.status = "cancelled";
-    saveCheckoutOrders(orders);
-    form.reset();
-    document.getElementById("cancellationReference").textContent = `${currentLanguage === "en" ? "Reference" : "\u041D\u043E\u043C\u0435\u0440 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F"}: ${reference}`;
-    document.getElementById("cancellationFormView")?.classList.add("hidden");
-    document.getElementById("cancellationSuccess")?.classList.remove("hidden");
-    renderAdminOrders();
-    renderAccount();
-  });
-  if (new URLSearchParams(window.location.search).has("cancel")) {
-    openCancellation();
-    const cleanUrl = new URL(window.location.href);
-    cleanUrl.searchParams.delete("cancel");
-    history.replaceState({}, "", cleanUrl);
-  }
-  var adminProductForm = document.getElementById("adminProductForm");
-  adminProductForm?.querySelector('input[name="image"]')?.addEventListener("change", (event) => {
-    const file = event.currentTarget.files?.[0];
-    const preview = document.getElementById("adminImagePreview");
-    if (!file || !preview) return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      preview.style.backgroundImage = `url("${String(reader.result)}")`;
-      preview.classList.remove("hidden");
-    });
-    reader.readAsDataURL(file);
-  });
-  adminProductForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const session = getSession();
-    const account = session ? getAccounts()[session] : void 0;
-    const status = document.getElementById("adminStatus");
-    if (account?.role !== "admin") return;
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const file = data.get("image");
-    if (!(file instanceof File) || !file.size) return;
-    if (file.size > 1.5 * 1024 * 1024) {
-      if (status) status.textContent = currentLanguage === "en" ? "The image is larger than 1.5 MB." : "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 1,5 \u041C\u0411.";
-      return;
-    }
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const products = getCatalogProducts();
-      products.unshift({
-        id: crypto.randomUUID?.() || `${Date.now()}`,
-        nameRu: String(data.get("nameRu")).trim(),
-        nameEn: String(data.get("nameEn")).trim(),
-        category: String(data.get("category")),
-        price: Number(data.get("price")),
-        descriptionRu: String(data.get("descriptionRu")).trim(),
-        descriptionEn: String(data.get("descriptionEn")).trim(),
-        image: String(reader.result)
-      });
-      try {
-        saveCatalogProducts(products);
-        form.reset();
-        document.getElementById("adminImagePreview")?.classList.add("hidden");
-        if (status) status.textContent = currentLanguage === "en" ? "The toy has been published." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u0430.";
-        renderCatalogProducts();
-        renderAdminProducts();
-        renderAdminOverview();
-      } catch {
-        if (status) status.textContent = currentLanguage === "en" ? "Browser storage is full. Use a smaller image." : "\u0425\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E. \u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043C\u0435\u043D\u044C\u0448\u0435\u0433\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0430.";
-      }
-    });
-    reader.readAsDataURL(file);
-  });
-  function renderAdminProducts() {
-    const container = document.getElementById("adminProducts");
-    if (!container) return;
-    container.innerHTML = getCatalogProducts().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage === "en" ? product.nameEn : product.nameRu)}</strong><span>\u20AC${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage === "en" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
-    container.querySelectorAll("[data-delete-product]").forEach((button) => {
-      button.addEventListener("click", () => {
-        saveCatalogProducts(getCatalogProducts().filter((product) => product.id !== button.dataset.deleteProduct));
-        renderCatalogProducts();
-        renderAdminProducts();
-        renderAdminOverview();
-      });
-    });
-  }
-  function orderStatusLabel(status) {
-    const labels = {
-      new: ["\u041D\u043E\u0432\u044B\u0439", "New"],
-      making: ["\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", "Making"],
-      shipped: ["\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", "Shipped"],
-      completed: ["\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", "Completed"],
-      cancelled: ["\u041E\u0442\u043C\u0435\u043D\u0451\u043D", "Cancelled"]
-    };
-    return labels[status][currentLanguage === "en" ? 1 : 0];
-  }
-  function renderAdminOrders() {
-    const container = document.getElementById("adminOrders");
-    if (!container) return;
-    const orders = getCheckoutOrders();
-    container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} \xB7 ${safeText(order.customer.city)} \xB7 ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${["new", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
-    container.querySelectorAll("[data-order-number]").forEach((select) => select.addEventListener("change", () => {
-      const currentOrders = getCheckoutOrders();
-      const order = currentOrders.find((item) => item.number === select.dataset.orderNumber);
-      if (!order) return;
-      order.status = select.value;
-      saveCheckoutOrders(currentOrders);
-      renderAdminOrders();
-      renderAdminOverview();
     }));
-  }
-  function renderAdminOverview() {
-    const products = getCatalogProducts();
-    const orders = getCheckoutOrders();
-    const passports = getNfcPassports();
-    document.getElementById("adminMetricProducts").textContent = String(products.length + 1);
-    document.getElementById("adminMetricOrders").textContent = String(orders.length);
-    document.getElementById("adminMetricNewOrders").textContent = String(orders.filter((order) => order.status === "new").length);
-    document.getElementById("adminMetricPassports").textContent = String(passports.length);
-    const container = document.getElementById("adminOverviewOrders");
-    if (!container) return;
-    container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} \xB7 \u20AC${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
-  }
-  function generateNfcCode() {
-    const bytes = new Uint8Array(6);
-    crypto.getRandomValues(bytes);
-    const token = Array.from(bytes, (byte) => byte.toString(36).padStart(2, "0")).join("").toUpperCase();
-    return `VIO-${token.slice(0, 4)}-${token.slice(4, 8)}-${token.slice(8, 12)}`;
-  }
-  document.getElementById("nfcIssueForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const session = getSession();
-    const account = session ? getAccounts()[session] : void 0;
-    if (account?.role !== "admin") return;
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const passports = getNfcPassports();
-    let code = generateNfcCode();
-    while (passports.some((item) => item.code === code)) code = generateNfcCode();
-    passports.unshift({ code, nameRu: String(data.get("nameRu")).trim(), nameEn: String(data.get("nameEn")).trim(), orderNumber: String(data.get("orderNumber")).trim(), issuedAt: (/* @__PURE__ */ new Date()).toISOString(), ownerEmail: null, claimedAt: null });
-    saveNfcPassports(passports);
-    form.reset();
-    const activationUrl = `${window.location.href.split("?")[0]}?nfc=${encodeURIComponent(code)}`;
-    const status = document.getElementById("nfcIssueStatus");
-    if (status) status.textContent = `${currentLanguage === "en" ? "Passport created" : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0441\u043E\u0437\u0434\u0430\u043D"}: ${activationUrl}`;
-    renderNfcPassports();
-    renderAdminOverview();
-  });
-  function renderNfcPassports() {
-    const container = document.getElementById("nfcPassports");
-    if (!container) return;
-    const passports = getNfcPassports();
-    container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` \xB7 ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : currentLanguage === "en" ? "Ready for activation" : "\u0413\u043E\u0442\u043E\u0432 \u043A \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438"}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? currentLanguage === "en" ? "Activated" : "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D" : currentLanguage === "en" ? "New" : "\u041D\u043E\u0432\u044B\u0439"}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage === "en" ? "No passports issued yet." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u044B\u043F\u0443\u0441\u043A\u0430\u043B\u0438\u0441\u044C."}</p></div>`;
-  }
-  var activePassportCode = null;
-  function openPassport(code) {
-    const session = getSession();
-    const account = session ? getAccounts()[session] : void 0;
-    const toy = account?.toys.find((item) => item.code === code);
-    if (!toy) return;
-    activePassportCode = code;
-    const name = currentLanguage === "en" ? toy.nameEn || toy.name : toy.nameRu || toy.name;
-    document.getElementById("passportName").textContent = name;
-    document.getElementById("passportCode").textContent = toy.code;
-    document.getElementById("passportBorn").textContent = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
-    renderPassportTimeline(toy);
-    document.getElementById("passportModal")?.classList.add("open");
-    document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("shop-open");
-  }
-  function closePassport() {
-    document.getElementById("passportModal")?.classList.remove("open");
-    document.getElementById("passportModal")?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("shop-open");
-  }
-  function renderPassportTimeline(toy) {
-    const born = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
-    const memories = toy.memories || [];
-    document.getElementById("passportTimeline").innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage === "en" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3><p>${currentLanguage === "en" ? "The day this character became part of your family." : "\u0414\u0435\u043D\u044C, \u043A\u043E\u0433\u0434\u0430 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0441\u0442\u0430\u043B \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
-  }
-  document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", closePassport));
-  document.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-open-passport]");
-    if (button?.dataset.openPassport) openPassport(button.dataset.openPassport);
-  });
-  document.getElementById("memoryForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const session = getSession();
-    const accounts = getAccounts();
-    const account = session ? accounts[session] : void 0;
-    const toy = account?.toys.find((item) => item.code === activePassportCode);
-    if (!account || !toy) return;
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    toy.memories || (toy.memories = []);
-    toy.memories.push({ id: crypto.randomUUID(), title: String(data.get("title")).trim(), text: String(data.get("text")).trim(), date: (/* @__PURE__ */ new Date()).toISOString() });
-    saveAccounts(accounts);
-    form.reset();
-    renderPassportTimeline(toy);
-    renderDashboard(account);
-  });
-  function renderDashboard(account) {
-    document.getElementById("profileName").textContent = account.name;
-    document.getElementById("profileCardName").textContent = account.name;
-    document.getElementById("profileEmail").textContent = account.email;
-    document.querySelectorAll(".admin-only").forEach((element) => element.classList.toggle("hidden", account.role !== "admin"));
-    document.querySelector(".account-panel")?.classList.toggle("admin-mode", account.role === "admin");
-    if (account.role === "admin") {
-      renderAdminProducts();
-      renderAdminOrders();
-      renderNfcPassports();
-      renderAdminOverview();
-      if (!adminLayoutInitialized) {
-        switchDashboardPage("admin-home");
-        adminLayoutInitialized = true;
+    document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage === "en" ? "Check your email to confirm registration." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 email \u0438 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044E.";
+    });
+    document.getElementById("loginForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const { error } = await supabase.auth.signInWithPassword({ email: String(data.get("email")).trim(), password: String(data.get("password")) });
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : "";
+      if (!error) await loadProductionAccount();
+    });
+    document.getElementById("logoutButton")?.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      await loadProductionAccount();
+    });
+    document.getElementById("nfcForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const token = String(new FormData(event.currentTarget).get("code") || "");
+      await claimProductionPassport(token);
+    });
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-production-passport]");
+      if (button?.dataset.productionPassport) void openProductionPassport(button.dataset.productionPassport);
+    });
+    document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", () => document.getElementById("passportModal")?.classList.remove("open")));
+    document.getElementById("memoryForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!activePassportId) return;
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { error } = await supabase.from("toy_memories").insert({ passport_id: activePassportId, owner_id: user.id, title: String(data.get("title")).trim(), body: String(data.get("text")).trim() });
+      if (!error) {
+        form.reset();
+        await openProductionPassport(activePassportId);
       }
-    } else {
-      const activePage = document.querySelector(".dashboard-tab.active")?.dataset.dashboardTab;
-      if (activePage === "admin" || activePage === "admin-home") switchDashboardPage("toys");
-    }
-    const toys = account.toys || [];
-    document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
-    document.getElementById("toyList").innerHTML = toys.map((toy) => {
-      const date = new Date(toy.born).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU");
-      const name = currentLanguage === "en" ? toy.nameEn || toy.name : toy.nameRu || toy.name;
-      return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage === "en" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</strong>${currentLanguage === "en" ? `Joined your family on ${date}` : `\u0421\u0442\u0430\u043B\u0430 \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438 ${date}`}</div><div class="life-event"><strong>${currentLanguage === "en" ? "Saved chapters" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0433\u043B\u0430\u0432\u044B"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage === "en" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
-    }).join("");
-    const shopOrders = getCheckoutOrders().filter((order) => order.customer.email.toLowerCase() === account.email.toLowerCase());
-    const legacyOrders = account.orders || [];
-    document.getElementById("ordersList").innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} \xB7 \u20AC${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} \xB7 ${orderStatusLabel(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3><p>${currentLanguage === "en" ? "Your future characters will appear here." : "\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0432\u0430\u0448\u0438 \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0438."}</p></div>`;
-  }
-  function renderAccount() {
-    const accounts = getAccounts();
-    const session = getSession();
-    let account = session ? accounts[session] : void 0;
-    if (account && !Object.values(accounts).some((item) => item.role === "admin")) {
-      account.role = "admin";
-      saveAccounts(accounts);
-    }
-    const nfcFromUrl = new URLSearchParams(window.location.search).get("nfc");
-    if (account && nfcFromUrl) {
-      const result = claimNfcPassport(nfcFromUrl, account.email);
-      account = session ? getAccounts()[session] : void 0;
-      setTimeout(() => {
-        const status = document.getElementById("nfcStatus");
-        if (status) status.textContent = result === "claimed" ? currentLanguage === "en" ? "The passport is activated." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D." : result === "taken" ? currentLanguage === "en" ? "This passport belongs to another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u0438\u0442 \u0434\u0440\u0443\u0433\u043E\u043C\u0443 \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0443." : result === "invalid" ? currentLanguage === "en" ? "Passport not found." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D." : "";
-      }, 0);
-      const cleanUrl = new URL(window.location.href);
-      cleanUrl.searchParams.delete("nfc");
-      history.replaceState({}, "", cleanUrl);
-    }
-    authView?.classList.toggle("hidden", Boolean(account));
-    dashboardView?.classList.toggle("hidden", !account);
-    if (!account) document.querySelector(".account-panel")?.classList.remove("admin-mode");
-    if (account) renderDashboard(account);
+    });
+    document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const status = document.getElementById("nfcIssueStatus");
+      const { data: result, error } = await supabase.rpc("issue_nfc_passport", { name_ru: String(data.get("nameRu")), name_en: String(data.get("nameEn")), target_order_number: String(data.get("orderNumber")) || null });
+      if (error || !result?.[0]) {
+        if (status) status.textContent = productionMessage(error);
+        return;
+      }
+      const activationUrl = `${location.origin}${location.pathname}?nfc=${encodeURIComponent(result[0].claim_token)}`;
+      if (status) status.textContent = `${currentLanguage === "en" ? "Copy now \u2014 shown once" : "\u0421\u043A\u043E\u043F\u0438\u0440\u0443\u0439\u0442\u0435 \u0441\u0435\u0439\u0447\u0430\u0441 \u2014 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437"}: ${activationUrl}`;
+      form.reset();
+      await loadProductionAdmin();
+    });
+    document.getElementById("adminProductForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const status = document.getElementById("adminStatus");
+      const slug = `${String(data.get("nameEn")).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
+      const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: false }).select("id").single();
+      if (error || !product) {
+        if (status) status.textContent = productionMessage(error);
+        return;
+      }
+      const file = data.get("image");
+      if (file instanceof File && file.size) {
+        const path = `${product.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+        const upload = await supabase.storage.from("product-images").upload(path, file, { contentType: file.type, upsert: false });
+        if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
+      }
+      form.reset();
+      if (status) status.textContent = currentLanguage === "en" ? "Saved as a draft pending safety data." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043A\u0430\u043A \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A \u0434\u043E \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445 \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u0438.";
+      await loadProductionAdmin();
+    });
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-delete-db-product]");
+      if (!button?.dataset.deleteDbProduct) return;
+      await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct);
+      await loadProductionAdmin();
+    });
+    supabase.auth.onAuthStateChange(() => {
+      window.setTimeout(() => void loadProductionAccount(), 0);
+    });
+    void loadProductionAccount().catch((error) => {
+      if (accountStatus) accountStatus.textContent = productionMessage(error);
+    });
   }
   document.getElementById("year").textContent = String((/* @__PURE__ */ new Date()).getFullYear());
   setLanguage(localStorage.getItem("viori-language") || "ru");
-  if (new URLSearchParams(window.location.search).has("nfc")) openAccount();
+  if (new URLSearchParams(window.location.search).has("nfc")) {
+    if (supabase) productionOpenAccount();
+    else openAccount();
+  }
   var observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {

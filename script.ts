@@ -391,6 +391,15 @@ const dashboardView = document.getElementById("dashboardView");
 const accountStatus = document.getElementById("accountStatus");
 let adminLayoutInitialized = false;
 
+function safeText(value: unknown): string {
+  const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
+  return String(value ?? "").replace(/[&<>'"]/g, (char) => entities[char] || char);
+}
+
+// The code below is retained only as an offline design preview. Production uses
+// Supabase and must never store passwords, roles, orders, or NFC claims locally.
+if (!supabase) {
+
 function getAccounts(): Accounts {
   try { return JSON.parse(localStorage.getItem("viori-accounts") || "{}") as Accounts; }
   catch { return {}; }
@@ -525,11 +534,6 @@ document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
   form.reset();
   renderAccount();
 });
-
-function safeText(value: unknown): string {
-  const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
-  return String(value).replace(/[&<>'"]/g, (char) => entities[char] || char);
-}
 
 function getCatalogProducts(): CatalogProduct[] {
   try { return JSON.parse(localStorage.getItem("viori-catalog-products") || "[]") as CatalogProduct[]; }
@@ -1072,12 +1076,211 @@ function renderAccount() {
   if (!account) document.querySelector(".account-panel")?.classList.remove("admin-mode");
   if (account) renderDashboard(account);
 }
+} // end offline-only demo
+
+function getSession(): string | null { return productionProfile?.id || null; }
+function renderAccount(): void { if (supabase) void loadProductionAccount(); }
+function renderCart(): void { /* Checkout is intentionally disabled until verified payments are connected. */ }
+function openAccount(): void { if (supabase) productionOpenAccount(); }
+
+async function renderCatalogProducts(): Promise<void> {
+  if (!supabase) return;
+  const { data, error } = await supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").eq("is_active", true).order("created_at");
+  const grid = document.querySelector<HTMLElement>(".product-grid");
+  if (!grid || error) return;
+  productionProducts = (data || []) as DbProduct[];
+  if (!productionProducts.length) {
+    grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage === "en" ? "The collection is being prepared" : "Коллекция готовится"}</h3><p>${currentLanguage === "en" ? "Products will appear after safety documentation is complete." : "Товары появятся после завершения документов по безопасности."}</p></div>`;
+    return;
+  }
+  grid.innerHTML = productionProducts.map((product) => {
+    const name = currentLanguage === "en" ? product.name_en : product.name_ru;
+    const description = currentLanguage === "en" ? product.description_en : product.description_ru;
+    const path = product.product_images?.[0]?.storage_path;
+    const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
+    return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><p class="small-note">${currentLanguage === "en" ? "Ordering opens after product compliance approval." : "Заказ откроется после подтверждения соответствия товара."}</p></article>`;
+  }).join("");
+}
+
+type DbProfile = { id: string; display_name: string; role: "customer" | "admin" };
+type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string };
+type DbOrder = { id: string; order_number: string; total_cents: number; status: string; created_at: string };
+type DbProduct = { id: string; slug: string; name_ru: string; name_en: string; description_ru: string; description_en: string; category: CatalogProduct["category"]; price_cents: number; is_active: boolean; product_images?: Array<{ storage_path: string }> };
+
+let productionProfile: DbProfile | null = null;
+let productionPassports: DbPassport[] = [];
+let productionOrders: DbOrder[] = [];
+let productionProducts: DbProduct[] = [];
+let activePassportId: string | null = null;
+
+function productionMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error || "");
+  if (message.includes("Invalid login credentials")) return currentLanguage === "en" ? "Incorrect email or password." : "Неверный email или пароль.";
+  if (message.includes("Email not confirmed")) return currentLanguage === "en" ? "Confirm your email first." : "Сначала подтвердите email.";
+  if (message.includes("User already registered")) return currentLanguage === "en" ? "This email is already registered." : "Этот email уже зарегистрирован.";
+  return currentLanguage === "en" ? "Something went wrong. Please try again." : "Произошла ошибка. Попробуйте ещё раз.";
+}
+
+function productionOpenAccount(): void {
+  document.getElementById("accountModal")?.classList.add("open");
+  document.getElementById("accountModal")?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("account-open");
+}
+
+function productionCloseAccount(): void {
+  document.getElementById("accountModal")?.classList.remove("open");
+  document.getElementById("accountModal")?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("account-open");
+}
+
+async function loadProductionAccount(): Promise<void> {
+  if (!supabase) return;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    productionProfile = null; productionPassports = []; productionOrders = [];
+    authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden");
+    document.querySelector(".account-panel")?.classList.remove("admin-mode");
+    return;
+  }
+  const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
+    supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+    supabase.from("orders").select("id,order_number,total_cents,status,created_at").order("created_at", { ascending: false })
+  ]);
+  if (profileError) throw profileError;
+  productionProfile = profile as DbProfile;
+  productionPassports = (passports || []) as DbPassport[];
+  productionOrders = (orders || []) as DbOrder[];
+  authView?.classList.add("hidden"); dashboardView?.classList.remove("hidden");
+  renderProductionDashboard(user.email || "");
+  const token = new URLSearchParams(location.search).get("nfc");
+  if (token) await claimProductionPassport(token);
+}
+
+function renderProductionDashboard(email: string): void {
+  if (!productionProfile) return;
+  const isAdmin = productionProfile.role === "admin";
+  document.getElementById("profileName")!.textContent = productionProfile.display_name || email;
+  document.getElementById("profileCardName")!.textContent = productionProfile.display_name || "—";
+  document.getElementById("profileEmail")!.textContent = email;
+  document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
+  document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
+  document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
+  document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
+    const name = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
+    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage === "en" ? "Open passport" : "Открыть паспорт"}</button></article>`;
+  }).join("");
+  document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "ru-RU")} · ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage === "en" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
+  if (isAdmin) void loadProductionAdmin();
+}
+
+async function claimProductionPassport(token: string): Promise<void> {
+  if (!supabase) return;
+  const status = document.getElementById("nfcStatus");
+  const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
+  if (status) status.textContent = error ? (currentLanguage === "en" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован.") : (currentLanguage === "en" ? "Passport activated." : "Паспорт активирован.");
+  const clean = new URL(location.href); clean.searchParams.delete("nfc"); history.replaceState({}, "", clean);
+  if (!error) await loadProductionAccount();
+}
+
+async function openProductionPassport(id: string): Promise<void> {
+  if (!supabase) return;
+  const passport = productionPassports.find((item) => item.id === id);
+  if (!passport) return;
+  activePassportId = id;
+  document.getElementById("passportName")!.textContent = currentLanguage === "en" ? passport.character_name_en : passport.character_name_ru;
+  document.getElementById("passportCode")!.textContent = passport.public_code;
+  document.getElementById("passportBorn")!.textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
+  const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
+  document.getElementById("passportTimeline")!.innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage === "en" ? "The story begins" : "История начинается"}</h3></article>`;
+  document.getElementById("passportModal")?.classList.add("open");
+  document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
+}
+
+async function loadProductionAdmin(): Promise<void> {
+  if (!supabase || productionProfile?.role !== "admin") return;
+  const [{ data: products }, { data: passports }] = await Promise.all([
+    supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false })
+  ]);
+  productionProducts = (products || []) as DbProduct[];
+  productionPassports = (passports || []) as DbPassport[];
+  renderProductionAdmin();
+}
+
+function renderProductionAdmin(): void {
+  const productContainer = document.getElementById("adminProducts");
+  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage === "en" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage === "en" ? "Delete" : "Удалить"}</button></div>`).join("");
+  const passportContainer = document.getElementById("nfcPassports");
+  if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage === "en" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+  document.getElementById("adminMetricProducts")!.textContent = String(productionProducts.length);
+  document.getElementById("adminMetricOrders")!.textContent = String(productionOrders.length);
+  document.getElementById("adminMetricNewOrders")!.textContent = String(productionOrders.filter((o) => o.status === "new").length);
+  document.getElementById("adminMetricPassports")!.textContent = String(productionPassports.length);
+}
+
+if (supabase) {
+  document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
+  document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", productionCloseAccount));
+  document.querySelectorAll<HTMLButtonElement>(".auth-tab").forEach((tab) => tab.addEventListener("click", () => {
+    document.querySelectorAll(".auth-tab").forEach((item) => item.classList.toggle("active", item === tab));
+    document.getElementById("loginForm")?.classList.toggle("hidden", tab.dataset.authTab !== "login");
+    document.getElementById("registerForm")?.classList.toggle("hidden", tab.dataset.authTab !== "register");
+  }));
+  document.getElementById("registerForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
+    const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password: String(data.get("password")), options: { data: { display_name: String(data.get("name")).trim() }, emailRedirectTo: location.origin + location.pathname } });
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : (currentLanguage === "en" ? "Check your email to confirm registration." : "Проверьте email и подтвердите регистрацию.");
+  });
+  document.getElementById("loginForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const data = new FormData(event.currentTarget as HTMLFormElement);
+    const { error } = await supabase.auth.signInWithPassword({ email: String(data.get("email")).trim(), password: String(data.get("password")) });
+    if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : "";
+    if (!error) await loadProductionAccount();
+  });
+  document.getElementById("logoutButton")?.addEventListener("click", async () => { await supabase.auth.signOut(); await loadProductionAccount(); });
+  document.getElementById("nfcForm")?.addEventListener("submit", async (event) => { event.preventDefault(); const token = String(new FormData(event.currentTarget as HTMLFormElement).get("code") || ""); await claimProductionPassport(token); });
+  document.addEventListener("click", (event) => { const button = (event.target as HTMLElement).closest<HTMLElement>("[data-production-passport]"); if (button?.dataset.productionPassport) void openProductionPassport(button.dataset.productionPassport); });
+  document.querySelectorAll("[data-close-passport]").forEach((button) => button.addEventListener("click", () => document.getElementById("passportModal")?.classList.remove("open")));
+  document.getElementById("memoryForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); if (!activePassportId) return; const form = event.currentTarget as HTMLFormElement; const data = new FormData(form);
+    const { data: { user } } = await supabase.auth.getUser(); if (!user) return;
+    const { error } = await supabase.from("toy_memories").insert({ passport_id: activePassportId, owner_id: user.id, title: String(data.get("title")).trim(), body: String(data.get("text")).trim() });
+    if (!error) { form.reset(); await openProductionPassport(activePassportId); }
+  });
+  document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("nfcIssueStatus");
+    const { data: result, error } = await supabase.rpc("issue_nfc_passport", { name_ru: String(data.get("nameRu")), name_en: String(data.get("nameEn")), target_order_number: String(data.get("orderNumber")) || null });
+    if (error || !result?.[0]) { if (status) status.textContent = productionMessage(error); return; }
+    const activationUrl = `${location.origin}${location.pathname}?nfc=${encodeURIComponent(result[0].claim_token)}`;
+    if (status) status.textContent = `${currentLanguage === "en" ? "Copy now — shown once" : "Скопируйте сейчас — показывается один раз"}: ${activationUrl}`;
+    form.reset(); await loadProductionAdmin();
+  });
+  document.getElementById("adminProductForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("adminStatus");
+    const slug = `${String(data.get("nameEn")).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
+    const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: false }).select("id").single();
+    if (error || !product) { if (status) status.textContent = productionMessage(error); return; }
+    const file = data.get("image");
+    if (file instanceof File && file.size) {
+      const path = `${product.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+      const upload = await supabase.storage.from("product-images").upload(path, file, { contentType: file.type, upsert: false });
+      if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
+    }
+    form.reset(); if (status) status.textContent = currentLanguage === "en" ? "Saved as a draft pending safety data." : "Сохранено как черновик до заполнения данных безопасности."; await loadProductionAdmin();
+  });
+  document.addEventListener("click", async (event) => { const button = (event.target as HTMLElement).closest<HTMLElement>("[data-delete-db-product]"); if (!button?.dataset.deleteDbProduct) return; await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct); await loadProductionAdmin(); });
+  supabase.auth.onAuthStateChange(() => { window.setTimeout(() => void loadProductionAccount(), 0); });
+  void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); });
+}
 
 document.getElementById("year")!.textContent = String(new Date().getFullYear());
 
 setLanguage(localStorage.getItem("viori-language") || "ru");
 
-if (new URLSearchParams(window.location.search).has("nfc")) openAccount();
+if (new URLSearchParams(window.location.search).has("nfc")) {
+  if (supabase) productionOpenAccount(); else openAccount();
+}
 
 const observer = new IntersectionObserver(
   (entries) => {
