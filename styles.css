@@ -265,6 +265,27 @@ h1 em {
   font-weight: 600;
 }
 
+.hero-copy h1 em {
+  position:relative;
+  display:table;
+  margin-top:.08em;
+  padding-right:.08em;
+  line-height:.92;
+}
+
+.hero-copy h1 em::after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:2%;
+  right:-1%;
+  bottom:.02em;
+  height:.16em;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(210,155,116,.48),rgba(239,197,169,.12));
+  transform:rotate(-1deg);
+}
+
 h2 {
   margin-bottom: 20px;
   font-size: clamp(42px, 5vw, 64px);
