@@ -21569,6 +21569,11 @@ ${suffix}`;
     ]);
     if (profileError) throw profileError;
     productionProfile = profile;
+    const googleName = String(user.user_metadata?.full_name || user.user_metadata?.name || "").trim();
+    if (productionProfile && !productionProfile.display_name && googleName) {
+      const { error: nameError } = await supabase.from("profiles").update({ display_name: googleName }).eq("id", user.id);
+      if (!nameError) productionProfile.display_name = googleName;
+    }
     productionPassports = passports || [];
     productionOrders = orders || [];
     authView?.classList.add("hidden");
@@ -21947,7 +21952,10 @@ ${suffix}`;
         showProductionAuthForm("resetPasswordForm");
         return;
       }
-      window.setTimeout(() => void loadProductionAccount(), 0);
+      if (event === "SIGNED_IN") productionOpenAccount();
+      window.setTimeout(() => void loadProductionAccount().catch((error) => {
+        if (accountStatus) accountStatus.textContent = productionMessage(error);
+      }), 0);
     });
     void loadProductionAccount().catch((error) => {
       if (accountStatus) accountStatus.textContent = productionMessage(error);

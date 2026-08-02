@@ -1321,6 +1321,11 @@ async function loadProductionAccount(): Promise<void> {
   ]);
   if (profileError) throw profileError;
   productionProfile = profile as DbProfile;
+  const googleName = String(user.user_metadata?.full_name || user.user_metadata?.name || "").trim();
+  if (productionProfile && !productionProfile.display_name && googleName) {
+    const { error: nameError } = await supabase.from("profiles").update({ display_name: googleName }).eq("id", user.id);
+    if (!nameError) productionProfile.display_name = googleName;
+  }
   productionPassports = (passports || []) as DbPassport[];
   productionOrders = (orders || []) as DbOrder[];
   authView?.classList.add("hidden"); dashboardView?.classList.remove("hidden");
@@ -1579,7 +1584,8 @@ if (supabase) {
   });
   supabase.auth.onAuthStateChange((event) => {
     if (event === "PASSWORD_RECOVERY") { productionOpenAccount(); authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden"); showProductionAuthForm("resetPasswordForm"); return; }
-    window.setTimeout(() => void loadProductionAccount(), 0);
+    if (event === "SIGNED_IN") productionOpenAccount();
+    window.setTimeout(() => void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); }), 0);
   });
   void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); });
 }
