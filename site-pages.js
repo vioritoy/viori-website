@@ -23,7 +23,7 @@ document.querySelectorAll('.filter').forEach((filter) => filter.addEventListener
   });
 }));
 document.querySelectorAll('.view-product,.add-to-cart').forEach((button) => button.addEventListener('click', () => {
-  location.href = button.classList.contains('add-to-cart') ? 'index.html#contacts' : 'contact.html';
+  location.href = button.classList.contains('add-to-cart') ? '#contacts' : 'contact.html';
 }));
 async function loadPageCatalog() {
   const grid = document.querySelector('.product-grid');
@@ -39,6 +39,13 @@ async function loadPageCatalog() {
       return;
     }
     const code = localStorage.getItem('viori-language') || 'ru';
+    const cardLabels = {
+      ru: ['Познакомиться', 'Хочу такую'],
+      en: ['Meet the character', 'I want this one'],
+      nl: ['Maak kennis', 'Deze wil ik'],
+      de: ['Kennenlernen', 'Diese möchte ich'],
+      fr: ['Découvrir', 'Je la veux']
+    }[code] || ['Meet the character', 'I want this one'];
     const productSelect = document.getElementById('productSelect');
     if (productSelect) productSelect.innerHTML = products.map((product) => `<option>${code === 'ru' ? product.name_ru : product.name_en}</option>`).join('');
     grid.innerHTML = products.map((product) => {
@@ -46,7 +53,7 @@ async function loadPageCatalog() {
       const description = code === 'ru' ? product.description_ru : product.description_en;
       const path = product.product_images?.[0]?.storage_path;
       const image = path ? `${config.supabaseUrl}/storage/v1/object/public/product-images/${encodeURI(path)}` : '';
-      return `<article class="product-card" data-category="${product.category}"><div class="product-image"${image ? ` style="background-image:url('${image}');background-size:cover;background-position:center"` : ''}></div><div class="product-info"><div><p class="product-type">VIORI</p><h3>${name}</h3></div><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${description}</p><div class="card-actions"><a class="card-button" href="contact.html">Подробнее</a><a class="card-button" href="index.html#contacts">Заказать</a></div></article>`;
+      return `<article class="product-card" data-category="${product.category}"><div class="product-image"${image ? ` style="background-image:url('${image}');background-size:cover;background-position:center"` : ''}></div><div class="product-info"><div><p class="product-type">VIORI</p><h3>${name}</h3></div><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${description}</p><div class="card-actions"><a class="card-button" href="contact.html">${cardLabels[0]}</a><a class="card-button" href="#contacts">${cardLabels[1]}</a></div></article>`;
     }).join('');
   } catch { /* Keep the static fallback when the network is unavailable. */ }
 }
