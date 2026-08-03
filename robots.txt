@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vioritoy.github.io/viori-website/sitemap.xml

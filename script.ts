@@ -1597,6 +1597,9 @@ setLanguage(localStorage.getItem("viori-language") || "ru");
 if (new URLSearchParams(window.location.search).has("nfc")) {
   if (supabase) productionOpenAccount(); else openAccount();
 }
+if (new URLSearchParams(window.location.search).has("account")) {
+  window.setTimeout(() => { if (supabase) productionOpenAccount(); else openAccount(); }, 0);
+}
 
 const observer = new IntersectionObserver(
   (entries) => {

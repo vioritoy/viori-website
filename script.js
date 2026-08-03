@@ -21967,6 +21967,12 @@ ${suffix}`;
     if (supabase) productionOpenAccount();
     else openAccount();
   }
+  if (new URLSearchParams(window.location.search).has("account")) {
+    window.setTimeout(() => {
+      if (supabase) productionOpenAccount();
+      else openAccount();
+    }, 0);
+  }
   var observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
