@@ -81,10 +81,10 @@ language.value = savedLanguage;
 document.querySelector('.account-button')?.before(language);
 
 const common = {
-  en: ['Toys','About','Contact','My account'],
-  nl: ['Knuffels','Over VIORI','Contact','Mijn account'],
-  de: ['Kuscheltiere','Über VIORI','Kontakt','Mein Konto'],
-  fr: ['Peluches','À propos','Contact','Mon compte']
+  en: ['Catalog','About','Contact','My account'],
+  nl: ['Catalogus','Over VIORI','Contact','Mijn account'],
+  de: ['Katalog','Über VIORI','Kontakt','Mein Konto'],
+  fr: ['Catalogue','À propos','Contact','Mon compte']
 };
 const pageCopy = {
   'toys.html': {

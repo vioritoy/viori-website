@@ -20249,7 +20249,7 @@ ${suffix}`;
   var englishTranslations = {
     "title": "VIORI \u2014 handmade crochet toys",
     'meta[name="description"]': "VIORI \u2014 handmade crochet toys. Unique gifts made with love.",
-    ".main-nav a:nth-child(1)": "Toys",
+    ".main-nav a:nth-child(1)": "Catalog",
     ".main-nav a:nth-child(2)": "About",
     ".main-nav a:nth-child(3)": "Contacts",
     ".header-cta": "Order",
@@ -20484,7 +20484,7 @@ ${suffix}`;
     nl: {
       "title": "VIORI \u2014 handgemaakte gehaakte knuffels",
       'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
-      ".main-nav a:nth-child(1)": "Knuffels",
+      ".main-nav a:nth-child(1)": "Catalogus",
       ".main-nav a:nth-child(2)": "Over VIORI",
       ".main-nav a:nth-child(3)": "Contact",
       ".header-cta": "Bestellen",
@@ -20527,7 +20527,7 @@ ${suffix}`;
     de: {
       "title": "VIORI \u2014 handgefertigte H\xE4keltiere",
       'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
-      ".main-nav a:nth-child(1)": "Kuscheltiere",
+      ".main-nav a:nth-child(1)": "Katalog",
       ".main-nav a:nth-child(2)": "\xDCber VIORI",
       ".main-nav a:nth-child(3)": "Kontakt",
       ".header-cta": "Bestellen",
@@ -20570,7 +20570,7 @@ ${suffix}`;
     fr: {
       "title": "VIORI \u2014 peluches au crochet faites main",
       'meta[name="description"]': "VIORI cr\xE9e des peluches faites main avec leur propre caract\xE8re, leur histoire et un passeport NFC num\xE9rique.",
-      ".main-nav a:nth-child(1)": "Peluches",
+      ".main-nav a:nth-child(1)": "Catalogue",
       ".main-nav a:nth-child(2)": "\xC0 propos",
       ".main-nav a:nth-child(3)": "Contact",
       ".header-cta": "Commander",
