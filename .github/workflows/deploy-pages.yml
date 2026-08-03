@@ -37,7 +37,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir dist
-          cp index.html legal.html styles.css script.js config.js dist/
+          cp index.html legal.html toys.html about.html how-to-order.html contact.html styles.css script.js site-pages.js config.js robots.txt sitemap.xml dist/
           cp -R assets dist/assets
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
