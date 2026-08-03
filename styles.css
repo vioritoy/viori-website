@@ -906,6 +906,7 @@ input:focus, textarea:focus, select:focus {
 .subpage-main #catalog { padding:70px 0; }
 .toy-story-section { padding-top:22px; background:#fffaf5; }
 .toy-story-section .story-grid { padding-top:70px; border-top:1px solid var(--line); }
+.toy-story-section + #catalog { padding-top:24px; }
 .subpage-main > section:last-child { margin-bottom:0; }
 .subpage-section.soft { background:#f6eee7; }
 .subpage-heading { display:grid; grid-template-columns:.65fr 1.35fr; gap:60px; margin-bottom:48px; }
@@ -947,6 +948,7 @@ input:focus, textarea:focus, select:focus {
   .subpage-main #catalog { padding:54px 0; }
   .toy-story-section { padding-top:0; }
   .toy-story-section .story-grid { padding-top:54px; }
+  .toy-story-section + #catalog { padding-top:12px; }
 }
 .cookie-banner { position:fixed; z-index:150; left:20px; right:20px; bottom:20px; display:none; align-items:center; justify-content:space-between; gap:30px; width:min(900px,calc(100% - 40px)); margin:auto; padding:20px 24px; border:1px solid var(--line); border-radius:20px; background:var(--paper); box-shadow:var(--shadow); }
 .cookie-banner.open { display:flex; }
