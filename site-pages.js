@@ -24,7 +24,7 @@ document.querySelectorAll('.filter').forEach((filter) => filter.addEventListener
   });
 }));
 document.querySelectorAll('.view-product,.add-to-cart').forEach((button) => button.addEventListener('click', () => {
-  location.href = button.classList.contains('add-to-cart') ? '#contacts' : 'contact.html';
+  location.href = button.classList.contains('add-to-cart') ? '#custom' : 'contact.html';
 }));
 async function loadPageCatalog() {
   const grid = document.querySelector('.product-grid');
@@ -54,7 +54,7 @@ async function loadPageCatalog() {
       const description = code === 'ru' ? product.description_ru : product.description_en;
       const path = product.product_images?.[0]?.storage_path;
       const image = path ? `${config.supabaseUrl}/storage/v1/object/public/product-images/${encodeURI(path)}` : '';
-      return `<article class="product-card" data-category="${product.category}"><div class="product-image"${image ? ` style="background-image:url('${image}');background-size:cover;background-position:center"` : ''}></div><div class="product-info"><div><p class="product-type">VIORI</p><h3>${name}</h3></div><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${description}</p><div class="card-actions"><a class="card-button" href="contact.html">${cardLabels[0]}</a><a class="card-button" href="#contacts">${cardLabels[1]}</a></div></article>`;
+      return `<article class="product-card" data-category="${product.category}"><div class="product-image"${image ? ` style="background-image:url('${image}');background-size:cover;background-position:center"` : ''}></div><div class="product-info"><div><p class="product-type">VIORI</p><h3>${name}</h3></div><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${description}</p><div class="card-actions"><a class="card-button" href="contact.html">${cardLabels[0]}</a><a class="card-button" href="#custom">${cardLabels[1]}</a></div></article>`;
     }).join('');
   } catch { /* Keep the static fallback when the network is unavailable. */ }
 }
@@ -92,6 +92,12 @@ const pageCopy = {
     nl: ['VIORI-COLLECTIE','Knuffels die deel worden van het gezin','Kies een bijzonder handgemaakt personage met een eigen karakter, NFC-paspoort en verhaal.'],
     de: ['VIORI KOLLEKTION','Spielzeuge, die Teil der Familie werden','Wähle einen besonderen handgefertigten Charakter mit Persönlichkeit, NFC-Pass und eigener Geschichte.'],
     fr: ['COLLECTION VIORI','Des peluches qui entrent dans la famille','Choisissez un personnage artisanal avec son caractère, son passeport NFC et une histoire à poursuivre.']
+  },
+  'catalog.html': {
+    en: ['VIORI CATALOG','Find your character','Choose a ready-made toy or share your idea — we will create a special character just for you.'],
+    nl: ['VIORI-CATALOGUS','Vind jouw personage','Kies een bestaande knuffel of deel je idee — wij maken een bijzonder personage speciaal voor jou.'],
+    de: ['VIORI-KATALOG','Finde deinen Charakter','Wähle ein fertiges Spielzeug oder teile deine Idee — wir erschaffen einen besonderen Charakter für dich.'],
+    fr: ['CATALOGUE VIORI','Trouvez votre personnage','Choisissez un jouet disponible ou partagez votre idée — nous créerons un personnage rien que pour vous.']
   },
   'about.html': {
     en: ['ABOUT THE BRAND','Every toy has a life of its own','VIORI combines warm craftsmanship with thoughtful technology so a beloved character remains part of the family story.'],
@@ -137,12 +143,12 @@ function applyPageLanguage(code) {
     if (title) title.textContent = copy[1];
     if (intro) intro.textContent = copy[2];
   }
-  if (file === 'toys.html' && catalogCopy[code]) {
+  if (file === 'catalog.html' && catalogCopy[code]) {
     const [title, intro, customLabel, customTitle] = catalogCopy[code];
     const catalogTitle = document.querySelector('#catalog .section-heading h2');
     const catalogIntro = document.querySelector('#catalog .catalog-intro');
-    const customEyebrow = document.querySelector('#contacts .contact-copy .eyebrow');
-    const customHeading = document.querySelector('#contacts .contact-copy h2');
+    const customEyebrow = document.querySelector('#custom .contact-copy .eyebrow');
+    const customHeading = document.querySelector('#custom .contact-copy h2');
     if (catalogTitle) catalogTitle.textContent = title;
     if (catalogIntro) catalogIntro.textContent = intro;
     if (customEyebrow) customEyebrow.textContent = customLabel;
