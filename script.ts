@@ -30,9 +30,10 @@ interface CancellationRequest { reference: string; orderNumber: string; email: s
 const englishTranslations: Record<string, string> = {
   "title": "VIORI — handmade crochet toys",
   'meta[name="description"]': "VIORI — handmade crochet toys. Unique gifts made with love.",
-  ".main-nav a:nth-child(1)": "Catalog",
-  ".main-nav a:nth-child(2)": "About",
-  ".main-nav a:nth-child(3)": "Contacts",
+  ".main-nav a:nth-child(1)": "Toys",
+  ".main-nav a:nth-child(2)": "Catalog",
+  ".main-nav a:nth-child(3)": "About",
+  ".main-nav a:nth-child(4)": "Contacts",
   ".header-cta": "Order",
   ".account-button-text": "My account",
   ".auth-home-button": '<span aria-hidden="true">←</span> Home',
@@ -266,7 +267,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   nl: {
     "title": "VIORI — handgemaakte gehaakte knuffels",
     'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
-    ".main-nav a:nth-child(1)": "Catalogus", ".main-nav a:nth-child(2)": "Over VIORI", ".main-nav a:nth-child(3)": "Contact",
+    ".main-nav a:nth-child(1)": "Knuffels", ".main-nav a:nth-child(2)": "Catalogus", ".main-nav a:nth-child(3)": "Over VIORI", ".main-nav a:nth-child(4)": "Contact",
     ".header-cta": "Bestellen", ".account-button-text": "Mijn account",
     ".hero-copy .eyebrow": "VIORI · MET DE HAND GEMAAKT", ".hero-copy h1": "Elke knuffel <em>heeft een eigen leven</em>",
     ".hero-text": "Elke VIORI wordt met de hand gemaakt en krijgt een naam, karakter en uniek digitaal paspoort. Tik met je telefoon op de NFC-tag en ontdek het verhaal en de herinneringen.",
@@ -284,7 +285,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   de: {
     "title": "VIORI — handgefertigte Häkeltiere",
     'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
-    ".main-nav a:nth-child(1)": "Katalog", ".main-nav a:nth-child(2)": "Über VIORI", ".main-nav a:nth-child(3)": "Kontakt",
+    ".main-nav a:nth-child(1)": "Kuscheltiere", ".main-nav a:nth-child(2)": "Katalog", ".main-nav a:nth-child(3)": "Über VIORI", ".main-nav a:nth-child(4)": "Kontakt",
     ".header-cta": "Bestellen", ".account-button-text": "Mein Konto",
     ".hero-copy .eyebrow": "VIORI · VON HAND GEFERTIGT", ".hero-copy h1": "Jedes Kuscheltier <em>hat ein eigenes Leben</em>",
     ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erhält einen Namen, einen Charakter und einen digitalen Pass. Berühre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
@@ -302,7 +303,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   fr: {
     "title": "VIORI — peluches au crochet faites main",
     'meta[name="description"]': "VIORI crée des peluches faites main avec leur propre caractère, leur histoire et un passeport NFC numérique.",
-    ".main-nav a:nth-child(1)": "Catalogue", ".main-nav a:nth-child(2)": "À propos", ".main-nav a:nth-child(3)": "Contact",
+    ".main-nav a:nth-child(1)": "Peluches", ".main-nav a:nth-child(2)": "Catalogue", ".main-nav a:nth-child(3)": "À propos", ".main-nav a:nth-child(4)": "Contact",
     ".header-cta": "Commander", ".account-button-text": "Mon compte",
     ".hero-copy .eyebrow": "VIORI · CRÉÉ À LA MAIN", ".hero-copy h1": "Chaque peluche <em>a sa propre vie</em>",
     ".hero-text": "Chaque VIORI est créée à la main et reçoit un nom, un caractère et un passeport numérique unique. Touchez la puce NFC avec votre téléphone pour découvrir son histoire.",

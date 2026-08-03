@@ -906,6 +906,7 @@ input:focus, textarea:focus, select:focus {
 .subpage-hero-stats strong { font-family:var(--serif); color:var(--brown); font-size:30px; line-height:1; }
 .subpage-hero-stats span { color:var(--muted); font-size:12px; }
 .catalog-heading { grid-template-columns:1fr; }
+.catalog-intro { max-width:680px; margin:10px 0 0; color:var(--muted); font-size:16px; }
 .subpage-seal { width:min(330px,100%); aspect-ratio:1; justify-self:end; border-radius:50%; object-fit:cover; box-shadow:0 30px 80px rgba(74,43,27,.16); }
 .subpage-section { padding:90px 0; }
 .subpage-main #catalog { padding:70px 0; }

@@ -81,10 +81,10 @@ language.value = savedLanguage;
 document.querySelector('.account-button')?.before(language);
 
 const common = {
-  en: ['Catalog','About','Contact','My account'],
-  nl: ['Catalogus','Over VIORI','Contact','Mijn account'],
-  de: ['Katalog','Über VIORI','Kontakt','Mein Konto'],
-  fr: ['Catalogue','À propos','Contact','Mon compte']
+  en: ['Toys','Catalog','About','Contact','My account'],
+  nl: ['Knuffels','Catalogus','Over VIORI','Contact','Mijn account'],
+  de: ['Kuscheltiere','Katalog','Über VIORI','Kontakt','Mein Konto'],
+  fr: ['Peluches','Catalogue','À propos','Contact','Mon compte']
 };
 const pageCopy = {
   'toys.html': {
@@ -112,6 +112,12 @@ const pageCopy = {
     fr: ['CONTACT','Créons quelque chose d’unique','Écrivez-nous au sujet d’une commande, livraison, passeport NFC ou collaboration. Nous répondrons personnellement.']
   }
 };
+const catalogCopy = {
+  en: ['VIORI catalog','Ready-made characters and toys created especially for you.','CUSTOM TOY','Create a toy from your idea'],
+  nl: ['VIORI-catalogus','Kant-en-klare personages en speelgoed dat speciaal voor jou wordt gemaakt.','MAATWERK','Maak een knuffel naar jouw idee'],
+  de: ['VIORI-Katalog','Fertige Charaktere und Spielzeuge, die speziell für dich entstehen.','INDIVIDUELLES SPIELZEUG','Gestalte ein Spielzeug nach deiner Idee'],
+  fr: ['Catalogue VIORI','Des personnages disponibles et des créations réalisées spécialement pour vous.','CRÉATION SUR MESURE','Créez un jouet à partir de votre idée']
+};
 function applyPageLanguage(code) {
   language.value = code;
   document.documentElement.lang = code;
@@ -119,7 +125,7 @@ function applyPageLanguage(code) {
   const navCopy = common[code];
   document.querySelectorAll('.main-nav a').forEach((link,index) => { if (navCopy?.[index]) link.textContent = navCopy[index]; });
   const accountText = document.querySelector('.account-button-text');
-  if (accountText && navCopy) accountText.textContent = navCopy[3];
+  if (accountText && navCopy) accountText.textContent = navCopy[4];
   const file = location.pathname.split('/').pop() || '';
   const copy = pageCopy[file]?.[code];
   if (copy) {
@@ -130,6 +136,17 @@ function applyPageLanguage(code) {
     if (eyebrow) eyebrow.textContent = copy[0];
     if (title) title.textContent = copy[1];
     if (intro) intro.textContent = copy[2];
+  }
+  if (file === 'toys.html' && catalogCopy[code]) {
+    const [title, intro, customLabel, customTitle] = catalogCopy[code];
+    const catalogTitle = document.querySelector('#catalog .section-heading h2');
+    const catalogIntro = document.querySelector('#catalog .catalog-intro');
+    const customEyebrow = document.querySelector('#contacts .contact-copy .eyebrow');
+    const customHeading = document.querySelector('#contacts .contact-copy h2');
+    if (catalogTitle) catalogTitle.textContent = title;
+    if (catalogIntro) catalogIntro.textContent = intro;
+    if (customEyebrow) customEyebrow.textContent = customLabel;
+    if (customHeading) customHeading.textContent = customTitle;
   }
 }
 if (savedLanguage !== 'ru') applyPageLanguage(savedLanguage);
