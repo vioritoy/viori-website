@@ -14,6 +14,41 @@ document.addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
 window.addEventListener('scroll', closeMenu, { passive: true });
+document.querySelectorAll('.filter').forEach((filter) => filter.addEventListener('click', () => {
+  document.querySelectorAll('.filter').forEach((item) => item.classList.remove('active'));
+  filter.classList.add('active');
+  document.querySelectorAll('.product-card').forEach((card) => {
+    const visible = filter.dataset.filter === 'all' || card.dataset.category === filter.dataset.filter;
+    card.classList.toggle('hidden', !visible);
+  });
+}));
+document.querySelectorAll('.view-product,.add-to-cart').forEach((button) => button.addEventListener('click', () => {
+  location.href = button.classList.contains('add-to-cart') ? 'index.html#contacts' : 'contact.html';
+}));
+async function loadPageCatalog() {
+  const grid = document.querySelector('.product-grid');
+  const config = window.VIORI_CONFIG;
+  if (!grid || !config?.supabaseUrl || !config?.supabaseAnonKey) return;
+  try {
+    const endpoint = `${config.supabaseUrl}/rest/v1/products?select=id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)&is_active=eq.true&order=created_at`;
+    const response = await fetch(endpoint, { headers: { apikey: config.supabaseAnonKey, Authorization: `Bearer ${config.supabaseAnonKey}` } });
+    if (!response.ok) return;
+    const products = await response.json();
+    if (!products.length) {
+      grid.innerHTML = '<div class="toy-empty"><h3>Коллекция готовится</h3><p>Товары появятся после завершения документов по безопасности.</p></div>';
+      return;
+    }
+    const code = localStorage.getItem('viori-language') || 'ru';
+    grid.innerHTML = products.map((product) => {
+      const name = code === 'ru' ? product.name_ru : product.name_en;
+      const description = code === 'ru' ? product.description_ru : product.description_en;
+      const path = product.product_images?.[0]?.storage_path;
+      const image = path ? `${config.supabaseUrl}/storage/v1/object/public/product-images/${encodeURI(path)}` : '';
+      return `<article class="product-card" data-category="${product.category}"><div class="product-image"${image ? ` style="background-image:url('${image}');background-size:cover;background-position:center"` : ''}></div><div class="product-info"><div><p class="product-type">VIORI</p><h3>${name}</h3></div><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${description}</p><div class="card-actions"><a class="card-button" href="contact.html">Подробнее</a><a class="card-button" href="index.html#contacts">Заказать</a></div></article>`;
+    }).join('');
+  } catch { /* Keep the static fallback when the network is unavailable. */ }
+}
+void loadPageCatalog();
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
 
