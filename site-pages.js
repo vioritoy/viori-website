@@ -68,10 +68,10 @@ const common = {
 };
 const pageCopy = {
   'toys.html': {
-    en: ['VIORI COLLECTION','Characters you will want to remember','Every toy is made by hand and receives a name, a personality and a place for its own digital story.'],
-    nl: ['VIORI-COLLECTIE','Personages om te koesteren','Elke knuffel wordt met de hand gemaakt en krijgt een naam, karakter en plek voor een eigen digitaal verhaal.'],
-    de: ['VIORI KOLLEKTION','Charaktere, die in Erinnerung bleiben','Jedes Kuscheltier wird von Hand gefertigt und erhält einen Namen, Charakter und seine eigene digitale Geschichte.'],
-    fr: ['COLLECTION VIORI','Des personnages à chérir','Chaque peluche est créée à la main et reçoit un nom, un caractère et sa propre histoire numérique.']
+    en: ['VIORI COLLECTION','Toys that become part of the family','Choose a special handmade character. Every toy has a personality, a private NFC passport and a story you continue.'],
+    nl: ['VIORI-COLLECTIE','Knuffels die deel worden van het gezin','Kies een bijzonder handgemaakt personage met een eigen karakter, NFC-paspoort en verhaal.'],
+    de: ['VIORI KOLLEKTION','Spielzeuge, die Teil der Familie werden','Wähle einen besonderen handgefertigten Charakter mit Persönlichkeit, NFC-Pass und eigener Geschichte.'],
+    fr: ['COLLECTION VIORI','Des peluches qui entrent dans la famille','Choisissez un personnage artisanal avec son caractère, son passeport NFC et une histoire à poursuivre.']
   },
   'about.html': {
     en: ['ABOUT THE BRAND','Every toy has a life of its own','VIORI combines warm craftsmanship with thoughtful technology so a beloved character remains part of the family story.'],

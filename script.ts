@@ -1399,7 +1399,7 @@ async function loadProductionAdmin(): Promise<void> {
 
 function renderProductionAdmin(): void {
   const productContainer = document.getElementById("adminProducts");
-  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div>`).join("");
+  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? (currentLanguage !== "ru" ? "Hide" : "Скрыть") : (currentLanguage !== "ru" ? "Publish" : "Опубликовать")}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div></div>`).join("");
   const passportContainer = document.getElementById("nfcPassports");
   if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
   const orderContainer = document.getElementById("adminOrders");
@@ -1564,7 +1564,7 @@ if (supabase) {
   document.getElementById("adminProductForm")?.addEventListener("submit", async (event) => {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("adminStatus");
     const slug = `${String(data.get("nameEn")).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
-    const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: false }).select("id").single();
+    const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: true }).select("id").single();
     if (error || !product) { if (status) status.textContent = productionMessage(error); return; }
     const file = data.get("image");
     if (file instanceof File && file.size) {
@@ -1572,9 +1572,16 @@ if (supabase) {
       const upload = await supabase.storage.from("product-images").upload(path, file, { contentType: file.type, upsert: false });
       if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
     }
-    form.reset(); if (status) status.textContent = currentLanguage !== "ru" ? "Saved as a draft pending safety data." : "Сохранено как черновик до заполнения данных безопасности."; await loadProductionAdmin();
+    form.reset(); if (status) status.textContent = currentLanguage !== "ru" ? "Published in the toy catalogue." : "Игрушка опубликована в каталоге."; await loadProductionAdmin();
   });
   document.addEventListener("click", async (event) => { const button = (event.target as HTMLElement).closest<HTMLElement>("[data-delete-db-product]"); if (!button?.dataset.deleteDbProduct) return; await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct); await loadProductionAdmin(); });
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLElement>("[data-toggle-db-product]");
+    if (!button?.dataset.toggleDbProduct || productionProfile?.role !== "admin") return;
+    const { error } = await supabase.from("products").update({ is_active: button.dataset.nextActive === "true" }).eq("id", button.dataset.toggleDbProduct);
+    if (error) { if (document.getElementById("adminStatus")) document.getElementById("adminStatus")!.textContent = productionMessage(error); return; }
+    await loadProductionAdmin();
+  });
   document.addEventListener("change", async (event) => {
     const select = (event.target as HTMLElement).closest<HTMLSelectElement>("[data-db-order]");
     if (!select?.dataset.dbOrder || productionProfile?.role !== "admin") return;

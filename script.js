@@ -21648,7 +21648,7 @@ ${suffix}`;
   }
   function renderProductionAdmin() {
     const productContainer = document.getElementById("adminProducts");
-    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? "LIVE" : "DRAFT"}</span></div><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
+    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? "LIVE" : "DRAFT"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C" : currentLanguage !== "ru" ? "Publish" : "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div></div>`).join("");
     const passportContainer = document.getElementById("nfcPassports");
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
     const orderContainer = document.getElementById("adminOrders");
@@ -21913,7 +21913,7 @@ ${suffix}`;
       const data = new FormData(form);
       const status = document.getElementById("adminStatus");
       const slug = `${String(data.get("nameEn")).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
-      const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: false }).select("id").single();
+      const { data: product, error } = await supabase.from("products").insert({ slug, name_ru: String(data.get("nameRu")).trim(), name_en: String(data.get("nameEn")).trim(), category: String(data.get("category")), price_cents: Math.round(Number(data.get("price")) * 100), description_ru: String(data.get("descriptionRu")).trim(), description_en: String(data.get("descriptionEn")).trim(), is_active: true }).select("id").single();
       if (error || !product) {
         if (status) status.textContent = productionMessage(error);
         return;
@@ -21925,13 +21925,23 @@ ${suffix}`;
         if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
       }
       form.reset();
-      if (status) status.textContent = currentLanguage !== "ru" ? "Saved as a draft pending safety data." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043A\u0430\u043A \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A \u0434\u043E \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445 \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u0438.";
+      if (status) status.textContent = currentLanguage !== "ru" ? "Published in the toy catalogue." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u0430 \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435.";
       await loadProductionAdmin();
     });
     document.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-delete-db-product]");
       if (!button?.dataset.deleteDbProduct) return;
       await supabase.from("products").delete().eq("id", button.dataset.deleteDbProduct);
+      await loadProductionAdmin();
+    });
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-toggle-db-product]");
+      if (!button?.dataset.toggleDbProduct || productionProfile?.role !== "admin") return;
+      const { error } = await supabase.from("products").update({ is_active: button.dataset.nextActive === "true" }).eq("id", button.dataset.toggleDbProduct);
+      if (error) {
+        if (document.getElementById("adminStatus")) document.getElementById("adminStatus").textContent = productionMessage(error);
+        return;
+      }
       await loadProductionAdmin();
     });
     document.addEventListener("change", async (event) => {
