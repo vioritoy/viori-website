@@ -1,5 +1,6 @@
 const menuButton = document.querySelector('.menu-button');
 const navigation = document.querySelector('.main-nav');
+document.querySelectorAll('.reveal').forEach((element) => element.classList.add('visible'));
 const closeMenu = () => {
   navigation?.classList.remove('open');
   menuButton?.setAttribute('aria-expanded', 'false');
