@@ -39,6 +39,8 @@ async function loadPageCatalog() {
       return;
     }
     const code = localStorage.getItem('viori-language') || 'ru';
+    const productSelect = document.getElementById('productSelect');
+    if (productSelect) productSelect.innerHTML = products.map((product) => `<option>${code === 'ru' ? product.name_ru : product.name_en}</option>`).join('');
     grid.innerHTML = products.map((product) => {
       const name = code === 'ru' ? product.name_ru : product.name_en;
       const description = code === 'ru' ? product.description_ru : product.description_en;
@@ -49,6 +51,16 @@ async function loadPageCatalog() {
   } catch { /* Keep the static fallback when the network is unavailable. */ }
 }
 void loadPageCatalog();
+document.getElementById('orderForm')?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const subject = `Новая заявка VIORI — ${String(data.get('product') || 'особенная игрушка')}`;
+  const body = [`Имя: ${data.get('name') || ''}`, `Игрушка: ${data.get('product') || ''}`, `Пожелания: ${data.get('message') || 'не указаны'}`].join('\n');
+  location.href = `mailto:viktoriasulima1@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const status = document.getElementById('formStatus');
+  if (status) status.textContent = 'Открываем почту с подготовленной заявкой.';
+});
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
 
@@ -61,10 +73,10 @@ language.value = savedLanguage;
 document.querySelector('.account-button')?.before(language);
 
 const common = {
-  en: ['Toys','About','How to order','Contact','My account'],
-  nl: ['Knuffels','Over VIORI','Bestellen','Contact','Mijn account'],
-  de: ['Kuscheltiere','Über VIORI','Bestellen','Kontakt','Mein Konto'],
-  fr: ['Peluches','À propos','Commander','Contact','Mon compte']
+  en: ['Toys','About','Contact','My account'],
+  nl: ['Knuffels','Over VIORI','Contact','Mijn account'],
+  de: ['Kuscheltiere','Über VIORI','Kontakt','Mein Konto'],
+  fr: ['Peluches','À propos','Contact','Mon compte']
 };
 const pageCopy = {
   'toys.html': {
@@ -99,7 +111,7 @@ function applyPageLanguage(code) {
   const navCopy = common[code];
   document.querySelectorAll('.main-nav a').forEach((link,index) => { if (navCopy?.[index]) link.textContent = navCopy[index]; });
   const accountText = document.querySelector('.account-button-text');
-  if (accountText && navCopy) accountText.textContent = navCopy[4];
+  if (accountText && navCopy) accountText.textContent = navCopy[3];
   const file = location.pathname.split('/').pop() || '';
   const copy = pageCopy[file]?.[code];
   if (copy) {

@@ -5,6 +5,7 @@ declare global {
 }
 
 const backendConfig = window.VIORI_CONFIG;
+const arrivedFromOAuth = location.hash.includes("access_token=") || location.search.includes("code=");
 const supabase: SupabaseClient | null = backendConfig?.supabaseUrl && backendConfig?.supabaseAnonKey
   ? createClient(backendConfig.supabaseUrl, backendConfig.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
   : null;
@@ -31,8 +32,7 @@ const englishTranslations: Record<string, string> = {
   'meta[name="description"]': "VIORI — handmade crochet toys. Unique gifts made with love.",
   ".main-nav a:nth-child(1)": "Toys",
   ".main-nav a:nth-child(2)": "About",
-  ".main-nav a:nth-child(3)": "How to order",
-  ".main-nav a:nth-child(4)": "Contacts",
+  ".main-nav a:nth-child(3)": "Contacts",
   ".header-cta": "Order",
   ".account-button-text": "My account",
   ".auth-home-button": '<span aria-hidden="true">←</span> Home',
@@ -266,7 +266,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   nl: {
     "title": "VIORI — handgemaakte gehaakte knuffels",
     'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
-    ".main-nav a:nth-child(1)": "Knuffels", ".main-nav a:nth-child(2)": "Over VIORI", ".main-nav a:nth-child(3)": "Bestellen", ".main-nav a:nth-child(4)": "Contact",
+    ".main-nav a:nth-child(1)": "Knuffels", ".main-nav a:nth-child(2)": "Over VIORI", ".main-nav a:nth-child(3)": "Contact",
     ".header-cta": "Bestellen", ".account-button-text": "Mijn account",
     ".hero-copy .eyebrow": "VIORI · MET DE HAND GEMAAKT", ".hero-copy h1": "Elke knuffel <em>heeft een eigen leven</em>",
     ".hero-text": "Elke VIORI wordt met de hand gemaakt en krijgt een naam, karakter en uniek digitaal paspoort. Tik met je telefoon op de NFC-tag en ontdek het verhaal en de herinneringen.",
@@ -284,7 +284,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   de: {
     "title": "VIORI — handgefertigte Häkeltiere",
     'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
-    ".main-nav a:nth-child(1)": "Kuscheltiere", ".main-nav a:nth-child(2)": "Über VIORI", ".main-nav a:nth-child(3)": "Bestellen", ".main-nav a:nth-child(4)": "Kontakt",
+    ".main-nav a:nth-child(1)": "Kuscheltiere", ".main-nav a:nth-child(2)": "Über VIORI", ".main-nav a:nth-child(3)": "Kontakt",
     ".header-cta": "Bestellen", ".account-button-text": "Mein Konto",
     ".hero-copy .eyebrow": "VIORI · VON HAND GEFERTIGT", ".hero-copy h1": "Jedes Kuscheltier <em>hat ein eigenes Leben</em>",
     ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erhält einen Namen, einen Charakter und einen digitalen Pass. Berühre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
@@ -302,7 +302,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
   fr: {
     "title": "VIORI — peluches au crochet faites main",
     'meta[name="description"]': "VIORI crée des peluches faites main avec leur propre caractère, leur histoire et un passeport NFC numérique.",
-    ".main-nav a:nth-child(1)": "Peluches", ".main-nav a:nth-child(2)": "À propos", ".main-nav a:nth-child(3)": "Commander", ".main-nav a:nth-child(4)": "Contact",
+    ".main-nav a:nth-child(1)": "Peluches", ".main-nav a:nth-child(2)": "À propos", ".main-nav a:nth-child(3)": "Contact",
     ".header-cta": "Commander", ".account-button-text": "Mon compte",
     ".hero-copy .eyebrow": "VIORI · CRÉÉ À LA MAIN", ".hero-copy h1": "Chaque peluche <em>a sa propre vie</em>",
     ".hero-text": "Chaque VIORI est créée à la main et reçoit un nom, un caractère et un passeport numérique unique. Touchez la puce NFC avec votre téléphone pour découvrir son histoire.",
@@ -1399,7 +1399,7 @@ async function loadProductionAdmin(): Promise<void> {
 
 function renderProductionAdmin(): void {
   const productContainer = document.getElementById("adminProducts");
-  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? "LIVE" : "DRAFT"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? (currentLanguage !== "ru" ? "Hide" : "Скрыть") : (currentLanguage !== "ru" ? "Publish" : "Опубликовать")}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div></div>`).join("");
+  if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? (currentLanguage !== "ru" ? "PUBLISHED" : "ОПУБЛИКОВАНО") : (currentLanguage !== "ru" ? "DRAFT" : "ЧЕРНОВИК")}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? (currentLanguage !== "ru" ? "Hide" : "Скрыть из каталога") : (currentLanguage !== "ru" ? "Publish" : "Опубликовать в каталоге")}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div></div>`).join("");
   const passportContainer = document.getElementById("nfcPassports");
   if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
   const orderContainer = document.getElementById("adminOrders");
@@ -1591,7 +1591,7 @@ if (supabase) {
   });
   supabase.auth.onAuthStateChange((event) => {
     if (event === "PASSWORD_RECOVERY") { productionOpenAccount(); authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden"); showProductionAuthForm("resetPasswordForm"); return; }
-    if (event === "SIGNED_IN") productionOpenAccount();
+    if (event === "SIGNED_IN" && arrivedFromOAuth) productionOpenAccount();
     window.setTimeout(() => void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); }), 0);
   });
   void loadProductionAccount().catch((error) => { if (accountStatus) accountStatus.textContent = productionMessage(error); });

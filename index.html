@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260803-14" />
+  <link rel="stylesheet" href="styles.css?v=20260803-15" />
 </head>
 <body>
   <header class="site-header">
@@ -25,7 +25,7 @@
       <nav class="main-nav" aria-label="Основная навигация">
         <a href="toys.html">Игрушки</a>
         <a href="about.html">О бренде</a>
-        <a href="how-to-order.html">Как заказать</a>
+
         <a href="contact.html">Контакты</a>
       </nav>
 
@@ -53,7 +53,7 @@
         <span aria-hidden="true">Bag</span><strong id="cartCount">0</strong>
       </button>
 
-      <a class="button button-small header-cta" href="#contacts">Заказать</a>
+      <a class="button button-small header-cta" href="toys.html#contacts">Заказать</a>
     </div>
   </header>
 
@@ -72,7 +72,7 @@
           </p>
           <div class="hero-actions">
             <a class="button" href="toys.html#catalog">Посмотреть игрушки</a>
-            <a class="text-link" href="#contacts">Заказать свою идею <span>→</span></a>
+            <a class="text-link" href="toys.html#contacts">Заказать свою идею <span>→</span></a>
           </div>
           <div class="hero-points">
             <span>♡ Ручная работа</span>
@@ -163,58 +163,25 @@
             <h3>Выберите игрушку</h3>
             <p>Выберите модель из каталога или пришлите свою идею.</p>
           </article>
+          <article class="step reveal">
+            <span class="step-number">02</span>
+            <h3>Уточним детали</h3>
+            <p>Согласуем цвет, размер, персонализацию, стоимость и срок создания.</p>
+          </article>
+          <article class="step reveal">
+            <span class="step-number">03</span>
+            <h3>Создадим вручную</h3>
+            <p>Мастер свяжет персонажа и подготовит его личный NFC-паспорт.</p>
+          </article>
+          <article class="step reveal">
+            <span class="step-number">04</span>
+            <h3>Доставим бережно</h3>
+            <p>Вы получите игрушку, активируете паспорт и начнёте её историю.</p>
+          </article>
         </div>
       </div>
     </section>
-
-    <section class="section contact-section" id="contacts">
-      <div class="container contact-grid">
-        <div class="contact-copy reveal">
-          <p class="eyebrow">Связаться с VIORI</p>
-          <h2>Давайте создадим особенную игрушку</h2>
-          <p>
-            Напишите, какая игрушка вам понравилась, или расскажите свою идею.
-            Мы ответим, уточним детали и рассчитаем стоимость.
-          </p>
-          <div class="contact-links">
-            <a class="contact-link" href="https://wa.me/31000000000" target="_blank" rel="noreferrer">
-              <span class="contact-icon">WA</span>
-              <span><small>Написать в</small><strong>WhatsApp</strong></span>
-            </a>
-            <a class="contact-link" href="https://instagram.com/" target="_blank" rel="noreferrer">
-              <span class="contact-icon">IG</span>
-              <span><small>Посмотреть</small><strong>Instagram</strong></span>
-            </a>
-          </div>
-          <p class="small-note">Перед публикацией замените номер WhatsApp и ссылку Instagram на настоящие.</p>
-        </div>
-
-        <form class="order-form reveal" id="orderForm">
-          <div class="form-row">
-            <label>
-              <span class="label-text">Ваше имя</span>
-              <input type="text" name="name" placeholder="Например, Анна" required />
-            </label>
-          </div>
-
-          <label>
-            <span class="label-text">Что хотите заказать?</span>
-            <select name="product" id="productSelect">
-              <option>Зайка Мия</option>
-            </select>
-          </label>
-
-          <label>
-            <span class="label-text">Пожелания</span>
-            <textarea name="message" rows="5" placeholder="Напишите желаемый цвет, размер и другие детали"></textarea>
-          </label>
-
-          <button class="button form-submit" type="submit">Подготовить сообщение</button>
-          <p class="form-status" id="formStatus" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
-  </main>
+</main>
 
   <div class="product-modal" id="productModal" aria-hidden="true">
     <button class="shop-backdrop" type="button" data-close-product aria-label="Закрыть"></button>
@@ -462,6 +429,6 @@
   <div class="cancellation-modal" id="cancellationModal" aria-hidden="true"><button class="shop-backdrop" type="button" data-close-cancellation aria-label="Закрыть"></button><section class="cancellation-dialog" role="dialog" aria-modal="true" aria-labelledby="cancellationTitle"><button class="shop-close" type="button" data-close-cancellation aria-label="Закрыть">×</button><div id="cancellationFormView"><p class="eyebrow">ПРАВО НА ОТМЕНУ</p><h2 id="cancellationTitle">Отменить заказ</h2><p>Отправьте запрос — мы сохраним дату обращения и свяжемся с вами после проверки статуса заказа.</p><form class="checkout-form" id="cancellationForm"><label><span>Номер заказа</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001" required></label><label><span>Email заказа</span><input type="email" name="email" required></label><label><span>Причина (необязательно)</span><textarea name="reason" rows="3"></textarea></label><button class="button" type="submit">Отправить запрос на отмену</button><p class="account-status" id="cancellationStatus" aria-live="polite"></p></form></div><div class="checkout-success hidden" id="cancellationSuccess"><div>✓</div><p class="eyebrow">ЗАПРОС ПРИНЯТ</p><h2>Отмена зарегистрирована</h2><p id="cancellationReference"></p><button class="button" type="button" data-close-cancellation>Закрыть</button></div></section></div>
 
   <script src="config.js"></script>
-  <script src="script.js?v=20260803-14"></script>
+  <script src="script.js?v=20260803-15"></script>
 </body>
 </html>

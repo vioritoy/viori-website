@@ -20241,6 +20241,7 @@ ${suffix}`;
 
   // script.ts
   var backendConfig = window.VIORI_CONFIG;
+  var arrivedFromOAuth = location.hash.includes("access_token=") || location.search.includes("code=");
   var supabase = backendConfig?.supabaseUrl && backendConfig?.supabaseAnonKey ? createClient(backendConfig.supabaseUrl, backendConfig.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
   document.documentElement.dataset.backend = supabase ? "supabase" : "local-demo";
   var menuButton = document.querySelector(".menu-button");
@@ -20250,8 +20251,7 @@ ${suffix}`;
     'meta[name="description"]': "VIORI \u2014 handmade crochet toys. Unique gifts made with love.",
     ".main-nav a:nth-child(1)": "Toys",
     ".main-nav a:nth-child(2)": "About",
-    ".main-nav a:nth-child(3)": "How to order",
-    ".main-nav a:nth-child(4)": "Contacts",
+    ".main-nav a:nth-child(3)": "Contacts",
     ".header-cta": "Order",
     ".account-button-text": "My account",
     ".auth-home-button": '<span aria-hidden="true">\u2190</span> Home',
@@ -20486,8 +20486,7 @@ ${suffix}`;
       'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
       ".main-nav a:nth-child(1)": "Knuffels",
       ".main-nav a:nth-child(2)": "Over VIORI",
-      ".main-nav a:nth-child(3)": "Bestellen",
-      ".main-nav a:nth-child(4)": "Contact",
+      ".main-nav a:nth-child(3)": "Contact",
       ".header-cta": "Bestellen",
       ".account-button-text": "Mijn account",
       ".hero-copy .eyebrow": "VIORI \xB7 MET DE HAND GEMAAKT",
@@ -20530,8 +20529,7 @@ ${suffix}`;
       'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
       ".main-nav a:nth-child(1)": "Kuscheltiere",
       ".main-nav a:nth-child(2)": "\xDCber VIORI",
-      ".main-nav a:nth-child(3)": "Bestellen",
-      ".main-nav a:nth-child(4)": "Kontakt",
+      ".main-nav a:nth-child(3)": "Kontakt",
       ".header-cta": "Bestellen",
       ".account-button-text": "Mein Konto",
       ".hero-copy .eyebrow": "VIORI \xB7 VON HAND GEFERTIGT",
@@ -20574,8 +20572,7 @@ ${suffix}`;
       'meta[name="description"]': "VIORI cr\xE9e des peluches faites main avec leur propre caract\xE8re, leur histoire et un passeport NFC num\xE9rique.",
       ".main-nav a:nth-child(1)": "Peluches",
       ".main-nav a:nth-child(2)": "\xC0 propos",
-      ".main-nav a:nth-child(3)": "Commander",
-      ".main-nav a:nth-child(4)": "Contact",
+      ".main-nav a:nth-child(3)": "Contact",
       ".header-cta": "Commander",
       ".account-button-text": "Mon compte",
       ".hero-copy .eyebrow": "VIORI \xB7 CR\xC9\xC9 \xC0 LA MAIN",
@@ -21648,7 +21645,7 @@ ${suffix}`;
   }
   function renderProductionAdmin() {
     const productContainer = document.getElementById("adminProducts");
-    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? "LIVE" : "DRAFT"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C" : currentLanguage !== "ru" ? "Publish" : "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div></div>`).join("");
+    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? currentLanguage !== "ru" ? "PUBLISHED" : "\u041E\u041F\u0423\u0411\u041B\u0418\u041A\u041E\u0412\u0410\u041D\u041E" : currentLanguage !== "ru" ? "DRAFT" : "\u0427\u0415\u0420\u041D\u041E\u0412\u0418\u041A"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" : currentLanguage !== "ru" ? "Publish" : "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div></div>`).join("");
     const passportContainer = document.getElementById("nfcPassports");
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
     const orderContainer = document.getElementById("adminOrders");
@@ -21962,7 +21959,7 @@ ${suffix}`;
         showProductionAuthForm("resetPasswordForm");
         return;
       }
-      if (event === "SIGNED_IN") productionOpenAccount();
+      if (event === "SIGNED_IN" && arrivedFromOAuth) productionOpenAccount();
       window.setTimeout(() => void loadProductionAccount().catch((error) => {
         if (accountStatus) accountStatus.textContent = productionMessage(error);
       }), 0);
