@@ -34,7 +34,6 @@ const englishTranslations: Record<string, string> = {
   ".main-nav a:nth-child(2)": "Catalog",
   ".main-nav a:nth-child(3)": "About",
   ".main-nav a:nth-child(4)": "Contacts",
-  ".header-cta": "Order",
   ".account-button-text": "My account",
   ".auth-home-button": '<span aria-hidden="true">←</span> Home',
   ".google-auth-button span": "Continue with Google",
@@ -68,11 +67,6 @@ const englishTranslations: Record<string, string> = {
   ".stats div:nth-child(1) span": "handmade",
   ".stats div:nth-child(2) span": "unique toy",
   ".stats div:nth-child(3) span": "warmth and care",
-  "#order .eyebrow": "A simple process",
-  "#order h2": "How to order a toy",
-  "#order .section-heading > p": "From your first message to a beautiful parcel — in just four steps.",
-  ".step h3": "Choose a toy",
-  ".step p": "Choose a model from the catalogue or send us your own idea.",
   "#contacts .eyebrow": "Get in touch with VIORI",
   "#contacts h2": "Let’s create a special toy",
   "#contacts .contact-copy > p:nth-of-type(2)": "Tell us which toy you like or share your own idea. We’ll reply, discuss the details and calculate the price.",
@@ -128,8 +122,8 @@ const englishTranslations: Record<string, string> = {
   '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
   ".privacy-note": "Your account keeps your toys’ stories, orders and access to the personal VIORI world."
   , '.admin-heading .eyebrow': "VIORI CATALOGUE",
-  '.admin-heading h3': "Add a new toy",
-  '.admin-heading > p:not(.eyebrow)': "Complete the card and upload a photo. The toy will appear on the website immediately.",
+  '.admin-heading h3': "Toys on the site",
+  '.admin-heading > p:not(.eyebrow)': "Published cards are visible to every catalogue visitor.",
   '.image-upload > span': "Toy photo",
   '.image-upload small': "JPG, PNG or WebP, up to 1.5 MB",
   '#adminProductForm > .button': "Publish toy"
@@ -242,25 +236,17 @@ const englishTranslations: Record<string, string> = {
   , '#cancellationSuccess .eyebrow': "REQUEST RECEIVED"
   , '#cancellationSuccess h2': "Cancellation registered"
   , '#cancellationSuccess .button': "Close"
-  , '.admin-subtitle': "Manage the shop, orders, characters and digital passports in one place."
-  , '.dashboard-tab[data-dashboard-tab="admin-home"]': "Overview"
-  , '.dashboard-tab[data-dashboard-tab="admin"]': "Catalogue & NFC"
-  , '.admin-metrics article:nth-child(1) span': "Products"
-  , '.admin-metrics article:nth-child(1) small': "in the catalogue"
+  , '.dashboard-tab[data-dashboard-tab="admin-orders"]': "Orders"
+  , '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "Catalogue"
+  , '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC passports"
+  , '.admin-metrics article:nth-child(1) span': "New"
+  , '.admin-metrics article:nth-child(1) small': "need attention"
   , '.admin-metrics article:nth-child(2) span': "Orders"
   , '.admin-metrics article:nth-child(2) small': "all time"
-  , '.admin-metrics article:nth-child(3) span': "New"
-  , '.admin-metrics article:nth-child(3) small': "need attention"
+  , '.admin-metrics article:nth-child(3) span': "Products"
+  , '.admin-metrics article:nth-child(3) small': "in the catalogue"
   , '.admin-metrics article:nth-child(4) small': "passports issued"
-  , '.admin-focus .eyebrow': "TODAY"
-  , '.admin-focus h3': "VIORI control centre"
-  , '.admin-focus > p:not(.eyebrow)': "Start with new orders, then prepare the characters and issue NFC passports before shipping."
-  , '.admin-quick-actions button:nth-child(1)': "Add a toy"
-  , '.admin-quick-actions button:nth-child(2)': "Issue NFC"
-  , '.admin-quick-actions button:nth-child(3)': "Check orders"
-  , '.admin-activity .eyebrow': "ACTIVITY"
-  , '.admin-activity h3': "Latest orders"
-  , '.admin-section-title button': "Open all"
+  , '#adminAddProductToggle': "Add a toy"
 };
 
 const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> = {
@@ -268,14 +254,13 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "title": "VIORI — handgemaakte gehaakte knuffels",
     'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
     ".main-nav a:nth-child(1)": "Knuffels", ".main-nav a:nth-child(2)": "Catalogus", ".main-nav a:nth-child(3)": "Over VIORI", ".main-nav a:nth-child(4)": "Contact",
-    ".header-cta": "Bestellen", ".account-button-text": "Mijn account",
+    ".account-button-text": "Mijn account",
     ".hero-copy .eyebrow": "VIORI · MET DE HAND GEMAAKT", ".hero-copy h1": "Elke knuffel <em>heeft een eigen leven</em>",
     ".hero-text": "Elke VIORI wordt met de hand gemaakt en krijgt een naam, karakter en uniek digitaal paspoort. Tik met je telefoon op de NFC-tag en ontdek het verhaal en de herinneringen.",
     ".hero-actions .button": "Bekijk de knuffels", ".hero-actions .text-link": "Laat jouw idee maken <span>→</span>",
     "#catalog .section-heading .eyebrow": "Een kleine collectie", "#catalog .section-heading h2": "VIORI-knuffels", "#catalog .section-heading > p": "Ontdek handgemaakte personages met een eigen digitaal verhaal.",
     '.filters [data-filter="all"]': "Alles", '.filters [data-filter="animals"]': "Dieren", '.filters [data-filter="dolls"]': "Poppen", '.filters [data-filter="baby"]': "Voor baby's",
     "#about .eyebrow": "Over het atelier", "#about h2": "Elke steek vertelt een verhaal",
-    "#order .eyebrow": "Eenvoudig bestellen", "#order h2": "Zo bestel je een VIORI",
     "#contacts .eyebrow": "Neem contact op", "#contacts h2": "Laten we een bijzondere knuffel maken", ".form-submit": "Bericht voorbereiden",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "Het leven van jouw knuffel", '.auth-tab[data-auth-tab="login"]': "Inloggen", '.auth-tab[data-auth-tab="register"]': "Registreren",
     "#loginForm .button": "Inloggen", "#registerForm .button": "Account maken", ".dashboard-head .eyebrow": "MIJN ACCOUNT",
@@ -286,14 +271,13 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "title": "VIORI — handgefertigte Häkeltiere",
     'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
     ".main-nav a:nth-child(1)": "Kuscheltiere", ".main-nav a:nth-child(2)": "Katalog", ".main-nav a:nth-child(3)": "Über VIORI", ".main-nav a:nth-child(4)": "Kontakt",
-    ".header-cta": "Bestellen", ".account-button-text": "Mein Konto",
+    ".account-button-text": "Mein Konto",
     ".hero-copy .eyebrow": "VIORI · VON HAND GEFERTIGT", ".hero-copy h1": "Jedes Kuscheltier <em>hat ein eigenes Leben</em>",
     ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erhält einen Namen, einen Charakter und einen digitalen Pass. Berühre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
     ".hero-actions .button": "Kuscheltiere ansehen", ".hero-actions .text-link": "Eigene Idee anfragen <span>→</span>",
     "#catalog .section-heading .eyebrow": "Eine kleine Kollektion", "#catalog .section-heading h2": "VIORI-Kuscheltiere", "#catalog .section-heading > p": "Entdecke handgefertigte Charaktere mit ihrer eigenen digitalen Geschichte.",
     '.filters [data-filter="all"]': "Alle", '.filters [data-filter="animals"]': "Tiere", '.filters [data-filter="dolls"]': "Puppen", '.filters [data-filter="baby"]': "Für Babys",
     "#about .eyebrow": "Über das Atelier", "#about h2": "Jede Masche erzählt eine Geschichte",
-    "#order .eyebrow": "Einfach bestellen", "#order h2": "So bestellst du deine VIORI",
     "#contacts .eyebrow": "VIORI kontaktieren", "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen", ".form-submit": "Nachricht vorbereiten",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "Das Leben deines Kuscheltiers", '.auth-tab[data-auth-tab="login"]': "Anmelden", '.auth-tab[data-auth-tab="register"]': "Registrieren",
     "#loginForm .button": "Anmelden", "#registerForm .button": "Konto erstellen", ".dashboard-head .eyebrow": "MEIN KONTO",
@@ -304,14 +288,13 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "title": "VIORI — peluches au crochet faites main",
     'meta[name="description"]': "VIORI crée des peluches faites main avec leur propre caractère, leur histoire et un passeport NFC numérique.",
     ".main-nav a:nth-child(1)": "Peluches", ".main-nav a:nth-child(2)": "Catalogue", ".main-nav a:nth-child(3)": "À propos", ".main-nav a:nth-child(4)": "Contact",
-    ".header-cta": "Commander", ".account-button-text": "Mon compte",
+    ".account-button-text": "Mon compte",
     ".hero-copy .eyebrow": "VIORI · CRÉÉ À LA MAIN", ".hero-copy h1": "Chaque peluche <em>a sa propre vie</em>",
     ".hero-text": "Chaque VIORI est créée à la main et reçoit un nom, un caractère et un passeport numérique unique. Touchez la puce NFC avec votre téléphone pour découvrir son histoire.",
     ".hero-actions .button": "Voir les peluches", ".hero-actions .text-link": "Créer votre idée <span>→</span>",
     "#catalog .section-heading .eyebrow": "Une petite collection", "#catalog .section-heading h2": "Peluches VIORI", "#catalog .section-heading > p": "Découvrez des personnages faits main avec leur propre histoire numérique.",
     '.filters [data-filter="all"]': "Toutes", '.filters [data-filter="animals"]': "Animaux", '.filters [data-filter="dolls"]': "Poupées", '.filters [data-filter="baby"]': "Pour bébés",
     "#about .eyebrow": "À propos de l’atelier", "#about h2": "Chaque maille raconte une histoire",
-    "#order .eyebrow": "Commande simple", "#order h2": "Comment commander votre VIORI",
     "#contacts .eyebrow": "Contacter VIORI", "#contacts h2": "Créons une peluche exceptionnelle", ".form-submit": "Préparer le message",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "La vie de votre peluche", '.auth-tab[data-auth-tab="login"]': "Connexion", '.auth-tab[data-auth-tab="register"]': "Inscription",
     "#loginForm .button": "Se connecter", "#registerForm .button": "Créer un compte", ".dashboard-head .eyebrow": "MON COMPTE",
@@ -594,7 +577,14 @@ document.querySelectorAll<HTMLButtonElement>(".dashboard-tab").forEach((tab) => 
   });
 });
 
-document.querySelectorAll<HTMLButtonElement>("[data-admin-go]").forEach((button) => button.addEventListener("click", () => switchDashboardPage(button.dataset.adminGo || "admin")));
+// Форма добавления игрушки открывается по кнопке, а не занимает весь экран каталога.
+const addProductToggle = document.getElementById("adminAddProductToggle");
+addProductToggle?.addEventListener("click", () => {
+  const form = document.getElementById("adminProductForm");
+  const opened = form ? !form.classList.toggle("hidden") : false;
+  addProductToggle.setAttribute("aria-expanded", String(opened));
+  if (opened) form?.querySelector<HTMLInputElement>("input")?.focus();
+});
 
 function getNfcPassports(): NfcPassport[] {
   try { return JSON.parse(localStorage.getItem("viori-nfc-passports") || "[]") as NfcPassport[]; }
@@ -681,10 +671,37 @@ function renderCatalogProducts(): void {
 
 let activeShopProduct: ShopProduct | null = null;
 
-function resolveShopProduct(button: HTMLElement): ShopProduct | null {
-  if (button.dataset.staticProduct === "mia") {
-    return { id: "static:mia", name: currentLanguage !== "ru" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.", image: "" };
+// Персонажи, свёрстанные прямо в каталоге. Тот же список продублирован
+// в site-pages.js — подстраницы не подключают этот бандл. Меняя цены или
+// имена здесь, поправьте и там, иначе корзина покажет разные данные.
+const staticShopProducts: Record<string, { nameRu: string; nameEn: string; price: number; descriptionRu: string; descriptionEn: string }> = {
+  mia: {
+    nameRu: "Зайка Мия", nameEn: "Mia the Bunny", price: 29,
+    descriptionRu: "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.",
+    descriptionEn: "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours."
+  },
+  teo: {
+    nameRu: "Мишка Тео", nameEn: "Theo the Bear", price: 34,
+    descriptionRu: "Готовый персонаж с вязаным шарфом и личным NFC-паспортом. Высота около 30 см.",
+    descriptionEn: "A ready character with a knitted scarf and a personal NFC passport. About 30 cm tall."
   }
+};
+
+function staticShopProduct(key: string): ShopProduct | null {
+  const item = staticShopProducts[key];
+  if (!item) return null;
+  return {
+    id: `static:${key}`,
+    name: currentLanguage !== "ru" ? item.nameEn : item.nameRu,
+    price: item.price,
+    description: currentLanguage !== "ru" ? item.descriptionEn : item.descriptionRu,
+    image: ""
+  };
+}
+
+function resolveShopProduct(button: HTMLElement): ShopProduct | null {
+  const staticKey = button.dataset.staticProduct;
+  if (staticKey) return staticShopProduct(staticKey);
   const id = button.dataset.catalogProduct;
   const product = getCatalogProducts().find((item) => item.id === id);
   if (!product) return null;
@@ -692,7 +709,7 @@ function resolveShopProduct(button: HTMLElement): ShopProduct | null {
 }
 
 function resolveShopProductById(id: string): ShopProduct | null {
-  if (id === "static:mia") return { id, name: currentLanguage !== "ru" ? "Mia the Bunny" : "Зайка Мия", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом.", image: "" };
+  if (id.startsWith("static:")) return staticShopProduct(id.slice(7));
   const product = getCatalogProducts().find((item) => `catalog:${item.id}` === id);
   return product ? { id, name: currentLanguage !== "ru" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
 }
@@ -1043,9 +1060,6 @@ function renderAdminOverview(): void {
   document.getElementById("adminMetricOrders")!.textContent = String(orders.length);
   document.getElementById("adminMetricNewOrders")!.textContent = String(orders.filter((order) => order.status === "new").length);
   document.getElementById("adminMetricPassports")!.textContent = String(passports.length);
-  const container = document.getElementById("adminOverviewOrders");
-  if (!container) return;
-  container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} · €${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
 }
 
 function generateNfcCode(): string {
@@ -1143,10 +1157,10 @@ function renderDashboard(account: Account): void {
   document.querySelector(".account-panel")?.classList.toggle("admin-mode", account.role === "admin");
   if (account.role === "admin") {
     renderAdminProducts(); renderAdminOrders(); renderNfcPassports(); renderAdminOverview();
-    if (!adminLayoutInitialized) { switchDashboardPage("admin-home"); adminLayoutInitialized = true; }
+    if (!adminLayoutInitialized) { switchDashboardPage("admin-orders"); adminLayoutInitialized = true; }
   } else {
     const activePage = document.querySelector<HTMLButtonElement>(".dashboard-tab.active")?.dataset.dashboardTab;
-    if (activePage === "admin" || activePage === "admin-home") switchDashboardPage("toys");
+    if (activePage?.startsWith("admin-")) switchDashboardPage("toys");
   }
   const toys = account.toys || [];
   document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
@@ -1352,8 +1366,8 @@ function renderProductionDashboard(email: string): void {
   document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
   const selectedPage = document.querySelector<HTMLButtonElement>(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
   const allowedPage = isAdmin
-    ? (selectedPage === "admin" || selectedPage === "admin-home" ? selectedPage : "admin-home")
-    : (selectedPage && selectedPage !== "admin" && selectedPage !== "admin-home" ? selectedPage : "toys");
+    ? (selectedPage?.startsWith("admin-") ? selectedPage : "admin-orders")
+    : (selectedPage && !selectedPage.startsWith("admin-") ? selectedPage : "toys");
   switchProductionDashboardPage(allowedPage);
   document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
   document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
@@ -1409,8 +1423,6 @@ function renderProductionAdmin(): void {
   document.getElementById("adminMetricOrders")!.textContent = String(productionOrders.length);
   document.getElementById("adminMetricNewOrders")!.textContent = String(productionOrders.filter((o) => o.status === "new").length);
   document.getElementById("adminMetricPassports")!.textContent = String(productionPassports.length);
-  const overview = document.getElementById("adminOverviewOrders");
-  if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>€${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Новых заказов пока нет."}</p></div>`;
 }
 
 if (supabase) {
@@ -1467,10 +1479,6 @@ if (supabase) {
     event.preventDefault();
     switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
   });
-  document.querySelectorAll<HTMLButtonElement>("[data-admin-go]").forEach((button) => button.addEventListener("click", () => {
-    if (productionProfile?.role !== "admin") return;
-    switchProductionDashboardPage(button.dataset.adminGo || "admin");
-  }));
   document.querySelector<HTMLInputElement>('#adminProductForm input[name="image"]')?.addEventListener("change", (event) => {
     const file = (event.currentTarget as HTMLInputElement).files?.[0];
     const preview = document.getElementById("adminImagePreview");
@@ -1607,6 +1615,11 @@ if (new URLSearchParams(window.location.search).has("nfc")) {
 }
 if (new URLSearchParams(window.location.search).has("account")) {
   window.setTimeout(() => { if (supabase) productionOpenAccount(); else openAccount(); }, 0);
+}
+// Из каталога товар кладётся в корзину и пользователь приходит сюда по ?cart=1.
+// Клик по кнопке, а не прямой вызов: обработчик висит на ней в обеих ветках.
+if (new URLSearchParams(window.location.search).has("cart")) {
+  window.setTimeout(() => document.getElementById("openCart")?.click(), 0);
 }
 
 const observer = new IntersectionObserver(

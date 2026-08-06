@@ -50,10 +50,22 @@
       </button>
 
       <button class="cart-button" id="openCart" type="button" aria-label="Открыть корзину">
-        <span aria-hidden="true">Bag</span><strong id="cartCount">0</strong>
+        <svg class="cart-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+          <path d="M1.6 3.6h2.4l1.5 3"/>
+          <path d="M6.4 7.4h3.1"/>
+          <path d="M16.5 7.4h5.1"/>
+          <path d="M6.4 7.4 8.9 14.6"/>
+          <path d="M21.6 7.4 18.7 14.6"/>
+          <path d="M8.9 14.6h9.8"/>
+          <circle cx="10.7" cy="19" r="1.6"/>
+          <circle cx="16.9" cy="19" r="1.6"/>
+          <circle class="cart-toy" cx="10.6" cy="4.1" r="1.5"/>
+          <circle class="cart-toy" cx="15.4" cy="4.1" r="1.5"/>
+          <circle class="cart-toy" cx="13" cy="6.9" r="3.3"/>
+        </svg>
+        <strong id="cartCount">0</strong>
       </button>
 
-      <a class="button button-small header-cta" href="catalog.html#custom">Заказать</a>
     </div>
   </header>
 
@@ -105,38 +117,6 @@
       </div>
     </section>
 
-    <section class="section section-soft" id="order">
-      <div class="container">
-        <div class="section-heading centered reveal">
-          <p class="eyebrow">Простой процесс</p>
-          <h2>Как заказать игрушку</h2>
-          <p>От первого сообщения до красивой посылки — всего четыре шага.</p>
-        </div>
-
-        <div class="steps">
-          <article class="step reveal">
-            <span class="step-number">01</span>
-            <h3>Выберите игрушку</h3>
-            <p>Выберите модель из каталога или пришлите свою идею.</p>
-          </article>
-          <article class="step reveal">
-            <span class="step-number">02</span>
-            <h3>Уточним детали</h3>
-            <p>Согласуем цвет, размер, персонализацию, стоимость и срок создания.</p>
-          </article>
-          <article class="step reveal">
-            <span class="step-number">03</span>
-            <h3>Создадим вручную</h3>
-            <p>Мастер свяжет персонажа и подготовит его личный NFC-паспорт.</p>
-          </article>
-          <article class="step reveal">
-            <span class="step-number">04</span>
-            <h3>Доставим бережно</h3>
-            <p>Вы получите игрушку, активируете паспорт и начнёте её историю.</p>
-          </article>
-        </div>
-      </div>
-    </section>
 </main>
 
   <div class="product-modal" id="productModal" aria-hidden="true">
@@ -286,24 +266,22 @@
         </div>
 
         <div class="dashboard-tabs" role="tablist">
-          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-home">Обзор</button>
+          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-orders">Заказы</button>
+          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-catalog">Каталог</button>
+          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin-nfc">NFC-паспорта</button>
           <button class="dashboard-tab active customer-only" type="button" data-dashboard-tab="toys">Мои игрушки</button>
           <button class="dashboard-tab customer-only" type="button" data-dashboard-tab="orders">Заказы</button>
           <button class="dashboard-tab customer-only" type="button" data-dashboard-tab="profile">Профиль</button>
-          <button class="dashboard-tab admin-only hidden" type="button" data-dashboard-tab="admin">Управление</button>
         </div>
 
-        <div class="dashboard-page admin-overview admin-only hidden" data-dashboard-page="admin-home">
+        <div class="dashboard-page admin-only hidden" data-dashboard-page="admin-orders">
           <div class="admin-metrics">
-            <article><span>Товары</span><strong id="adminMetricProducts">0</strong><small>в каталоге</small></article>
-            <article><span>Заказы</span><strong id="adminMetricOrders">0</strong><small>за всё время</small></article>
             <article><span>Новые</span><strong id="adminMetricNewOrders">0</strong><small>требуют внимания</small></article>
+            <article><span>Заказы</span><strong id="adminMetricOrders">0</strong><small>за всё время</small></article>
+            <article><span>Товары</span><strong id="adminMetricProducts">0</strong><small>в каталоге</small></article>
             <article><span>NFC</span><strong id="adminMetricPassports">0</strong><small>паспортов выпущено</small></article>
           </div>
-          <div class="admin-overview-grid">
-            <section class="admin-focus"><p class="eyebrow">СЕГОДНЯ</p><h3>Центр управления VIORI</h3><p>Начните с новых заказов, затем подготовьте персонажей и выпустите NFC-паспорта перед отправкой.</p><div class="admin-quick-actions"><button type="button" data-admin-go="admin">Добавить игрушку</button><button type="button" data-admin-go="admin">Выпустить NFC</button><button type="button" data-admin-go="admin">Проверить заказы</button></div></section>
-            <section class="admin-activity"><div class="admin-section-title"><div><p class="eyebrow">АКТИВНОСТЬ</p><h3>Последние заказы</h3></div><button type="button" data-admin-go="admin">Открыть все</button></div><div id="adminOverviewOrders"></div></section>
-          </div>
+          <div class="admin-orders" id="adminOrders"></div>
         </div>
 
         <div class="dashboard-page customer-only" data-dashboard-page="toys">
@@ -331,13 +309,16 @@
           <p class="privacy-note">Ваш кабинет хранит истории игрушек, заказы и доступ к персональному миру VIORI.</p>
         </div>
 
-        <div class="dashboard-page admin-only hidden" data-dashboard-page="admin">
-          <div class="admin-heading">
-            <p class="eyebrow">КАТАЛОГ VIORI</p>
-            <h3>Добавить новую игрушку</h3>
-            <p>Заполните карточку и загрузите фотографию. Игрушка сразу появится на сайте.</p>
+        <div class="dashboard-page admin-only hidden" data-dashboard-page="admin-catalog">
+          <div class="admin-section-head">
+            <div class="admin-heading">
+              <p class="eyebrow">КАТАЛОГ VIORI</p>
+              <h3>Игрушки на сайте</h3>
+              <p>Опубликованные карточки видны всем посетителям каталога.</p>
+            </div>
+            <button class="button button-small" id="adminAddProductToggle" type="button" aria-expanded="false" aria-controls="adminProductForm">Добавить игрушку</button>
           </div>
-          <form class="account-form admin-product-form" id="adminProductForm">
+          <form class="account-form admin-product-form hidden" id="adminProductForm">
             <label><span>Название (RU)</span><input type="text" name="nameRu" placeholder="Например, Мишка Тео" required></label>
             <label><span>Название (EN)</span><input type="text" name="nameEn" placeholder="For example, Theo the Bear" required></label>
             <div class="admin-form-row">
@@ -352,8 +333,9 @@
           </form>
           <p class="account-status" id="adminStatus" aria-live="polite"></p>
           <div class="admin-products" id="adminProducts"></div>
-          <div class="admin-orders-heading"><p class="eyebrow">ЗАКАЗЫ</p><h3>Последние заказы</h3></div>
-          <div class="admin-orders" id="adminOrders"></div>
+        </div>
+
+        <div class="dashboard-page admin-only hidden" data-dashboard-page="admin-nfc">
           <div class="admin-orders-heading nfc-admin-heading"><p class="eyebrow">NFC-ПАСПОРТА</p><h3>Выпустить новый паспорт</h3><p>Создайте защищённый код для конкретной игрушки. Активировать его сможет только один клиент.</p></div>
           <form class="account-form nfc-issue-form" id="nfcIssueForm"><div class="admin-form-row"><label><span>Имя персонажа (RU)</span><input type="text" name="nameRu" placeholder="Зайка Мия" required></label><label><span>Имя персонажа (EN)</span><input type="text" name="nameEn" placeholder="Mia the Bunny" required></label></div><label><span>Номер заказа (необязательно)</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001"></label><button class="button" type="submit">Создать NFC-паспорт</button></form>
           <p class="account-status" id="nfcIssueStatus" aria-live="polite"></p>

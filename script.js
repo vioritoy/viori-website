@@ -20253,7 +20253,6 @@ ${suffix}`;
     ".main-nav a:nth-child(2)": "Catalog",
     ".main-nav a:nth-child(3)": "About",
     ".main-nav a:nth-child(4)": "Contacts",
-    ".header-cta": "Order",
     ".account-button-text": "My account",
     ".auth-home-button": '<span aria-hidden="true">\u2190</span> Home',
     ".google-auth-button span": "Continue with Google",
@@ -20287,11 +20286,6 @@ ${suffix}`;
     ".stats div:nth-child(1) span": "handmade",
     ".stats div:nth-child(2) span": "unique toy",
     ".stats div:nth-child(3) span": "warmth and care",
-    "#order .eyebrow": "A simple process",
-    "#order h2": "How to order a toy",
-    "#order .section-heading > p": "From your first message to a beautiful parcel \u2014 in just four steps.",
-    ".step h3": "Choose a toy",
-    ".step p": "Choose a model from the catalogue or send us your own idea.",
     "#contacts .eyebrow": "Get in touch with VIORI",
     "#contacts h2": "Let\u2019s create a special toy",
     "#contacts .contact-copy > p:nth-of-type(2)": "Tell us which toy you like or share your own idea. We\u2019ll reply, discuss the details and calculate the price.",
@@ -20347,8 +20341,8 @@ ${suffix}`;
     '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
     ".privacy-note": "Your account keeps your toys\u2019 stories, orders and access to the personal VIORI world.",
     ".admin-heading .eyebrow": "VIORI CATALOGUE",
-    ".admin-heading h3": "Add a new toy",
-    ".admin-heading > p:not(.eyebrow)": "Complete the card and upload a photo. The toy will appear on the website immediately.",
+    ".admin-heading h3": "Toys on the site",
+    ".admin-heading > p:not(.eyebrow)": "Published cards are visible to every catalogue visitor.",
     ".image-upload > span": "Toy photo",
     ".image-upload small": "JPG, PNG or WebP, up to 1.5 MB",
     "#adminProductForm > .button": "Publish toy",
@@ -20461,25 +20455,17 @@ ${suffix}`;
     "#cancellationSuccess .eyebrow": "REQUEST RECEIVED",
     "#cancellationSuccess h2": "Cancellation registered",
     "#cancellationSuccess .button": "Close",
-    ".admin-subtitle": "Manage the shop, orders, characters and digital passports in one place.",
-    '.dashboard-tab[data-dashboard-tab="admin-home"]': "Overview",
-    '.dashboard-tab[data-dashboard-tab="admin"]': "Catalogue & NFC",
-    ".admin-metrics article:nth-child(1) span": "Products",
-    ".admin-metrics article:nth-child(1) small": "in the catalogue",
+    '.dashboard-tab[data-dashboard-tab="admin-orders"]': "Orders",
+    '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "Catalogue",
+    '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC passports",
+    ".admin-metrics article:nth-child(1) span": "New",
+    ".admin-metrics article:nth-child(1) small": "need attention",
     ".admin-metrics article:nth-child(2) span": "Orders",
     ".admin-metrics article:nth-child(2) small": "all time",
-    ".admin-metrics article:nth-child(3) span": "New",
-    ".admin-metrics article:nth-child(3) small": "need attention",
+    ".admin-metrics article:nth-child(3) span": "Products",
+    ".admin-metrics article:nth-child(3) small": "in the catalogue",
     ".admin-metrics article:nth-child(4) small": "passports issued",
-    ".admin-focus .eyebrow": "TODAY",
-    ".admin-focus h3": "VIORI control centre",
-    ".admin-focus > p:not(.eyebrow)": "Start with new orders, then prepare the characters and issue NFC passports before shipping.",
-    ".admin-quick-actions button:nth-child(1)": "Add a toy",
-    ".admin-quick-actions button:nth-child(2)": "Issue NFC",
-    ".admin-quick-actions button:nth-child(3)": "Check orders",
-    ".admin-activity .eyebrow": "ACTIVITY",
-    ".admin-activity h3": "Latest orders",
-    ".admin-section-title button": "Open all"
+    "#adminAddProductToggle": "Add a toy"
   };
   var regionalTranslations = {
     nl: {
@@ -20489,7 +20475,6 @@ ${suffix}`;
       ".main-nav a:nth-child(2)": "Catalogus",
       ".main-nav a:nth-child(3)": "Over VIORI",
       ".main-nav a:nth-child(4)": "Contact",
-      ".header-cta": "Bestellen",
       ".account-button-text": "Mijn account",
       ".hero-copy .eyebrow": "VIORI \xB7 MET DE HAND GEMAAKT",
       ".hero-copy h1": "Elke knuffel <em>heeft een eigen leven</em>",
@@ -20505,8 +20490,6 @@ ${suffix}`;
       '.filters [data-filter="baby"]': "Voor baby's",
       "#about .eyebrow": "Over het atelier",
       "#about h2": "Elke steek vertelt een verhaal",
-      "#order .eyebrow": "Eenvoudig bestellen",
-      "#order h2": "Zo bestel je een VIORI",
       "#contacts .eyebrow": "Neem contact op",
       "#contacts h2": "Laten we een bijzondere knuffel maken",
       ".form-submit": "Bericht voorbereiden",
@@ -20533,7 +20516,6 @@ ${suffix}`;
       ".main-nav a:nth-child(2)": "Katalog",
       ".main-nav a:nth-child(3)": "\xDCber VIORI",
       ".main-nav a:nth-child(4)": "Kontakt",
-      ".header-cta": "Bestellen",
       ".account-button-text": "Mein Konto",
       ".hero-copy .eyebrow": "VIORI \xB7 VON HAND GEFERTIGT",
       ".hero-copy h1": "Jedes Kuscheltier <em>hat ein eigenes Leben</em>",
@@ -20549,8 +20531,6 @@ ${suffix}`;
       '.filters [data-filter="baby"]': "F\xFCr Babys",
       "#about .eyebrow": "\xDCber das Atelier",
       "#about h2": "Jede Masche erz\xE4hlt eine Geschichte",
-      "#order .eyebrow": "Einfach bestellen",
-      "#order h2": "So bestellst du deine VIORI",
       "#contacts .eyebrow": "VIORI kontaktieren",
       "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen",
       ".form-submit": "Nachricht vorbereiten",
@@ -20577,7 +20557,6 @@ ${suffix}`;
       ".main-nav a:nth-child(2)": "Catalogue",
       ".main-nav a:nth-child(3)": "\xC0 propos",
       ".main-nav a:nth-child(4)": "Contact",
-      ".header-cta": "Commander",
       ".account-button-text": "Mon compte",
       ".hero-copy .eyebrow": "VIORI \xB7 CR\xC9\xC9 \xC0 LA MAIN",
       ".hero-copy h1": "Chaque peluche <em>a sa propre vie</em>",
@@ -20593,8 +20572,6 @@ ${suffix}`;
       '.filters [data-filter="baby"]': "Pour b\xE9b\xE9s",
       "#about .eyebrow": "\xC0 propos de l\u2019atelier",
       "#about h2": "Chaque maille raconte une histoire",
-      "#order .eyebrow": "Commande simple",
-      "#order h2": "Comment commander votre VIORI",
       "#contacts .eyebrow": "Contacter VIORI",
       "#contacts h2": "Cr\xE9ons une peluche exceptionnelle",
       ".form-submit": "Pr\xE9parer le message",
@@ -20863,16 +20840,25 @@ ${suffix}`;
         option.textContent = name;
         select.appendChild(option);
       });
+    }, staticShopProduct2 = function(key) {
+      const item = staticShopProducts[key];
+      if (!item) return null;
+      return {
+        id: `static:${key}`,
+        name: currentLanguage !== "ru" ? item.nameEn : item.nameRu,
+        price: item.price,
+        description: currentLanguage !== "ru" ? item.descriptionEn : item.descriptionRu,
+        image: ""
+      };
     }, resolveShopProduct2 = function(button) {
-      if (button.dataset.staticProduct === "mia") {
-        return { id: "static:mia", name: currentLanguage !== "ru" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0441\u0434\u0435\u043B\u0430\u0439\u0442\u0435 \u0435\u0451 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0432\u043E\u0435\u0439.", image: "" };
-      }
+      const staticKey = button.dataset.staticProduct;
+      if (staticKey) return staticShopProduct2(staticKey);
       const id = button.dataset.catalogProduct;
       const product = getCatalogProducts2().find((item) => item.id === id);
       if (!product) return null;
       return { id: `catalog:${product.id}`, name: currentLanguage !== "ru" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu, image: product.image };
     }, resolveShopProductById2 = function(id) {
-      if (id === "static:mia") return { id, name: currentLanguage !== "ru" ? "Mia the Bunny" : "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F", price: 29, description: currentLanguage !== "ru" ? "A gentle bunny with long ears, her own character and a personal NFC passport." : "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C.", image: "" };
+      if (id.startsWith("static:")) return staticShopProduct2(id.slice(7));
       const product = getCatalogProducts2().find((item) => `catalog:${item.id}` === id);
       return product ? { id, name: currentLanguage !== "ru" ? product.nameEn : product.nameRu, price: product.price, description: currentLanguage !== "ru" ? product.descriptionEn : product.descriptionRu, image: product.image } : null;
     }, getCart2 = function() {
@@ -21020,9 +21006,6 @@ ${suffix}`;
       document.getElementById("adminMetricOrders").textContent = String(orders.length);
       document.getElementById("adminMetricNewOrders").textContent = String(orders.filter((order) => order.status === "new").length);
       document.getElementById("adminMetricPassports").textContent = String(passports.length);
-      const container = document.getElementById("adminOverviewOrders");
-      if (!container) return;
-      container.innerHTML = orders.length ? orders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.number)}</strong><span>${safeText(order.customer.name)} \xB7 \u20AC${order.total.toFixed(2)}</span></div><b class="overview-status">${orderStatusLabel2(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
     }, generateNfcCode2 = function() {
       const bytes = new Uint8Array(6);
       crypto.getRandomValues(bytes);
@@ -21067,12 +21050,12 @@ ${suffix}`;
         renderNfcPassports2();
         renderAdminOverview2();
         if (!adminLayoutInitialized) {
-          switchDashboardPage2("admin-home");
+          switchDashboardPage2("admin-orders");
           adminLayoutInitialized = true;
         }
       } else {
         const activePage = document.querySelector(".dashboard-tab.active")?.dataset.dashboardTab;
-        if (activePage === "admin" || activePage === "admin-home") switchDashboardPage2("toys");
+        if (activePage?.startsWith("admin-")) switchDashboardPage2("toys");
       }
       const toys = account.toys || [];
       document.getElementById("toyEmpty")?.classList.toggle("hidden", toys.length > 0);
@@ -21109,7 +21092,7 @@ ${suffix}`;
       if (!account) document.querySelector(".account-panel")?.classList.remove("admin-mode");
       if (account) renderDashboard2(account);
     };
-    getAccounts = getAccounts2, saveAccounts = saveAccounts2, getSession = getSession2, openAccount = openAccount2, closeAccount = closeAccount2, switchDashboardPage = switchDashboardPage2, getNfcPassports = getNfcPassports2, saveNfcPassports = saveNfcPassports2, claimNfcPassport = claimNfcPassport2, getCatalogProducts = getCatalogProducts2, saveCatalogProducts = saveCatalogProducts2, renderCatalogProducts = renderCatalogProducts2, resolveShopProduct = resolveShopProduct2, resolveShopProductById = resolveShopProductById2, getCart = getCart2, saveCart = saveCart2, addProductToCart = addProductToCart2, openProduct = openProduct2, closeProduct = closeProduct2, openCart = openCart2, closeCart = closeCart2, renderCart = renderCart2, getCheckoutOrders = getCheckoutOrders2, saveCheckoutOrders = saveCheckoutOrders2, checkoutAmount = checkoutAmount2, updateCheckoutTotal = updateCheckoutTotal2, openCheckout = openCheckout2, closeCheckout = closeCheckout2, setCookiePreference = setCookiePreference2, openCookieSettings = openCookieSettings2, getCancellationRequests = getCancellationRequests2, openCancellation = openCancellation2, closeCancellation = closeCancellation2, renderAdminProducts = renderAdminProducts2, orderStatusLabel = orderStatusLabel2, renderAdminOrders = renderAdminOrders2, renderAdminOverview = renderAdminOverview2, generateNfcCode = generateNfcCode2, renderNfcPassports = renderNfcPassports2, openPassport = openPassport2, closePassport = closePassport2, renderPassportTimeline = renderPassportTimeline2, renderDashboard = renderDashboard2, renderAccount = renderAccount2;
+    getAccounts = getAccounts2, saveAccounts = saveAccounts2, getSession = getSession2, openAccount = openAccount2, closeAccount = closeAccount2, switchDashboardPage = switchDashboardPage2, getNfcPassports = getNfcPassports2, saveNfcPassports = saveNfcPassports2, claimNfcPassport = claimNfcPassport2, getCatalogProducts = getCatalogProducts2, saveCatalogProducts = saveCatalogProducts2, renderCatalogProducts = renderCatalogProducts2, staticShopProduct = staticShopProduct2, resolveShopProduct = resolveShopProduct2, resolveShopProductById = resolveShopProductById2, getCart = getCart2, saveCart = saveCart2, addProductToCart = addProductToCart2, openProduct = openProduct2, closeProduct = closeProduct2, openCart = openCart2, closeCart = closeCart2, renderCart = renderCart2, getCheckoutOrders = getCheckoutOrders2, saveCheckoutOrders = saveCheckoutOrders2, checkoutAmount = checkoutAmount2, updateCheckoutTotal = updateCheckoutTotal2, openCheckout = openCheckout2, closeCheckout = closeCheckout2, setCookiePreference = setCookiePreference2, openCookieSettings = openCookieSettings2, getCancellationRequests = getCancellationRequests2, openCancellation = openCancellation2, closeCancellation = closeCancellation2, renderAdminProducts = renderAdminProducts2, orderStatusLabel = orderStatusLabel2, renderAdminOrders = renderAdminOrders2, renderAdminOverview = renderAdminOverview2, generateNfcCode = generateNfcCode2, renderNfcPassports = renderNfcPassports2, openPassport = openPassport2, closePassport = closePassport2, renderPassportTimeline = renderPassportTimeline2, renderDashboard = renderDashboard2, renderAccount = renderAccount2;
     document.getElementById("openAccount")?.addEventListener("click", openAccount2);
     document.querySelectorAll("[data-close-account]").forEach((button) => button.addEventListener("click", closeAccount2));
     document.addEventListener("keydown", (event) => {
@@ -21163,7 +21146,13 @@ ${suffix}`;
         switchDashboardPage2(tab.dataset.dashboardTab || "toys");
       });
     });
-    document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => switchDashboardPage2(button.dataset.adminGo || "admin")));
+    const addProductToggle = document.getElementById("adminAddProductToggle");
+    addProductToggle?.addEventListener("click", () => {
+      const form = document.getElementById("adminProductForm");
+      const opened = form ? !form.classList.toggle("hidden") : false;
+      addProductToggle.setAttribute("aria-expanded", String(opened));
+      if (opened) form?.querySelector("input")?.focus();
+    });
     document.getElementById("nfcForm")?.addEventListener("submit", (event) => {
       event.preventDefault();
       const email = getSession2();
@@ -21184,6 +21173,22 @@ ${suffix}`;
       renderAccount2();
     });
     let activeShopProduct = null;
+    const staticShopProducts = {
+      mia: {
+        nameRu: "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F",
+        nameEn: "Mia the Bunny",
+        price: 29,
+        descriptionRu: "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0441\u0434\u0435\u043B\u0430\u0439\u0442\u0435 \u0435\u0451 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0432\u043E\u0435\u0439.",
+        descriptionEn: "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours."
+      },
+      teo: {
+        nameRu: "\u041C\u0438\u0448\u043A\u0430 \u0422\u0435\u043E",
+        nameEn: "Theo the Bear",
+        price: 34,
+        descriptionRu: "\u0413\u043E\u0442\u043E\u0432\u044B\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0441 \u0432\u044F\u0437\u0430\u043D\u044B\u043C \u0448\u0430\u0440\u0444\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0441\u043E\u0442\u0430 \u043E\u043A\u043E\u043B\u043E 30 \u0441\u043C.",
+        descriptionEn: "A ready character with a knitted scarf and a personal NFC passport. About 30 cm tall."
+      }
+    };
     document.addEventListener("click", (event) => {
       const target = event.target;
       const productButton = target.closest(".view-product, .add-to-cart");
@@ -21397,6 +21402,7 @@ ${suffix}`;
   var getCatalogProducts;
   var saveCatalogProducts;
   var renderCatalogProducts;
+  var staticShopProduct;
   var resolveShopProduct;
   var resolveShopProductById;
   var getCart;
@@ -21604,7 +21610,7 @@ ${suffix}`;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
     const selectedPage = document.querySelector(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
-    const allowedPage = isAdmin ? selectedPage === "admin" || selectedPage === "admin-home" ? selectedPage : "admin-home" : selectedPage && selectedPage !== "admin" && selectedPage !== "admin-home" ? selectedPage : "toys";
+    const allowedPage = isAdmin ? selectedPage?.startsWith("admin-") ? selectedPage : "admin-orders" : selectedPage && !selectedPage.startsWith("admin-") ? selectedPage : "toys";
     switchProductionDashboardPage(allowedPage);
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
@@ -21658,8 +21664,6 @@ ${suffix}`;
     document.getElementById("adminMetricOrders").textContent = String(productionOrders.length);
     document.getElementById("adminMetricNewOrders").textContent = String(productionOrders.filter((o) => o.status === "new").length);
     document.getElementById("adminMetricPassports").textContent = String(productionPassports.length);
-    const overview = document.getElementById("adminOverviewOrders");
-    if (overview) overview.innerHTML = productionOrders.length ? productionOrders.slice(0, 4).map((order) => `<article class="overview-order"><div><strong>${safeText(order.order_number)}</strong><span>\u20AC${(order.total_cents / 100).toFixed(2)}</span></div><b class="overview-status">${safeText(order.status)}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u041D\u043E\u0432\u044B\u0445 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
   }
   if (supabase) {
     document.documentElement.dataset.appVersion = "2026-08-02-2";
@@ -21759,10 +21763,6 @@ ${suffix}`;
       event.preventDefault();
       switchProductionDashboardPage(tab.dataset.dashboardTab || "toys");
     });
-    document.querySelectorAll("[data-admin-go]").forEach((button) => button.addEventListener("click", () => {
-      if (productionProfile?.role !== "admin") return;
-      switchProductionDashboardPage(button.dataset.adminGo || "admin");
-    }));
     document.querySelector('#adminProductForm input[name="image"]')?.addEventListener("change", (event) => {
       const file = event.currentTarget.files?.[0];
       const preview = document.getElementById("adminImagePreview");
@@ -21983,6 +21983,9 @@ ${suffix}`;
       if (supabase) productionOpenAccount();
       else openAccount();
     }, 0);
+  }
+  if (new URLSearchParams(window.location.search).has("cart")) {
+    window.setTimeout(() => document.getElementById("openCart")?.click(), 0);
   }
   var observer = new IntersectionObserver(
     (entries) => {
