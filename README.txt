@@ -68,6 +68,22 @@ GitHub + Supabase:
      </div>
 5. Названия, цены и описания игрушек.
 
+Письма клиенту о статусе заказа:
+- Код письма: supabase/functions/order-status-email/index.ts
+- Нужен аккаунт провайдера рассылки (по умолчанию Resend) и проверенный домен
+  отправителя. Без своего домена письма уходят только на ваш собственный адрес.
+- Секреты функции:
+    supabase secrets set RESEND_API_KEY=...
+    supabase secrets set ORDER_EMAIL_FROM="VIORI <orders@ваш-домен.nl>"
+    supabase secrets set ORDER_EMAIL_WEBHOOK_SECRET=...   (необязательно)
+- Деплой: npm run supabase:deploy-email
+- Затем в Dashboard: Database -> Webhooks -> Create webhook
+    таблица public.orders, событие UPDATE, тип HTTP Request,
+    URL функции, заголовок Authorization: Bearer <service_role key>.
+- Письмо уходит только при реальной смене статуса. Статус new не рассылается:
+  он выставляется при создании заказа.
+- Язык клиента нигде не хранится, поэтому письмо двуязычное: RU и EN.
+
 Для публикации бесплатно подойдут:
 - GitHub Pages
 - Netlify

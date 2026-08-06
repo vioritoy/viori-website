@@ -8,7 +8,8 @@
     "check": "tsc --noEmit",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "supabase:push": "supabase db push"
+    "supabase:push": "supabase db push",
+    "supabase:deploy-email": "supabase functions deploy order-status-email"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
