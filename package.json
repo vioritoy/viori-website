@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "dev": "node build.mjs --serve",
     "build": "tsc --noEmit && node build.mjs",
     "check": "tsc --noEmit",
     "supabase:start": "supabase start",
