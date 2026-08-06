@@ -20296,7 +20296,7 @@ ${suffix}`;
     ".order-form > label:nth-of-type(1) .label-text": "What would you like to order?",
     ".order-form > label:nth-of-type(2) .label-text": "Your wishes",
     "#productSelect option": "Mia the Bunny",
-    ".form-submit": "Prepare message",
+    ".form-submit": "Send request",
     ".footer > .container > p": '\xA9 <span id="year"></span> VIORI. Handmade crochet toys.',
     ".auth-view > .eyebrow": "VIORI WORLD",
     "#accountTitle": "Your toy\u2019s life",
@@ -20465,7 +20465,11 @@ ${suffix}`;
     ".admin-metrics article:nth-child(3) span": "Products",
     ".admin-metrics article:nth-child(3) small": "in the catalogue",
     ".admin-metrics article:nth-child(4) small": "passports issued",
-    "#adminAddProductToggle": "Add a toy"
+    "#adminAddProductToggle": "Add a toy",
+    '.dashboard-tab[data-dashboard-tab="admin-requests"]': "Requests",
+    '[data-dashboard-page="admin-requests"] .eyebrow': "CUSTOM ORDERS",
+    '[data-dashboard-page="admin-requests"] h3': "Requests from the site",
+    '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the \u201CCreate your own toy\u201D form in the catalogue."
   };
   var regionalTranslations = {
     nl: {
@@ -20492,7 +20496,7 @@ ${suffix}`;
       "#about h2": "Elke steek vertelt een verhaal",
       "#contacts .eyebrow": "Neem contact op",
       "#contacts h2": "Laten we een bijzondere knuffel maken",
-      ".form-submit": "Bericht voorbereiden",
+      ".form-submit": "Aanvraag versturen",
       ".auth-view > .eyebrow": "VIORI WORLD",
       "#accountTitle": "Het leven van jouw knuffel",
       '.auth-tab[data-auth-tab="login"]': "Inloggen",
@@ -20533,7 +20537,7 @@ ${suffix}`;
       "#about h2": "Jede Masche erz\xE4hlt eine Geschichte",
       "#contacts .eyebrow": "VIORI kontaktieren",
       "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen",
-      ".form-submit": "Nachricht vorbereiten",
+      ".form-submit": "Anfrage senden",
       ".auth-view > .eyebrow": "VIORI WORLD",
       "#accountTitle": "Das Leben deines Kuscheltiers",
       '.auth-tab[data-auth-tab="login"]': "Anmelden",
@@ -20574,7 +20578,7 @@ ${suffix}`;
       "#about h2": "Chaque maille raconte une histoire",
       "#contacts .eyebrow": "Contacter VIORI",
       "#contacts h2": "Cr\xE9ons une peluche exceptionnelle",
-      ".form-submit": "Pr\xE9parer le message",
+      ".form-submit": "Envoyer la demande",
       ".auth-view > .eyebrow": "VIORI WORLD",
       "#accountTitle": "La vie de votre peluche",
       '.auth-tab[data-auth-tab="login"]': "Connexion",
@@ -21451,9 +21455,39 @@ ${suffix}`;
       return [];
     }
   }
+  if (localStorage.getItem("viori-cart-owner-fix") !== "1") {
+    localStorage.removeItem("viori-cart");
+    localStorage.removeItem("viori-cart-owner");
+    localStorage.setItem("viori-cart-owner-fix", "1");
+  }
+  function syncCartOwner(userId) {
+    const previous = localStorage.getItem("viori-cart-owner");
+    if (!userId) {
+      if (previous && previous !== "anon") {
+        localStorage.removeItem("viori-cart");
+        localStorage.setItem("viori-cart-owner", "anon");
+      }
+      return;
+    }
+    if (previous && previous !== "anon" && previous !== userId) {
+      localStorage.removeItem("viori-cart");
+    }
+    localStorage.setItem("viori-cart-owner", userId);
+  }
   function saveProductionCart(cart) {
     localStorage.setItem("viori-cart", JSON.stringify(cart));
+    localStorage.setItem("viori-cart-owner", productionProfile?.id || "anon");
     renderCart();
+  }
+  var publicProductsLoaded = false;
+  async function ensureProductsLoaded() {
+    if (!supabase || publicProductsLoaded || productionProducts.length) return;
+    publicProductsLoaded = true;
+    const { data } = await supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").eq("is_active", true);
+    if (data?.length) {
+      productionProducts = data;
+      renderCart();
+    }
   }
   function renderCart() {
     if (!supabase) return;
@@ -21467,6 +21501,7 @@ ${suffix}`;
     if (checkout) checkout.disabled = !items.length;
   }
   function openProductionCart() {
+    void ensureProductsLoaded();
     renderCart();
     document.getElementById("cartDrawer")?.classList.add("open");
     document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false");
@@ -21526,12 +21561,20 @@ ${suffix}`;
   var productionPassports = [];
   var productionOrders = [];
   var productionProducts = [];
+  var productionRequests = [];
   var activePassportId = null;
   function productionMessage(error) {
-    const message = error instanceof Error ? error.message : String(error || "");
+    const raw = error;
+    const message = error instanceof Error ? error.message : String(raw?.message || error || "");
+    if (error) console.error("VIORI backend error:", error);
     if (message.includes("Invalid login credentials")) return currentLanguage !== "ru" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
     if (message.includes("Email not confirmed")) return currentLanguage !== "ru" ? "Confirm your email first." : "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email.";
     if (message.includes("User already registered")) return currentLanguage !== "ru" ? "This email is already registered." : "\u042D\u0442\u043E\u0442 email \u0443\u0436\u0435 \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D.";
+    if (message.includes("authentication_required")) return currentLanguage !== "ru" ? "Please sign in to place an order." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u0430\u043A\u043A\u0430\u0443\u043D\u0442, \u0447\u0442\u043E\u0431\u044B \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437.";
+    if (message.includes("empty_cart")) return currentLanguage !== "ru" ? "Your cart is empty." : "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u0443\u0441\u0442\u0430.";
+    if (message.includes("invalid_cart")) return currentLanguage !== "ru" ? "Some items are no longer available. Please refresh the cart." : "\u0422\u043E\u0432\u0430\u0440\u0430 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435\u0442 \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u043A\u043E\u0440\u0437\u0438\u043D\u0443.";
+    if (message.includes("invalid_customer_details")) return currentLanguage !== "ru" ? "Check your name and phone number." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u043C\u044F \u0438 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430.";
+    if (message.includes("invalid_delivery_method")) return currentLanguage !== "ru" ? "Choose a delivery method." : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438.";
     return currentLanguage !== "ru" ? "Something went wrong. Please try again." : "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.";
   }
   function productionOpenAccount() {
@@ -21564,15 +21607,21 @@ ${suffix}`;
       productionProfile = null;
       productionPassports = [];
       productionOrders = [];
+      syncCartOwner(null);
+      renderCart();
       authView?.classList.remove("hidden");
       dashboardView?.classList.add("hidden");
       document.querySelector(".account-panel")?.classList.remove("admin-mode");
+      document.body.classList.remove("viori-admin");
+      localStorage.removeItem("viori-role");
       return;
     }
+    syncCartOwner(user.id);
+    renderCart();
     const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
       supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
       supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
-      supabase.from("orders").select("id,order_number,total_cents,status,created_at").order("created_at", { ascending: false })
+      supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
     ]);
     if (profileError) throw profileError;
     productionProfile = profile;
@@ -21609,6 +21658,8 @@ ${suffix}`;
     document.getElementById("profileEmail").textContent = email;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
+    document.body.classList.toggle("viori-admin", isAdmin);
+    localStorage.setItem("viori-role", isAdmin ? "admin" : "customer");
     const selectedPage = document.querySelector(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
     const allowedPage = isAdmin ? selectedPage?.startsWith("admin-") ? selectedPage : "admin-orders" : selectedPage && !selectedPage.startsWith("admin-") ? selectedPage : "toys";
     switchProductionDashboardPage(allowedPage);
@@ -21617,7 +21668,7 @@ ${suffix}`;
       const name = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
       return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
     }).join("");
-    document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} \xB7 \u20AC${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} \xB7 ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3></div>`;
+    document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} \xB7 \u20AC${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} \xB7 ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3></div>`;
     if (isAdmin) void loadProductionAdmin();
   }
   async function claimProductionPassport(token) {
@@ -21645,13 +21696,56 @@ ${suffix}`;
   }
   async function loadProductionAdmin() {
     if (!supabase || productionProfile?.role !== "admin") return;
-    const [{ data: products }, { data: passports }] = await Promise.all([
+    const [{ data: products }, { data: passports }, { data: requests }] = await Promise.all([
       supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false })
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+      supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
     ]);
     productionProducts = products || [];
     productionPassports = passports || [];
+    productionRequests = requests || [];
+    renderProductionRequests();
     renderProductionAdmin();
+  }
+  var dbStatusLabels = {
+    new: { ru: "\u041D\u043E\u0432\u044B\u0439", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    paid: { ru: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Pay\xE9e" },
+    making: { ru: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En cr\xE9ation" },
+    shipped: { ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Exp\xE9di\xE9e" },
+    completed: { ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Termin\xE9e" },
+    cancelled: { ru: "\u041E\u0442\u043C\u0435\u043D\u0451\u043D", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annul\xE9e" }
+  };
+  function dbOrderStatusLabel(status) {
+    return dbStatusLabels[status]?.[currentLanguage] || safeText(status);
+  }
+  var requestStatusLabels = {
+    new: { ru: "\u041D\u043E\u0432\u0430\u044F", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    in_progress: { ru: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
+    done: { ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u0430", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Termin\xE9e" }
+  };
+  function renderProductionRequests() {
+    const container = document.getElementById("adminRequests");
+    if (!container) return;
+    const ru = currentLanguage === "ru";
+    if (!productionRequests.length) {
+      container.innerHTML = `<div class="toy-empty"><p>${ru ? "\u0417\u0430\u044F\u0432\u043E\u043A \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." : "No requests yet."}</p></div>`;
+      return;
+    }
+    container.innerHTML = productionRequests.map((request) => {
+      const options = Object.keys(requestStatusLabels).map(
+        (status) => `<option value="${status}"${status === request.status ? " selected" : ""}>${requestStatusLabels[status][currentLanguage]}</option>`
+      ).join("");
+      return `<article class="admin-request${request.status === "new" ? " unread" : ""}"><div class="admin-request-top"><div><strong>${safeText(request.customer_name)}</strong><span>${new Date(request.created_at).toLocaleString(ru ? "ru-RU" : "en-GB")} \xB7 ${safeText(request.product)}</span></div><select class="order-status-select" data-request="${request.id}">${options}</select></div><p class="admin-request-message">${safeText(request.message)}</p><a class="admin-request-reply" href="mailto:${safeText(request.contact_email)}?subject=${encodeURIComponent("VIORI \u2014 " + request.product)}">${safeText(request.contact_email)}</a></article>`;
+    }).join("");
+  }
+  function orderDetailsHtml(order) {
+    const ru = currentLanguage === "ru";
+    const items = (order.order_items || []).map((item) => `<li><span>${safeText(item.product_name)} \xD7 ${item.quantity}</span><b>\u20AC${(item.unit_price_cents * item.quantity / 100).toFixed(2)}</b></li>`).join("");
+    const address = order.shipping_address || {};
+    const addressLine = [address.street, address.postcode, address.city, address.country].filter(Boolean).map((part) => safeText(String(part))).join(", ");
+    const delivery = order.delivery_method === "pickup" ? ru ? "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437" : "Pickup" : ru ? "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Standard delivery";
+    const row = (label, value) => `<div><dt>${label}</dt><dd>${value || "\u2014"}</dd></div>`;
+    return `<details class="admin-order-details"><summary>${ru ? "\u0427\u0442\u043E \u0432 \u0437\u0430\u043A\u0430\u0437\u0435" : "Order details"}</summary><div class="admin-order-body"><ul class="admin-order-items">${items || `<li><span>${ru ? "\u041F\u043E\u0437\u0438\u0446\u0438\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B" : "No items"}</span></li>`}</ul><dl class="admin-order-meta">` + row(ru ? "\u041A\u043B\u0438\u0435\u043D\u0442" : "Customer", safeText(order.customer_name || "")) + row(ru ? "\u0422\u0435\u043B\u0435\u0444\u043E\u043D" : "Phone", safeText(order.customer_phone || "")) + row("Email", safeText(order.customer_email || "")) + row(ru ? "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Delivery", `${delivery} \xB7 \u20AC${((order.delivery_cents || 0) / 100).toFixed(2)}`) + row(ru ? "\u0410\u0434\u0440\u0435\u0441" : "Address", addressLine) + `</dl></div></details>`;
   }
   function renderProductionAdmin() {
     const productContainer = document.getElementById("adminProducts");
@@ -21659,7 +21753,7 @@ ${suffix}`;
     const passportContainer = document.getElementById("nfcPassports");
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
     const orderContainer = document.getElementById("adminOrders");
-    if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${safeText(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
+    if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
     document.getElementById("adminMetricProducts").textContent = String(productionProducts.length);
     document.getElementById("adminMetricOrders").textContent = String(productionOrders.length);
     document.getElementById("adminMetricNewOrders").textContent = String(productionOrders.filter((o) => o.status === "new").length);
@@ -21667,6 +21761,7 @@ ${suffix}`;
   }
   if (supabase) {
     document.documentElement.dataset.appVersion = "2026-08-02-2";
+    void ensureProductsLoaded();
     document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
     document.getElementById("openCart")?.addEventListener("click", openProductionCart);
     document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeProductionCart));
@@ -21954,6 +22049,18 @@ ${suffix}`;
         return;
       }
       await loadProductionAccount();
+    });
+    document.addEventListener("change", async (event) => {
+      const select = event.target.closest("[data-request]");
+      if (!select?.dataset.request || productionProfile?.role !== "admin") return;
+      const requestId = select.dataset.request;
+      const { error } = await supabase.from("custom_requests").update({ status: select.value }).eq("id", requestId);
+      if (error) {
+        select.value = productionRequests.find((request) => request.id === requestId)?.status || "new";
+        if (accountStatus) accountStatus.textContent = productionMessage(error);
+        return;
+      }
+      await loadProductionAdmin();
     });
     supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {

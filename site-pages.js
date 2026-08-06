@@ -67,6 +67,11 @@ const modal = document.getElementById('catalogProductModal');
 const toast = document.getElementById('cartToast');
 let toastTimer = 0;
 
+// Свёрстанные вручную персонажи — только запасной вид, когда каталог из базы
+// недоступен. Заказать их нельзя: create_order принимает лишь uuid товара из
+// public.products, поэтому такой id всегда упирается в invalid_cart.
+const backendReady = Boolean(window.VIORI_CONFIG?.supabaseUrl && window.VIORI_CONFIG?.supabaseAnonKey);
+
 function catalogLanguage() {
   return localStorage.getItem('viori-language') || 'ru';
 }
@@ -77,8 +82,16 @@ function productCopy(product) {
 }
 
 function readCart() {
-  try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+  let cart;
+  try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
   catch { return []; }
+  if (!Array.isArray(cart)) return [];
+  if (!backendReady) return cart;
+  // Чистим записи, которые корзина на главной всё равно отфильтрует: из-за них
+  // счётчик показывал товар, а открытая корзина оказывалась пустой.
+  const usable = cart.filter((item) => item && typeof item.id === 'string' && !item.id.startsWith('static:') && !item.id.startsWith('catalog:'));
+  if (usable.length !== cart.length) localStorage.setItem(CART_KEY, JSON.stringify(usable));
+  return usable;
 }
 
 function addToCart(id, quantity) {
@@ -87,19 +100,31 @@ function addToCart(id, quantity) {
   if (existing) existing.quantity += quantity;
   else cart.push({ id, quantity });
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  // Владельца проставляем только для новой корзины. Если пометка уже есть,
+  // корзина принадлежит вошедшему пользователю — перетирать её на "anon"
+  // нельзя, иначе следующий аккаунт унаследует чужие товары.
+  if (!localStorage.getItem('viori-cart-owner')) localStorage.setItem('viori-cart-owner', 'anon');
   renderCartCount();
 }
 
-function showCartToast(name) {
+function showCartNotice(message, href, linkLabel) {
   if (!toast) return;
-  const label = catalogLanguage() === 'ru' ? `«${name}» в корзине` : `“${name}” added to the cart`;
   const link = toast.querySelector('.cart-toast-link');
   const text = document.getElementById('cartToastText');
-  if (text) text.textContent = label;
-  if (link) link.textContent = catalogLanguage() === 'ru' ? 'Перейти в корзину' : 'Open the cart';
+  if (text) text.textContent = message;
+  if (link) { link.textContent = linkLabel; link.setAttribute('href', href); }
   toast.classList.add('visible');
   window.clearTimeout(toastTimer);
   toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 5000);
+}
+
+function showCartToast(name) {
+  const ru = catalogLanguage() === 'ru';
+  showCartNotice(
+    ru ? `«${name}» в корзине` : `“${name}” added to the cart`,
+    'index.html?cart=1',
+    ru ? 'Перейти в корзину' : 'Open the cart'
+  );
 }
 
 // Кнопка каталога -> данные товара. Статические персонажи описаны выше,
@@ -115,7 +140,9 @@ function resolveCatalogProduct(button) {
   if (!dbId) return null;
   const ru = catalogLanguage() === 'ru';
   return {
-    id: `catalog:${dbId}`,
+    // Именно голый uuid: create_order приводит product_id к uuid,
+    // а корзина на главной ищет товар по product.id без префиксов.
+    id: dbId,
     price: Number(button.dataset.productPrice || 0),
     name: button.dataset.productName || '',
     story: button.dataset.productDescription || '',
@@ -168,8 +195,7 @@ document.addEventListener('click', (event) => {
 
   const addFromModal = target.closest('#catalogModalAddToCart');
   if (addFromModal) {
-    addToCart(addFromModal.dataset.product || '', 1);
-    showCartToast(addFromModal.dataset.productName || '');
+    tryAddToCart({ id: addFromModal.dataset.product || '', name: addFromModal.dataset.productName || '' });
     closeCatalogProduct();
     return;
   }
@@ -182,10 +208,26 @@ document.addEventListener('click', (event) => {
   if (button.classList.contains('view-product')) {
     openCatalogProduct(product);
   } else {
-    addToCart(product.id, 1);
-    showCartToast(product.name);
+    tryAddToCart(product);
   }
 });
+
+// Запасные карточки нельзя оформить: у них нет товара в базе. Честнее увести
+// в контакты, чем положить в корзину то, что не пройдёт оформление заказа.
+function tryAddToCart(product) {
+  if (backendReady && product.id.startsWith('static:')) {
+    showCartNotice(
+      catalogLanguage() === 'ru'
+        ? 'Этот персонаж пока не опубликован в каталоге'
+        : 'This character is not published in the catalogue yet',
+      'contact.html',
+      catalogLanguage() === 'ru' ? 'Написать нам' : 'Contact us'
+    );
+    return;
+  }
+  addToCart(product.id, 1);
+  showCartToast(product.name);
+}
 
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCatalogProduct(); });
 async function loadPageCatalog() {
@@ -223,15 +265,60 @@ async function loadPageCatalog() {
   } catch { /* Keep the static fallback when the network is unavailable. */ }
 }
 void loadPageCatalog();
-document.getElementById('orderForm')?.addEventListener('submit', (event) => {
+// Заявка сохраняется в базе и попадает в раздел «Заявки» у администратора.
+// Раньше форма открывала почтовый клиент: если он не настроен, заявка терялась.
+document.getElementById('orderForm')?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const form = event.currentTarget;
   const data = new FormData(form);
-  const subject = `Новая заявка VIORI — ${String(data.get('product') || 'особенная игрушка')}`;
-  const body = [`Имя: ${data.get('name') || ''}`, `Игрушка: ${data.get('product') || ''}`, `Пожелания: ${data.get('message') || 'не указаны'}`].join('\n');
-  location.href = `mailto:viktoriasulima1@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const status = document.getElementById('formStatus');
-  if (status) status.textContent = 'Открываем почту с подготовленной заявкой.';
+  const submit = form.querySelector('button[type="submit"]');
+  const ru = catalogLanguage() === 'ru';
+  const config = window.VIORI_CONFIG;
+
+  if (!config?.supabaseUrl || !config?.supabaseAnonKey) {
+    if (status) status.textContent = ru ? 'Отправка заявок сейчас недоступна.' : 'Requests cannot be sent right now.';
+    return;
+  }
+
+  if (submit) submit.disabled = true;
+  if (status) status.textContent = ru ? 'Отправляем заявку…' : 'Sending your request…';
+
+  try {
+    const response = await fetch(`${config.supabaseUrl}/rest/v1/rpc/submit_custom_request`, {
+      method: 'POST',
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        customer_name: String(data.get('name') || ''),
+        contact_email: String(data.get('email') || ''),
+        product: String(data.get('product') || ''),
+        message: String(data.get('message') || '')
+      })
+    });
+    if (!response.ok) {
+      const detail = await response.text();
+      console.error('VIORI custom request error:', response.status, detail);
+      if (status) {
+        status.textContent = detail.includes('invalid_email')
+          ? (ru ? 'Проверьте адрес электронной почты.' : 'Please check your email address.')
+          : (ru ? 'Не удалось отправить заявку. Попробуйте ещё раз.' : 'Could not send the request. Please try again.');
+      }
+      return;
+    }
+    form.reset();
+    if (status) status.textContent = ru
+      ? 'Заявка отправлена. Мы ответим на указанную почту.'
+      : 'Request sent. We will reply to the email you provided.';
+  } catch (error) {
+    console.error('VIORI custom request error:', error);
+    if (status) status.textContent = ru ? 'Нет связи с сервером. Попробуйте позже.' : 'No connection to the server. Please try again later.';
+  } finally {
+    if (submit) submit.disabled = false;
+  }
 });
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
@@ -274,15 +361,17 @@ document.querySelectorAll('.language-button').forEach((button) => button.addEven
   if (code === 'ru') location.reload(); else applyPageLanguage(code);
 }));
 
+// Роль запоминает главная страница при входе. Здесь она нужна только чтобы
+// спрятать корзину у администратора — на доступ к данным это не влияет.
+if (localStorage.getItem('viori-role') === 'admin') document.body.classList.add('viori-admin');
+
 // Счётчик корзины в шапке. Корзина живёт на главной, поэтому кнопка — ссылка.
 function renderCartCount() {
   const badge = document.getElementById('cartCount');
   if (!badge) return;
-  let total = 0;
-  try {
-    total = (JSON.parse(localStorage.getItem('viori-cart') || '[]') || [])
-      .reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
-  } catch { total = 0; }
+  // readCart отбрасывает записи, которые корзина на главной не покажет,
+  // иначе счётчик расходится с её содержимым.
+  const total = readCart().reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
   badge.textContent = String(total);
   badge.closest('.cart-button')?.classList.toggle('has-items', total > 0);
 }

@@ -77,7 +77,7 @@ const englishTranslations: Record<string, string> = {
   '.order-form > label:nth-of-type(1) .label-text': "What would you like to order?",
   '.order-form > label:nth-of-type(2) .label-text': "Your wishes",
   "#productSelect option": "Mia the Bunny",
-  ".form-submit": "Prepare message",
+  ".form-submit": "Send request",
   ".footer > .container > p": '© <span id="year"></span> VIORI. Handmade crochet toys.',
   ".auth-view > .eyebrow": "VIORI WORLD",
   "#accountTitle": "Your toy’s life",
@@ -247,6 +247,10 @@ const englishTranslations: Record<string, string> = {
   , '.admin-metrics article:nth-child(3) small': "in the catalogue"
   , '.admin-metrics article:nth-child(4) small': "passports issued"
   , '#adminAddProductToggle': "Add a toy"
+  , '.dashboard-tab[data-dashboard-tab="admin-requests"]': "Requests"
+  , '[data-dashboard-page="admin-requests"] .eyebrow': "CUSTOM ORDERS"
+  , '[data-dashboard-page="admin-requests"] h3': "Requests from the site"
+  , '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the “Create your own toy” form in the catalogue."
 };
 
 const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> = {
@@ -261,7 +265,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "#catalog .section-heading .eyebrow": "Een kleine collectie", "#catalog .section-heading h2": "VIORI-knuffels", "#catalog .section-heading > p": "Ontdek handgemaakte personages met een eigen digitaal verhaal.",
     '.filters [data-filter="all"]': "Alles", '.filters [data-filter="animals"]': "Dieren", '.filters [data-filter="dolls"]': "Poppen", '.filters [data-filter="baby"]': "Voor baby's",
     "#about .eyebrow": "Over het atelier", "#about h2": "Elke steek vertelt een verhaal",
-    "#contacts .eyebrow": "Neem contact op", "#contacts h2": "Laten we een bijzondere knuffel maken", ".form-submit": "Bericht voorbereiden",
+    "#contacts .eyebrow": "Neem contact op", "#contacts h2": "Laten we een bijzondere knuffel maken", ".form-submit": "Aanvraag versturen",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "Het leven van jouw knuffel", '.auth-tab[data-auth-tab="login"]': "Inloggen", '.auth-tab[data-auth-tab="register"]': "Registreren",
     "#loginForm .button": "Inloggen", "#registerForm .button": "Account maken", ".dashboard-head .eyebrow": "MIJN ACCOUNT",
     '.dashboard-tab[data-dashboard-tab="toys"]': "Mijn knuffels", '.dashboard-tab[data-dashboard-tab="orders"]': "Bestellingen", '.dashboard-tab[data-dashboard-tab="profile"]': "Profiel", "#logoutButton": "Uitloggen",
@@ -278,7 +282,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "#catalog .section-heading .eyebrow": "Eine kleine Kollektion", "#catalog .section-heading h2": "VIORI-Kuscheltiere", "#catalog .section-heading > p": "Entdecke handgefertigte Charaktere mit ihrer eigenen digitalen Geschichte.",
     '.filters [data-filter="all"]': "Alle", '.filters [data-filter="animals"]': "Tiere", '.filters [data-filter="dolls"]': "Puppen", '.filters [data-filter="baby"]': "Für Babys",
     "#about .eyebrow": "Über das Atelier", "#about h2": "Jede Masche erzählt eine Geschichte",
-    "#contacts .eyebrow": "VIORI kontaktieren", "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen", ".form-submit": "Nachricht vorbereiten",
+    "#contacts .eyebrow": "VIORI kontaktieren", "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen", ".form-submit": "Anfrage senden",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "Das Leben deines Kuscheltiers", '.auth-tab[data-auth-tab="login"]': "Anmelden", '.auth-tab[data-auth-tab="register"]': "Registrieren",
     "#loginForm .button": "Anmelden", "#registerForm .button": "Konto erstellen", ".dashboard-head .eyebrow": "MEIN KONTO",
     '.dashboard-tab[data-dashboard-tab="toys"]': "Meine Kuscheltiere", '.dashboard-tab[data-dashboard-tab="orders"]': "Bestellungen", '.dashboard-tab[data-dashboard-tab="profile"]': "Profil", "#logoutButton": "Abmelden",
@@ -295,7 +299,7 @@ const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> =
     "#catalog .section-heading .eyebrow": "Une petite collection", "#catalog .section-heading h2": "Peluches VIORI", "#catalog .section-heading > p": "Découvrez des personnages faits main avec leur propre histoire numérique.",
     '.filters [data-filter="all"]': "Toutes", '.filters [data-filter="animals"]': "Animaux", '.filters [data-filter="dolls"]': "Poupées", '.filters [data-filter="baby"]': "Pour bébés",
     "#about .eyebrow": "À propos de l’atelier", "#about h2": "Chaque maille raconte une histoire",
-    "#contacts .eyebrow": "Contacter VIORI", "#contacts h2": "Créons une peluche exceptionnelle", ".form-submit": "Préparer le message",
+    "#contacts .eyebrow": "Contacter VIORI", "#contacts h2": "Créons une peluche exceptionnelle", ".form-submit": "Envoyer la demande",
     ".auth-view > .eyebrow": "VIORI WORLD", "#accountTitle": "La vie de votre peluche", '.auth-tab[data-auth-tab="login"]': "Connexion", '.auth-tab[data-auth-tab="register"]': "Inscription",
     "#loginForm .button": "Se connecter", "#registerForm .button": "Créer un compte", ".dashboard-head .eyebrow": "MON COMPTE",
     '.dashboard-tab[data-dashboard-tab="toys"]': "Mes peluches", '.dashboard-tab[data-dashboard-tab="orders"]': "Commandes", '.dashboard-tab[data-dashboard-tab="profile"]': "Profil", "#logoutButton": "Déconnexion",
@@ -1209,9 +1213,60 @@ function getProductionCart(): CartItem[] {
   try { return JSON.parse(localStorage.getItem("viori-cart") || "[]") as CartItem[]; } catch { return []; }
 }
 
+// Корзина живёт в localStorage, то есть привязана к браузеру, а не к аккаунту.
+// Рядом храним владельца: id пользователя либо "anon" для гостя. Без этого
+// выбранные товары доставались следующему, кто войдёт на этом же устройстве.
+//
+// Одноразовая чистка: корзины, набранные до появления пометки владельца, могли
+// быть присвоены чужому аккаунту, поэтому при первом запуске стираем их.
+if (localStorage.getItem("viori-cart-owner-fix") !== "1") {
+  localStorage.removeItem("viori-cart");
+  localStorage.removeItem("viori-cart-owner");
+  localStorage.setItem("viori-cart-owner-fix", "1");
+}
+
+function syncCartOwner(userId: string | null): void {
+  const previous = localStorage.getItem("viori-cart-owner");
+
+  if (!userId) {
+    // Гость на странице. Чистим только если корзину оставил вошедший человек,
+    // иначе потеряли бы корзину обычного посетителя на каждой перезагрузке.
+    if (previous && previous !== "anon") {
+      localStorage.removeItem("viori-cart");
+      localStorage.setItem("viori-cart-owner", "anon");
+    }
+    return;
+  }
+
+  // Гостевую корзину при входе оставляем: её набрал тот же человек.
+  if (previous && previous !== "anon" && previous !== userId) {
+    localStorage.removeItem("viori-cart");
+  }
+  localStorage.setItem("viori-cart-owner", userId);
+}
+
 function saveProductionCart(cart: CartItem[]): void {
   localStorage.setItem("viori-cart", JSON.stringify(cart));
+  localStorage.setItem("viori-cart-owner", productionProfile?.id || "anon");
   renderCart();
+}
+
+// Каталог нужен корзине любому посетителю, а не только администратору:
+// loadProductionAdmin() выходит по роли, поэтому без этой загрузки
+// productionProducts оставался пустым и корзина всегда рисовалась пустой.
+let publicProductsLoaded = false;
+
+async function ensureProductsLoaded(): Promise<void> {
+  if (!supabase || publicProductsLoaded || productionProducts.length) return;
+  publicProductsLoaded = true;
+  const { data } = await supabase
+    .from("products")
+    .select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)")
+    .eq("is_active", true);
+  if (data?.length) {
+    productionProducts = data as DbProduct[];
+    renderCart();
+  }
 }
 
 function renderCart(): void {
@@ -1227,6 +1282,7 @@ function renderCart(): void {
 }
 
 function openProductionCart(): void {
+  void ensureProductsLoaded();
   renderCart(); document.getElementById("cartDrawer")?.classList.add("open"); document.getElementById("cartDrawer")?.setAttribute("aria-hidden", "false"); document.body.classList.add("shop-open");
 }
 
@@ -1276,20 +1332,41 @@ async function renderCatalogProducts(): Promise<void> {
 
 type DbProfile = { id: string; display_name: string; role: "customer" | "admin" };
 type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string };
-type DbOrder = { id: string; order_number: string; total_cents: number; status: string; created_at: string };
+type DbOrderItem = { product_name: string; unit_price_cents: number; quantity: number };
+type DbShippingAddress = { street?: string; postcode?: string; city?: string; country?: string };
+type DbOrder = {
+  id: string; order_number: string; total_cents: number; status: string; created_at: string;
+  customer_name?: string; customer_phone?: string; customer_email?: string;
+  shipping_address?: DbShippingAddress | null; delivery_method?: string; delivery_cents?: number;
+  order_items?: DbOrderItem[];
+};
 type DbProduct = { id: string; slug: string; name_ru: string; name_en: string; description_ru: string; description_en: string; category: CatalogProduct["category"]; price_cents: number; is_active: boolean; product_images?: Array<{ storage_path: string }> };
+type DbCustomRequest = { id: string; created_at: string; customer_name: string; contact_email: string; product: string; message: string; status: string };
 
 let productionProfile: DbProfile | null = null;
 let productionPassports: DbPassport[] = [];
 let productionOrders: DbOrder[] = [];
 let productionProducts: DbProduct[] = [];
+let productionRequests: DbCustomRequest[] = [];
 let activePassportId: string | null = null;
 
 function productionMessage(error: unknown): string {
-  const message = error instanceof Error ? error.message : String(error || "");
+  const raw = error as { message?: string; details?: string; hint?: string; code?: string } | null;
+  const message = error instanceof Error ? error.message : String(raw?.message || error || "");
+  // Настоящая причина иначе теряется: наружу уходит одна общая фраза.
+  if (error) console.error("VIORI backend error:", error);
+
   if (message.includes("Invalid login credentials")) return currentLanguage !== "ru" ? "Incorrect email or password." : "Неверный email или пароль.";
   if (message.includes("Email not confirmed")) return currentLanguage !== "ru" ? "Confirm your email first." : "Сначала подтвердите email.";
   if (message.includes("User already registered")) return currentLanguage !== "ru" ? "This email is already registered." : "Этот email уже зарегистрирован.";
+
+  // Ошибки, которые create_order поднимает сам.
+  if (message.includes("authentication_required")) return currentLanguage !== "ru" ? "Please sign in to place an order." : "Войдите в аккаунт, чтобы оформить заказ.";
+  if (message.includes("empty_cart")) return currentLanguage !== "ru" ? "Your cart is empty." : "Корзина пуста.";
+  if (message.includes("invalid_cart")) return currentLanguage !== "ru" ? "Some items are no longer available. Please refresh the cart." : "Товара больше нет в каталоге. Обновите корзину.";
+  if (message.includes("invalid_customer_details")) return currentLanguage !== "ru" ? "Check your name and phone number." : "Проверьте имя и номер телефона.";
+  if (message.includes("invalid_delivery_method")) return currentLanguage !== "ru" ? "Choose a delivery method." : "Выберите способ доставки.";
+
   return currentLanguage !== "ru" ? "Something went wrong. Please try again." : "Произошла ошибка. Попробуйте ещё раз.";
 }
 
@@ -1325,14 +1402,20 @@ async function loadProductionAccount(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     productionProfile = null; productionPassports = []; productionOrders = [];
+    syncCartOwner(null);
+    renderCart();
     authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden");
     document.querySelector(".account-panel")?.classList.remove("admin-mode");
+    document.body.classList.remove("viori-admin");
+    localStorage.removeItem("viori-role");
     return;
   }
+  syncCartOwner(user.id);
+  renderCart();
   const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
     supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
-    supabase.from("orders").select("id,order_number,total_cents,status,created_at").order("created_at", { ascending: false })
+    supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
   ]);
   if (profileError) throw profileError;
   productionProfile = profile as DbProfile;
@@ -1364,6 +1447,11 @@ function renderProductionDashboard(email: string): void {
   document.getElementById("profileEmail")!.textContent = email;
   document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
   document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
+  // Корзина администратору не нужна. Метка в localStorage — чтобы подстраницы,
+  // которые не грузят этот бандл, тоже знали роль. Это только внешний вид:
+  // доступ к данным по-прежнему решают политики RLS.
+  document.body.classList.toggle("viori-admin", isAdmin);
+  localStorage.setItem("viori-role", isAdmin ? "admin" : "customer");
   const selectedPage = document.querySelector<HTMLButtonElement>(".dashboard-tab.active:not(.hidden)")?.dataset.dashboardTab;
   const allowedPage = isAdmin
     ? (selectedPage?.startsWith("admin-") ? selectedPage : "admin-orders")
@@ -1374,7 +1462,7 @@ function renderProductionDashboard(email: string): void {
     const name = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
     return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
   }).join("");
-  document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${safeText(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
+  document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
   if (isAdmin) void loadProductionAdmin();
 }
 
@@ -1403,13 +1491,84 @@ async function openProductionPassport(id: string): Promise<void> {
 
 async function loadProductionAdmin(): Promise<void> {
   if (!supabase || productionProfile?.role !== "admin") return;
-  const [{ data: products }, { data: passports }] = await Promise.all([
+  const [{ data: products }, { data: passports }, { data: requests }] = await Promise.all([
     supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false })
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+    supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
   ]);
   productionProducts = (products || []) as DbProduct[];
   productionPassports = (passports || []) as DbPassport[];
+  productionRequests = (requests || []) as DbCustomRequest[];
+  renderProductionRequests();
   renderProductionAdmin();
+}
+
+// Статусы приходят из базы как есть (new, paid, ...) и раньше показывались
+// без перевода — в интерфейсе на любом языке оставались английские слова.
+const dbStatusLabels: Record<string, Record<Language, string>> = {
+  new: { ru: "Новый", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+  paid: { ru: "Оплачен", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Payée" },
+  making: { ru: "Создаётся", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En création" },
+  shipped: { ru: "Отправлен", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Expédiée" },
+  completed: { ru: "Завершён", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Terminée" },
+  cancelled: { ru: "Отменён", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annulée" }
+};
+
+function dbOrderStatusLabel(status: string): string {
+  return dbStatusLabels[status]?.[currentLanguage] || safeText(status);
+}
+
+const requestStatusLabels: Record<string, Record<Language, string>> = {
+  new: { ru: "Новая", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+  in_progress: { ru: "В работе", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
+  done: { ru: "Закрыта", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Terminée" }
+};
+
+function renderProductionRequests(): void {
+  const container = document.getElementById("adminRequests");
+  if (!container) return;
+  const ru = currentLanguage === "ru";
+  if (!productionRequests.length) {
+    container.innerHTML = `<div class="toy-empty"><p>${ru ? "Заявок пока нет." : "No requests yet."}</p></div>`;
+    return;
+  }
+  container.innerHTML = productionRequests.map((request) => {
+    const options = Object.keys(requestStatusLabels).map((status) =>
+      `<option value="${status}"${status === request.status ? " selected" : ""}>${requestStatusLabels[status][currentLanguage]}</option>`
+    ).join("");
+    return `<article class="admin-request${request.status === "new" ? " unread" : ""}">`
+      + `<div class="admin-request-top"><div><strong>${safeText(request.customer_name)}</strong>`
+      + `<span>${new Date(request.created_at).toLocaleString(ru ? "ru-RU" : "en-GB")} · ${safeText(request.product)}</span></div>`
+      + `<select class="order-status-select" data-request="${request.id}">${options}</select></div>`
+      + `<p class="admin-request-message">${safeText(request.message)}</p>`
+      + `<a class="admin-request-reply" href="mailto:${safeText(request.contact_email)}?subject=${encodeURIComponent("VIORI — " + request.product)}">${safeText(request.contact_email)}</a>`
+      + `</article>`;
+  }).join("");
+}
+
+// Карточка заказа показывала только номер и сумму — по ней нельзя было понять,
+// что именно заказал клиент и куда это везти.
+function orderDetailsHtml(order: DbOrder): string {
+  const ru = currentLanguage === "ru";
+  const items = (order.order_items || [])
+    .map((item) => `<li><span>${safeText(item.product_name)} × ${item.quantity}</span><b>€${((item.unit_price_cents * item.quantity) / 100).toFixed(2)}</b></li>`)
+    .join("");
+  const address = order.shipping_address || {};
+  const addressLine = [address.street, address.postcode, address.city, address.country]
+    .filter(Boolean).map((part) => safeText(String(part))).join(", ");
+  const delivery = order.delivery_method === "pickup"
+    ? (ru ? "Самовывоз" : "Pickup")
+    : (ru ? "Стандартная доставка" : "Standard delivery");
+  const row = (label: string, value: string) => `<div><dt>${label}</dt><dd>${value || "—"}</dd></div>`;
+  return `<details class="admin-order-details"><summary>${ru ? "Что в заказе" : "Order details"}</summary><div class="admin-order-body">`
+    + `<ul class="admin-order-items">${items || `<li><span>${ru ? "Позиции не найдены" : "No items"}</span></li>`}</ul>`
+    + `<dl class="admin-order-meta">`
+    + row(ru ? "Клиент" : "Customer", safeText(order.customer_name || ""))
+    + row(ru ? "Телефон" : "Phone", safeText(order.customer_phone || ""))
+    + row("Email", safeText(order.customer_email || ""))
+    + row(ru ? "Доставка" : "Delivery", `${delivery} · €${((order.delivery_cents || 0) / 100).toFixed(2)}`)
+    + row(ru ? "Адрес" : "Address", addressLine)
+    + `</dl></div></details>`;
 }
 
 function renderProductionAdmin(): void {
@@ -1418,7 +1577,7 @@ function renderProductionAdmin(): void {
   const passportContainer = document.getElementById("nfcPassports");
   if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
   const orderContainer = document.getElementById("adminOrders");
-  if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${safeText(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
+  if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
   document.getElementById("adminMetricProducts")!.textContent = String(productionProducts.length);
   document.getElementById("adminMetricOrders")!.textContent = String(productionOrders.length);
   document.getElementById("adminMetricNewOrders")!.textContent = String(productionOrders.filter((o) => o.status === "new").length);
@@ -1427,6 +1586,8 @@ function renderProductionAdmin(): void {
 
 if (supabase) {
   document.documentElement.dataset.appVersion = "2026-08-02-2";
+  // Счётчик в шапке должен быть верным сразу, до открытия корзины.
+  void ensureProductsLoaded();
   document.getElementById("openAccount")?.addEventListener("click", productionOpenAccount);
   document.getElementById("openCart")?.addEventListener("click", openProductionCart);
   document.querySelectorAll("[data-close-cart]").forEach((button) => button.addEventListener("click", closeProductionCart));
@@ -1597,6 +1758,18 @@ if (supabase) {
     const { error } = await supabase.from("orders").update({ status: select.value }).eq("id", select.dataset.dbOrder);
     if (error) { select.value = productionOrders.find((order) => order.id === select.dataset.dbOrder)?.status || "new"; return; }
     await loadProductionAccount();
+  });
+  document.addEventListener("change", async (event) => {
+    const select = (event.target as HTMLElement).closest<HTMLSelectElement>("[data-request]");
+    if (!select?.dataset.request || productionProfile?.role !== "admin") return;
+    const requestId = select.dataset.request;
+    const { error } = await supabase.from("custom_requests").update({ status: select.value }).eq("id", requestId);
+    if (error) {
+      select.value = productionRequests.find((request) => request.id === requestId)?.status || "new";
+      if (accountStatus) accountStatus.textContent = productionMessage(error);
+      return;
+    }
+    await loadProductionAdmin();
   });
   supabase.auth.onAuthStateChange((event) => {
     if (event === "PASSWORD_RECOVERY") { productionOpenAccount(); authView?.classList.remove("hidden"); dashboardView?.classList.add("hidden"); showProductionAuthForm("resetPasswordForm"); return; }
