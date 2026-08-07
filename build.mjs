@@ -11,6 +11,9 @@ const buildOptions = {
   format: "iife",
   target: "es2020",
   outfile: path.join(projectDir, "script.js"),
+  // По умолчанию esbuild экранирует кириллицу в \uXXXX: файл раздувается
+  // и его невозможно читать. Страницы объявляют UTF-8, так что это безопасно.
+  charset: "utf8",
   sourcemap: false
 };
 

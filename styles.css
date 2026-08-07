@@ -1250,6 +1250,31 @@ body.shop-open { overflow: hidden; }
 .admin-metrics article { padding:20px; border:1px solid var(--line); border-radius:18px; background:white; box-shadow:0 10px 30px rgba(70,43,28,.05); }
 .admin-metrics span,.admin-metrics small { display:block; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
 .admin-metrics strong { display:block; margin:8px 0; color:var(--accent-dark); font-family:"Cormorant Garamond",serif; font-size:42px; line-height:1; }
+.passport-page { padding:80px 0 96px; background:linear-gradient(180deg,#fffaf6,#f2e5d9); }
+.passport-page-inner { max-width:560px; margin:0 auto; text-align:center; }
+.passport-page-seal { width:96px; height:96px; margin-bottom:22px; border-radius:50%; }
+.passport-page h1 { margin:6px 0 16px; font-size:clamp(38px,9vw,56px); }
+.passport-page-seal.has-photo { width:min(260px,72vw); height:auto; aspect-ratio:1/1; object-fit:cover; border-radius:28px; box-shadow:0 24px 60px rgba(76,47,30,.18); }
+.passport-page-story { margin:0 auto 22px; max-width:480px; font-size:16px; line-height:1.8; white-space:pre-wrap; }
+.passport-page-text { margin:0 auto 30px; max-width:440px; color:var(--muted); font-size:15px; line-height:1.7; }
+.passport-story-editor { margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+.passport-story-editor summary { cursor:pointer; color:var(--accent-dark); font-size:12px; font-weight:800; }
+.passport-story-form { margin-top:14px; }
+.story-langs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.story-lang { padding:7px 13px; border:1px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:800 11px/1 "Montserrat",sans-serif; letter-spacing:.06em; cursor:pointer; }
+.story-lang.active { border-color:transparent; background:#4a2d20; color:#fff; }
+.story-lang-field { display:none; }
+.story-lang-field.active { display:block; }
+.passport-story-photo { width:120px; height:120px; border-radius:16px; object-fit:cover; }
+.nfc-passport-head { display:flex; align-items:start; justify-content:space-between; gap:12px; }
+.nfc-passport-actions { display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+.nfc-order { padding:5px 10px; border-radius:999px; background:var(--soft); color:var(--accent-dark); font-size:10px; font-weight:800; white-space:nowrap; }
+.nfc-delete { padding:6px 12px; border:1px solid rgba(154,79,51,.35); border-radius:999px; background:transparent; color:#9a4f33; font:800 11px/1 "Montserrat",sans-serif; cursor:pointer; }
+.nfc-delete:hover { background:#9a4f33; color:#fff; }
+.passport-activate { display:grid; gap:14px; text-align:left; }
+.passport-activate input { width:100%; }
+.passport-page-note { margin:0; color:var(--muted); font-size:12px; text-align:center; }
+
 .admin-request { padding:20px; border:1px solid var(--line); border-radius:18px; background:#fff; margin-bottom:12px; }
 .admin-request.unread { border-color:rgba(184,120,80,.5); box-shadow:0 10px 30px rgba(70,43,28,.07); }
 .admin-request-top { display:flex; align-items:start; justify-content:space-between; gap:14px; }
@@ -1315,6 +1340,17 @@ body.shop-open { overflow: hidden; }
   transition: background-color 9999s ease-out 0s;
 }
 .account-form input::placeholder, .nfc-form input::placeholder { color: #aa978a; }
+/* Базовые поля рассчитаны на тёмную панель: текст белый. Для input это уже
+   переопределено выше, а textarea и select оставались белыми на белом —
+   написанное просто не было видно. */
+.account-form textarea, .account-form select,
+.nfc-form textarea, .nfc-form select {
+  border-color: var(--line);
+  background: white;
+  color: var(--text);
+  caret-color: var(--accent-dark);
+}
+.account-form textarea::placeholder, .nfc-form textarea::placeholder { color: #aa978a; }
 .account-form .button, .nfc-form .button { width: 100%; }
 .consent { display: flex !important; align-items: center; gap: 10px; font-weight: 500; }
 .consent input { width: 18px; margin: 0; }

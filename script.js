@@ -20240,6 +20240,7 @@ ${suffix}`;
   if (shouldShowDeprecationWarning()) console.warn("\u26A0\uFE0F  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715");
 
   // script.ts
+  var PUBLIC_SITE_URL = "https://vioritoy.github.io/viori-website/";
   var backendConfig = window.VIORI_CONFIG;
   var arrivedFromOAuth = location.hash.includes("access_token=") || location.search.includes("code=");
   var supabase = backendConfig?.supabaseUrl && backendConfig?.supabaseAnonKey ? createClient(backendConfig.supabaseUrl, backendConfig.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
@@ -20432,7 +20433,8 @@ ${suffix}`;
     ".nfc-admin-heading > p:last-child": "Create a protected code for a specific toy. It can be activated by one customer only.",
     ".nfc-issue-form .admin-form-row label:nth-child(1) span": "Character name (RU)",
     ".nfc-issue-form .admin-form-row label:nth-child(2) span": "Character name (EN)",
-    ".nfc-issue-form > label span": "Order number (optional)",
+    ".nfc-issue-form > label span": "Customer order",
+    ".nfc-issue-form > label small": "The passport will be linked to this order \u2014 no need to type the number",
     ".nfc-issue-form .button": "Create NFC passport",
     "#cookieTitle": "Your privacy choice",
     "#cookieBanner p": "Essential storage keeps language, bag and sign-in working. Optional analytics will be enabled only with your consent.",
@@ -20472,6 +20474,232 @@ ${suffix}`;
     '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the \u201CCreate your own toy\u201D form in the catalogue."
   };
   var regionalTranslations = {
+    uk: {
+      "title": "VIORI \u2014 \u0432'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438",
+      'meta[name="description"]': "VIORI \u2014 \u0432'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438. \u0423\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0456 \u043F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u0438, \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u0456 \u0437 \u043B\u044E\u0431\u043E\u0432'\u044E.",
+      ".main-nav a:nth-child(1)": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438",
+      ".main-nav a:nth-child(2)": "\u041A\u0430\u0442\u0430\u043B\u043E\u0433",
+      ".main-nav a:nth-child(3)": "\u041F\u0440\u043E \u0431\u0440\u0435\u043D\u0434",
+      ".main-nav a:nth-child(4)": "\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u0438",
+      ".account-button-text": "\u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 \u043A\u0430\u0431\u0456\u043D\u0435\u0442",
+      ".auth-home-button": '<span aria-hidden="true">\u2190</span> \u041D\u0430 \u0433\u043E\u043B\u043E\u0432\u043D\u0443',
+      ".google-auth-button span": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438 \u0437 Google",
+      ".auth-divider span": "\u0430\u0431\u043E \u0447\u0435\u0440\u0435\u0437 email",
+      ".hero-copy .eyebrow": "VIORI \xB7 \u0421\u0422\u0412\u041E\u0420\u0415\u041D\u041E \u0412\u0420\u0423\u0427\u041D\u0423",
+      ".hero-copy h1": "\u041A\u043E\u0436\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 <em>\u043C\u0430\u0454 \u0432\u043B\u0430\u0441\u043D\u0435 \u0436\u0438\u0442\u0442\u044F</em>",
+      ".hero-text": "VIORI \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443, \u043E\u0442\u0440\u0438\u043C\u0443\u0454 \u0456\u043C'\u044F, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0456 \u0443\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0438\u0439 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442. \u0422\u043E\u0440\u043A\u043D\u0456\u0442\u044C\u0441\u044F \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u043E\u043C \u0434\u043E NFC-\u043C\u0456\u0442\u043A\u0438 \u2014 \u0456 \u0432\u0456\u0434\u043A\u0440\u0438\u0439\u0442\u0435 \u0457\u0457 \u0456\u0441\u0442\u043E\u0440\u0456\u044E, \u0441\u043F\u043E\u0433\u0430\u0434\u0438 \u0442\u0430 \u043D\u043E\u0432\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438.",
+      ".hero-actions .button": "\u041F\u043E\u0434\u0438\u0432\u0438\u0442\u0438\u0441\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
+      ".hero-actions .text-link": "\u0417\u0430\u043C\u043E\u0432\u0438\u0442\u0438 \u0441\u0432\u043E\u044E \u0456\u0434\u0435\u044E <span>\u2192</span>",
+      ".hero-points span:nth-child(1)": "\u2661 \u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
+      ".hero-points span:nth-child(2)": "\u2661 \u0423\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0438\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436",
+      ".hero-points span:nth-child(3)": "\u2661 \u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
+      ".tag-two": "\u0417\u0440\u043E\u0431\u043B\u0435\u043D\u043E \u0437 \u0442\u0443\u0440\u0431\u043E\u0442\u043E\u044E",
+      "#catalog .section-heading .eyebrow": "\u041D\u0435\u0432\u0435\u043B\u0438\u043A\u0430 \u043A\u043E\u043B\u0435\u043A\u0446\u0456\u044F",
+      "#catalog .section-heading h2": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438 VIORI",
+      "#catalog .section-heading > p": "\u0422\u0443\u0442 \u043C\u043E\u0436\u043D\u0430 \u0434\u043E\u0434\u0430\u0442\u0438 \u0441\u043F\u0440\u0430\u0432\u0436\u043D\u0456 \u0444\u043E\u0442\u043E, \u0440\u043E\u0437\u043C\u0456\u0440\u0438 \u0442\u0430 \u0446\u0456\u043D\u0438 \u0434\u043B\u044F \u043A\u043E\u0436\u043D\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438.",
+      '.filters [data-filter="all"]': "\u0423\u0441\u0456",
+      '.filters [data-filter="animals"]': "\u0422\u0432\u0430\u0440\u0438\u043D\u0438",
+      '.filters [data-filter="dolls"]': "\u041B\u044F\u043B\u044C\u043A\u0438",
+      '.filters [data-filter="baby"]': "\u0414\u043B\u044F \u043C\u0430\u043B\u044E\u043A\u0456\u0432",
+      ".product-image span": "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0444\u043E\u0442\u043E",
+      ".product-type": "\u0412'\u044F\u0437\u0430\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430",
+      ".product-info h3": "\u0417\u0430\u0439\u043A\u0430 \u041C\u0456\u044F",
+      ".price": "\u0432\u0456\u0434 \u20AC29",
+      ".product-description": "\u041C'\u044F\u043A\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u0437 \u0434\u043E\u0432\u0433\u0438\u043C\u0438 \u0432\u0443\u0448\u043A\u0430\u043C\u0438. \u041A\u043E\u043B\u0456\u0440 \u043E\u0434\u044F\u0433\u0443 \u043C\u043E\u0436\u043D\u0430 \u043E\u0431\u0440\u0430\u0442\u0438.",
+      ".order-product": "\u0417\u0430\u043C\u043E\u0432\u0438\u0442\u0438",
+      "#about .eyebrow": "\u041F\u0440\u043E \u043C\u0430\u0439\u0441\u0442\u0435\u0440\u043D\u044E",
+      "#about h2": "\u041A\u043E\u0436\u043D\u0430 \u043F\u0435\u0442\u043B\u044F \u0440\u043E\u0437\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0456\u0441\u0442\u043E\u0440\u0456\u044E",
+      "#about .story-copy > p:nth-of-type(2)": "VIORI \u2014 \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0430 \u0441\u0456\u043C\u0435\u0439\u043D\u0430 \u043C\u0430\u0439\u0441\u0442\u0435\u0440\u043D\u044F \u0432'\u044F\u0437\u0430\u043D\u0438\u0445 \u0456\u0433\u0440\u0430\u0448\u043E\u043A. \u041C\u0430\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0438\u0440\u043E\u0431\u043D\u0438\u0446\u0442\u0432\u0430 \u0442\u0443\u0442 \u043D\u0435\u043C\u0430\u0454: \u043A\u043E\u0436\u043D\u0430 \u0434\u0435\u0442\u0430\u043B\u044C \u0434\u0431\u0430\u0439\u043B\u0438\u0432\u043E \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u0443\u043A\u0430\u043C\u0438.",
+      "#about .story-copy > p:nth-of-type(3)": "\u0412\u0438 \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0431\u0440\u0430\u0442\u0438 \u043A\u043E\u043B\u0456\u0440, \u0440\u043E\u0437\u043C\u0456\u0440 \u0442\u0430 \u0432\u0431\u0440\u0430\u043D\u043D\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0439 \u0434\u043E\u0434\u0430\u0442\u0438 \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0443 \u0434\u0435\u0442\u0430\u043B\u044C \u2014 \u0456\u043C'\u044F, \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u0439 \u0430\u043A\u0441\u0435\u0441\u0443\u0430\u0440 \u0447\u0438 \u043F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u043E\u0432\u0443 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0443.",
+      ".stats div:nth-child(1) span": "\u0440\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
+      ".stats div:nth-child(2) span": "\u0443\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430",
+      ".stats div:nth-child(3) span": "\u0442\u0435\u043F\u043B\u0430 \u0439 \u0442\u0443\u0440\u0431\u043E\u0442\u0438",
+      "#contacts .eyebrow": "\u0417\u0432'\u044F\u0437\u0430\u0442\u0438\u0441\u044F \u0437 VIORI",
+      "#contacts h2": "\u0421\u0442\u0432\u043E\u0440\u0456\u043C\u043E \u043E\u0441\u043E\u0431\u043B\u0438\u0432\u0443 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
+      "#contacts .contact-copy > p:nth-of-type(2)": "\u0420\u043E\u0437\u043A\u0430\u0436\u0456\u0442\u044C, \u044F\u043A\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u0432\u0430\u043C \u0441\u043F\u043E\u0434\u043E\u0431\u0430\u043B\u0430\u0441\u044F, \u0430\u0431\u043E \u043F\u043E\u0434\u0456\u043B\u0456\u0442\u044C\u0441\u044F \u0432\u043B\u0430\u0441\u043D\u043E\u044E \u0456\u0434\u0435\u0454\u044E. \u041C\u0438 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u043C\u043E, \u043E\u0431\u0433\u043E\u0432\u043E\u0440\u0438\u043C\u043E \u0434\u0435\u0442\u0430\u043B\u0456 \u0439 \u043F\u043E\u0440\u0430\u0445\u0443\u0454\u043C\u043E \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044C.",
+      ".contact-link:nth-child(1) small": "\u041D\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u043D\u0430\u043C \u0443",
+      ".contact-link:nth-child(2) small": "\u0414\u0438\u0432\u0456\u0442\u044C\u0441\u044F \u043D\u0430\u0448",
+      ".small-note": "\u041F\u0435\u0440\u0435\u0434 \u043F\u0443\u0431\u043B\u0456\u043A\u0430\u0446\u0456\u0454\u044E \u0437\u0430\u043C\u0456\u043D\u0456\u0442\u044C \u043D\u043E\u043C\u0435\u0440 WhatsApp \u0456 \u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F Instagram \u043D\u0430 \u0441\u043F\u0440\u0430\u0432\u0436\u043D\u0456.",
+      ".form-row .label-text": "\u0412\u0430\u0448\u0435 \u0456\u043C'\u044F",
+      ".order-form > label:nth-of-type(1) .label-text": "\u0429\u043E \u0445\u043E\u0447\u0435\u0442\u0435 \u0437\u0430\u043C\u043E\u0432\u0438\u0442\u0438?",
+      ".order-form > label:nth-of-type(2) .label-text": "\u041F\u043E\u0431\u0430\u0436\u0430\u043D\u043D\u044F",
+      "#productSelect option": "\u0417\u0430\u0439\u043A\u0430 \u041C\u0456\u044F",
+      ".form-submit": "\u041D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438 \u0437\u0430\u044F\u0432\u043A\u0443",
+      ".footer > .container > p": `\xA9 <span id="year"></span> VIORI. \u0412'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438.`,
+      ".auth-view > .eyebrow": "VIORI WORLD",
+      "#accountTitle": "\u0416\u0438\u0442\u0442\u044F \u0432\u0430\u0448\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
+      ".account-intro": "\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043A\u0430\u0443\u043D\u0442, \u0449\u043E\u0431 \u0440\u043E\u0431\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0440\u0435\u0454\u0441\u0442\u0440\u0443\u0432\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0437\u0430 NFC-\u043A\u043E\u0434\u043E\u043C \u0456 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0442\u0438 \u0457\u0445\u043D\u0456 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
+      '.auth-tab[data-auth-tab="login"]': "\u0423\u0432\u0456\u0439\u0442\u0438",
+      '.auth-tab[data-auth-tab="register"]': "\u0420\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044F",
+      "#loginForm label:nth-child(1) span": "Email",
+      "#loginForm label:nth-child(2) span": "\u041F\u0430\u0440\u043E\u043B\u044C",
+      "#loginForm .button": "\u0423\u0432\u0456\u0439\u0442\u0438",
+      ".auth-story-panel .eyebrow": "\u0407\u0407 \u0421\u0412\u0406\u0422 \u041F\u041E\u0427\u0418\u041D\u0410\u0404\u0422\u042C\u0421\u042F \u0422\u0423\u0422",
+      ".auth-story-panel h2": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F, \u0449\u043E \u043B\u0438\u0448\u0430\u0454\u0442\u044C\u0441\u044F \u0443 \u0432\u0430\u0448\u0456\u0439 \u0440\u043E\u0434\u0438\u043D\u0456",
+      ".auth-story-panel > div:nth-child(2) > p:last-child": "\u041E\u0434\u0438\u043D \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u0434\u043E\u0440\u043E\u0441\u043B\u0438\u0439 \u0430\u043A\u0430\u0443\u043D\u0442 \u0442\u0440\u0438\u043C\u0430\u0454 \u0440\u0430\u0437\u043E\u043C \u0456\u0433\u0440\u0430\u0448\u043A\u0438, \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0442\u0430 \u0434\u043E\u0440\u043E\u0433\u0456 \u0441\u0456\u043C\u0435\u0439\u043D\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438.",
+      ".auth-benefits li:nth-child(1) span": "<strong>\u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442</strong><small>\u0406\u0441\u0442\u043E\u0440\u0456\u0454\u044E \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u043A\u0435\u0440\u0443\u0454 \u043B\u0438\u0448\u0435 \u0432\u043B\u0430\u0441\u043D\u0438\u043A</small>",
+      ".auth-benefits li:nth-child(2) span": "<strong>\u0421\u0456\u043C\u0435\u0439\u043D\u0456 \u0441\u043F\u043E\u0433\u0430\u0434\u0438</strong><small>\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0439\u0442\u0435 \u0432\u0430\u0436\u043B\u0438\u0432\u0456 \u043C\u043E\u043C\u0435\u043D\u0442\u0438 \u0442\u0430 \u043D\u043E\u0432\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438</small>",
+      ".auth-benefits li:nth-child(3) span": "<strong>\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u043E\u0434\u043D\u043E\u043C\u0443 \u043C\u0456\u0441\u0446\u0456</strong><small>\u0421\u0442\u0435\u0436\u0442\u0435 \u0437\u0430 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u043C \u0432\u0456\u0434 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u044F \u0434\u043E \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438</small>",
+      ".auth-trust": "\u0417\u0430\u0445\u0438\u0449\u0435\u043D\u043E Supabase \xB7 NFC \u043D\u0435 \u0432\u0456\u0434\u0441\u0442\u0435\u0436\u0443\u0454 \u043C\u0456\u0441\u0446\u0435\u0437\u043D\u0430\u0445\u043E\u0434\u0436\u0435\u043D\u043D\u044F",
+      "#registerForm .registration-progress p": "\u0411\u0435\u0437\u043F\u0435\u0447\u043D\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044F \u0437\u0430\u0439\u043C\u0430\u0454 \u043C\u0435\u043D\u0448\u0435 \u0445\u0432\u0438\u043B\u0438\u043D\u0438",
+      "#registerForm > label:nth-of-type(1) > span": "\u0412\u0430\u0448\u0435 \u0456\u043C'\u044F",
+      "#registerForm > label:nth-of-type(2) > span": "Email",
+      "#registerForm > label:nth-of-type(3) > span": "\u041F\u0440\u0438\u0434\u0443\u043C\u0430\u0439\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C",
+      "#registerForm > label:nth-of-type(4) > span": "\u041F\u043E\u0432\u0442\u043E\u0440\u0456\u0442\u044C \u043F\u0430\u0440\u043E\u043B\u044C",
+      "#registerForm > label:nth-of-type(5) > span": "\u042F \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0443\u044E, \u0449\u043E \u0430\u043A\u0430\u0443\u043D\u0442\u043E\u043C \u043A\u0435\u0440\u0443\u0454 \u0434\u043E\u0440\u043E\u0441\u043B\u0430 \u043B\u044E\u0434\u0438\u043D\u0430",
+      "#registerForm > label:nth-of-type(6) > span": '\u042F \u043F\u0440\u0438\u0439\u043C\u0430\u044E <a href="legal.html#terms" target="_blank">\u0443\u043C\u043E\u0432\u0438</a> \u0442\u0430 <a href="legal.html#privacy" target="_blank">\u043F\u043E\u043B\u0456\u0442\u0438\u043A\u0443 \u043A\u043E\u043D\u0444\u0456\u0434\u0435\u043D\u0446\u0456\u0439\u043D\u043E\u0441\u0442\u0456</a>',
+      "#registerForm .registration-submit span": "\u0421\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u043C\u0456\u0439 \u0441\u0432\u0456\u0442 VIORI",
+      "#registerForm .registration-security": "\u0412\u0430\u0448\u0456 \u0434\u0430\u043D\u0456 \u0437\u0430\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u043D\u0456. \u041C\u0438 \u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u043F\u0440\u043E\u0434\u0430\u0454\u043C\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0443 \u0456\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0456\u044E.",
+      "#registrationSuccess .eyebrow": "\u041C\u0410\u0419\u0416\u0415 \u0413\u041E\u0422\u041E\u0412\u041E",
+      "#registrationSuccess h2": "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0456\u0442\u044C email",
+      "#registrationSuccess > p:not(.eyebrow)": "\u041C\u0438 \u043D\u0430\u0434\u0456\u0441\u043B\u0430\u043B\u0438 \u0432\u0430\u043C \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0435 \u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F. \u041F\u0456\u0441\u043B\u044F \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043D\u043D\u044F \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F \u0432\u0430\u0448 \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 \u0441\u0432\u0456\u0442 VIORI.",
+      "#registrationSuccess .button": "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u0434\u043E \u0432\u0445\u043E\u0434\u0443",
+      ".dashboard-head .eyebrow": "\u041C\u0406\u0419 \u041A\u0410\u0411\u0406\u041D\u0415\u0422",
+      ".dashboard-greeting": "\u0412\u0456\u0442\u0430\u0454\u043C\u043E,",
+      '.dashboard-tab[data-dashboard-tab="toys"]': "\u041C\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
+      '.dashboard-tab[data-dashboard-tab="orders"]': "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      '.dashboard-tab[data-dashboard-tab="profile"]': "\u041F\u0440\u043E\u0444\u0456\u043B\u044C",
+      "#logoutButton": "\u0412\u0438\u0439\u0442\u0438",
+      ".toy-empty h3": "\u0422\u0443\u0442 \u043F\u043E\u0447\u0438\u043D\u0430\u0454\u0442\u044C\u0441\u044F \u0457\u0457 \u0436\u0438\u0442\u0442\u044F",
+      ".toy-empty p": "\u041F\u0456\u0434\u043D\u0435\u0441\u0456\u0442\u044C \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0434\u043E NFC-\u043C\u0456\u0442\u043A\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0430\u0431\u043E \u0432\u0432\u0435\u0434\u0456\u0442\u044C \u043A\u043E\u0434 \u0432\u0440\u0443\u0447\u043D\u0443.",
+      ".nfc-form label span": "NFC-\u043A\u043E\u0434 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
+      ".nfc-form .button": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
+      '.dashboard-page[data-dashboard-page="orders"] > .button': "\u041E\u0431\u0440\u0430\u0442\u0438 \u043D\u043E\u0432\u0443 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
+      '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "\u0406\u043C'\u044F",
+      '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
+      ".privacy-note": "\u0412\u0430\u0448 \u043A\u0430\u0431\u0456\u043D\u0435\u0442 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454 \u0456\u0441\u0442\u043E\u0440\u0456\u0457 \u0456\u0433\u0440\u0430\u0448\u043E\u043A, \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u0434\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u043E\u0433\u043E \u0441\u0432\u0456\u0442\u0443 VIORI.",
+      ".admin-heading .eyebrow": "\u041A\u0410\u0422\u0410\u041B\u041E\u0413 VIORI",
+      ".admin-heading h3": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438 \u043D\u0430 \u0441\u0430\u0439\u0442\u0456",
+      ".admin-heading > p:not(.eyebrow)": "\u041E\u043F\u0443\u0431\u043B\u0456\u043A\u043E\u0432\u0430\u043D\u0456 \u043A\u0430\u0440\u0442\u043A\u0438 \u0431\u0430\u0447\u0438\u0442\u044C \u043A\u043E\u0436\u0435\u043D \u0432\u0456\u0434\u0432\u0456\u0434\u0443\u0432\u0430\u0447 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443.",
+      ".image-upload > span": "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
+      ".image-upload small": "JPG, PNG \u0430\u0431\u043E WebP, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 1,5 \u041C\u0411",
+      "#adminProductForm > .button": "\u041E\u043F\u0443\u0431\u043B\u0456\u043A\u0443\u0432\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
+      "#adminProductForm > label:nth-of-type(1) > span": "\u041D\u0430\u0437\u0432\u0430 (RU)",
+      "#adminProductForm > label:nth-of-type(2) > span": "\u041D\u0430\u0437\u0432\u0430 (EN)",
+      ".admin-form-row label:nth-child(1) > span": "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0456\u044F",
+      ".admin-form-row label:nth-child(2) > span": "\u0426\u0456\u043D\u0430 \u0432\u0456\u0434, \u20AC",
+      "#adminProductForm > label:nth-of-type(3) > span": "\u041E\u043F\u0438\u0441 (RU)",
+      "#adminProductForm > label:nth-of-type(4) > span": "\u041E\u043F\u0438\u0441 (EN)",
+      "#adminProductForm select option:nth-child(1)": "\u0422\u0432\u0430\u0440\u0438\u043D\u0438",
+      "#adminProductForm select option:nth-child(2)": "\u041B\u044F\u043B\u044C\u043A\u0438",
+      "#adminProductForm select option:nth-child(3)": "\u0414\u043B\u044F \u043C\u0430\u043B\u044E\u043A\u0456\u0432",
+      ".life-intro .eyebrow": "\u041D\u0415 \u041F\u0420\u041E\u0421\u0422\u041E \u0406\u0413\u0420\u0410\u0428\u041A\u0410",
+      ".life-intro h2": "\u0407\u0457 \u0436\u0438\u0442\u0442\u044F \u043F\u0440\u043E\u0434\u043E\u0432\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0440\u0430\u0437\u043E\u043C \u0437 \u0432\u0430\u043C\u0438",
+      ".life-intro > p:last-child": "\u0423\u0441\u0435\u0440\u0435\u0434\u0438\u043D\u0456 \u043A\u043E\u0436\u043D\u043E\u0457 VIORI \u2014 \u043A\u043B\u044E\u0447 \u0434\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u043E\u0433\u043E \u0441\u0432\u0456\u0442\u0443 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430. NFC \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0443\u0441\u043A\u043B\u0430\u0434\u043D\u044E\u0454: \u043E\u0434\u0438\u043D \u0434\u043E\u0442\u0438\u043A \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \u0432\u0441\u0435 \u0432\u0430\u0436\u043B\u0438\u0432\u0435.",
+      ".life-step:nth-child(1) h3": "\u0412\u043E\u043D\u0430 \u043D\u0430\u0440\u043E\u0434\u0436\u0443\u0454\u0442\u044C\u0441\u044F",
+      ".life-step:nth-child(1) p": "\u041C\u0430\u0439\u0441\u0442\u0435\u0440 \u0441\u0442\u0432\u043E\u0440\u044E\u0454 \u0456\u0433\u0440\u0430\u0448\u043A\u0443 \u0432\u0440\u0443\u0447\u043D\u0443 \u0439 \u0437\u0430\u043F\u0438\u0441\u0443\u0454 \u043F\u0435\u0440\u0448\u0438\u0439 \u0440\u043E\u0437\u0434\u0456\u043B \u0457\u0457 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
+      ".life-step:nth-child(2) h3": "\u0412\u0438 \u0437\u043D\u0430\u0439\u043E\u043C\u0438\u0442\u0435\u0441\u044F",
+      ".life-step:nth-child(2) p": "\u0410\u043A\u0442\u0438\u0432\u0443\u0439\u0442\u0435 \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0456 \u0434\u0430\u0439\u0442\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0443 \u043C\u0456\u0441\u0446\u0435 \u0443 \u0441\u0432\u043E\u0457\u0439 \u0440\u043E\u0434\u0438\u043D\u0456.",
+      ".life-step:nth-child(3) h3": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F \u0440\u043E\u0441\u0442\u0435",
+      ".life-step:nth-child(3) p": "\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0439\u0442\u0435 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u0457, \u0441\u0456\u043C\u0435\u0439\u043D\u0456 \u0441\u043F\u043E\u0433\u0430\u0434\u0438, \u0430\u0443\u0434\u0456\u043E\u043A\u0430\u0437\u043A\u0438 \u0442\u0430 \u043E\u0441\u043E\u0431\u043B\u0438\u0432\u0456 \u0434\u0430\u0442\u0438.",
+      ".trust-section .section-heading .eyebrow": "\u0421\u041F\u041E\u041A\u0406\u0419 \u0414\u041B\u042F \u0411\u0410\u0422\u042C\u041A\u0406\u0412",
+      ".trust-section .section-heading h2": "\u0421\u0442\u0432\u043E\u0440\u0435\u043D\u043E \u0434\u0431\u0430\u0439\u043B\u0438\u0432\u043E \u0439 \u043F\u0440\u043E\u0437\u043E\u0440\u043E",
+      ".trust-section .section-heading > p": "\u041C\u0438 \u0445\u043E\u0447\u0435\u043C\u043E, \u0449\u043E\u0431 \u0432\u0438 \u0437\u043D\u0430\u043B\u0438 \u0456\u0441\u0442\u043E\u0440\u0456\u044E \u043D\u0435 \u043B\u0438\u0448\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430, \u0430 \u0439 \u043A\u043E\u0436\u043D\u043E\u0433\u043E \u043C\u0430\u0442\u0435\u0440\u0456\u0430\u043B\u0443, \u0437 \u044F\u043A\u043E\u0433\u043E \u0432\u0456\u043D \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u0439.",
+      "#cartTitle": "\u041A\u043E\u0448\u0438\u043A",
+      ".cart-checkout": "\u041E\u0444\u043E\u0440\u043C\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      ".trust-card:nth-child(1) h3": "\u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
+      ".trust-card:nth-child(1) p": "\u041A\u043E\u0436\u043D\u0430 \u0434\u0435\u0442\u0430\u043B\u044C \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u043C\u0438 \u043F\u0430\u0440\u0442\u0456\u044F\u043C\u0438 \u0442\u0430 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u044F\u0454\u0442\u044C\u0441\u044F \u043F\u0435\u0440\u0435\u0434 \u0432\u0456\u0434\u043F\u0440\u0430\u0432\u043A\u043E\u044E.",
+      ".trust-card:nth-child(2) h3": "\u0417\u0440\u043E\u0437\u0443\u043C\u0456\u043B\u0456 \u043C\u0430\u0442\u0435\u0440\u0456\u0430\u043B\u0438",
+      ".trust-card:nth-child(2) p": "\u0421\u043A\u043B\u0430\u0434, \u043D\u0430\u043F\u043E\u0432\u043D\u044E\u0432\u0430\u0447, \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0456\u0457 \u0437 \u0434\u043E\u0433\u043B\u044F\u0434\u0443 \u0442\u0430 \u0432\u0456\u043A\u043E\u0432\u0435 \u043C\u0430\u0440\u043A\u0443\u0432\u0430\u043D\u043D\u044F \u0432\u043A\u0430\u0437\u0430\u043D\u0456 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \u0442\u043E\u0432\u0430\u0440\u0443.",
+      ".trust-card:nth-child(3) h3": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u043F\u0435\u0440\u0435\u0434 \u0432\u0456\u0434\u043F\u0440\u0430\u0432\u043A\u043E\u044E",
+      ".trust-card:nth-child(3) p": "\u041A\u043E\u0436\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u043E\u0433\u043B\u044F\u0434\u0430\u0454\u0442\u044C\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443: \u043C\u0456\u0446\u043D\u0456\u0441\u0442\u044C \u0448\u0432\u0456\u0432, \u043D\u0430\u0434\u0456\u0439\u043D\u0456\u0441\u0442\u044C \u043A\u0440\u0456\u043F\u043B\u0435\u043D\u043D\u044F \u043E\u0447\u0435\u0439, \u043D\u043E\u0441\u0430 \u0439 \u0434\u0440\u0456\u0431\u043D\u0438\u0445 \u0434\u0435\u0442\u0430\u043B\u0435\u0439.",
+      ".trust-card:nth-child(4) h3": "\u0412\u0456\u043A\u043E\u0432\u0435 \u043C\u0430\u0440\u043A\u0443\u0432\u0430\u043D\u043D\u044F",
+      ".trust-card:nth-child(4) p": "\u0414\u043E \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044F \u043E\u0444\u0456\u0446\u0456\u0439\u043D\u0438\u0445 \u0432\u0438\u043F\u0440\u043E\u0431\u0443\u0432\u0430\u043D\u044C \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u043D\u0435 \u043F\u0440\u0438\u0437\u043D\u0430\u0447\u0435\u043D\u0456 \u0434\u043B\u044F \u0434\u0456\u0442\u0435\u0439 \u043C\u043E\u043B\u043E\u0434\u0448\u0438\u0445 \u0437\u0430 3 \u0440\u043E\u043A\u0438.",
+      ".faq details:nth-child(1) summary": "\u042F\u043A \u043F\u0440\u0430\u0446\u044E\u0454 NFC?",
+      ".faq details:nth-child(1) p": "\u041F\u0456\u0434\u043D\u0435\u0441\u0456\u0442\u044C \u0441\u0443\u043C\u0456\u0441\u043D\u0438\u0439 \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0434\u043E \u043C\u0456\u0442\u043A\u0438 \u0432\u0441\u0435\u0440\u0435\u0434\u0438\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438. \u0407\u0457 \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F \u0431\u0435\u0437 \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0430\u0441\u0442\u043E\u0441\u0443\u043D\u043A\u0443.",
+      ".faq details:nth-child(2) summary": "\u0427\u0438 \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0434\u0438\u0442\u0438\u043D\u0456 \u0430\u043A\u0430\u0443\u043D\u0442?",
+      ".faq details:nth-child(2) p": "\u041D\u0456. \u041A\u0430\u0431\u0456\u043D\u0435\u0442\u043E\u043C \u0456 \u0441\u0456\u043C\u0435\u0439\u043D\u0438\u043C\u0438 \u0434\u0430\u043D\u0438\u043C\u0438 \u043A\u0435\u0440\u0443\u0454 \u0434\u043E\u0440\u043E\u0441\u043B\u0430 \u043B\u044E\u0434\u0438\u043D\u0430.",
+      ".faq details:nth-child(3) summary": "\u0427\u0438 \u043C\u043E\u0436\u043D\u0430 \u043F\u043E\u0434\u0430\u0440\u0443\u0432\u0430\u0442\u0438 \u0430\u0431\u043E \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443?",
+      ".faq details:nth-child(3) p": "\u0422\u0430\u043A. \u0412\u043B\u0430\u0441\u043D\u0438\u043A \u043C\u043E\u0436\u0435 \u0431\u0435\u0437\u043F\u0435\u0447\u043D\u043E \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u0438 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0456\u043D\u0448\u0456\u0439 \u0434\u043E\u0440\u043E\u0441\u043B\u0456\u0439 \u043B\u044E\u0434\u0438\u043D\u0456, \u0437\u0431\u0435\u0440\u0456\u0433\u0448\u0438 \u043E\u0431\u0440\u0430\u043D\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
+      ".product-specs div:nth-child(1) span": "\u0420\u043E\u0437\u043C\u0456\u0440",
+      "#productModalSize": "\u0431\u043B\u0438\u0437\u044C\u043A\u043E 32 \u0441\u043C",
+      ".product-specs div:nth-child(2) span": "\u0421\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u044F",
+      "#productModalLead": "7\u201314 \u0434\u043D\u0456\u0432",
+      ".product-specs div:nth-child(3) span": "\u0423 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0456",
+      ".product-specs div:nth-child(3) strong": "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
+      ".product-quantity": '\u041A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C <input id="productQuantity" type="number" min="1" value="1">',
+      "#modalAddToCart": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0432 \u043A\u043E\u0448\u0438\u043A",
+      ".product-care": "\u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430 \xB7 \u041F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0456\u0437\u0430\u0446\u0456\u044F \xB7 \u041F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u043E\u0432\u0430 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0430",
+      ".cart-summary span": "\u0420\u0430\u0437\u043E\u043C",
+      ".cart-note": "\u041E\u043F\u043B\u0430\u0442\u0430 \u0431\u0443\u0434\u0435 \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0430 \u043D\u0430 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u043C\u0443 \u0435\u0442\u0430\u043F\u0456. \u041F\u043E\u043A\u0438 \u0449\u043E \u043E\u0444\u043E\u0440\u043C\u0456\u0442\u044C \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0447\u0435\u0440\u0435\u0437 \u0444\u043E\u0440\u043C\u0443 VIORI.",
+      "#checkoutFormView > .eyebrow": "\u041C\u0410\u0419\u0416\u0415 \u0413\u041E\u0422\u041E\u0412\u041E",
+      "#checkoutTitle": "\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u043D\u044F \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#checkoutForm .checkout-grid label:nth-child(1) span": "\u041F\u043E\u0432\u043D\u0435 \u0456\u043C'\u044F",
+      "#checkoutForm .checkout-grid label:nth-child(2) span": "Email",
+      "#checkoutForm .checkout-grid label:nth-child(3) span": "\u0422\u0435\u043B\u0435\u0444\u043E\u043D",
+      "#checkoutForm .checkout-grid label:nth-child(4) span": "\u0412\u0443\u043B\u0438\u0446\u044F \u0442\u0430 \u043D\u043E\u043C\u0435\u0440 \u0431\u0443\u0434\u0438\u043D\u043A\u0443",
+      "#checkoutForm .checkout-grid label:nth-child(5) span": "\u0406\u043D\u0434\u0435\u043A\u0441",
+      "#checkoutForm .checkout-grid label:nth-child(6) span": "\u041C\u0456\u0441\u0442\u043E",
+      ".delivery-options legend": "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430",
+      ".delivery-options label:nth-of-type(1) strong": "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430",
+      ".delivery-options label:nth-of-type(1) small": "2\u20133 \u0440\u043E\u0431\u043E\u0447\u0456 \u0434\u043D\u0456 \u043F\u0456\u0441\u043B\u044F \u0432\u0438\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      ".delivery-options label:nth-of-type(2) strong": "\u0421\u0430\u043C\u043E\u0432\u0438\u0432\u0456\u0437",
+      ".delivery-options label:nth-of-type(2) small": "\u0417\u0430 \u043F\u043E\u043F\u0435\u0440\u0435\u0434\u043D\u044C\u043E\u044E \u0434\u043E\u043C\u043E\u0432\u043B\u0435\u043D\u0456\u0441\u0442\u044E",
+      ".delivery-options label:nth-of-type(2) b": "\u0411\u0435\u0437\u043A\u043E\u0448\u0442\u043E\u0432\u043D\u043E",
+      ".checkout-total span": "\u0414\u043E \u0441\u043F\u043B\u0430\u0442\u0438",
+      ".payment-preview > span": "\u0421\u043F\u043E\u0441\u0456\u0431 \u043E\u043F\u043B\u0430\u0442\u0438",
+      ".payment-preview small": "\u0411\u0435\u0437\u043F\u0435\u0447\u043D\u0430 \u043E\u043D\u043B\u0430\u0439\u043D-\u043E\u043F\u043B\u0430\u0442\u0430 \u0431\u0443\u0434\u0435 \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0430 \u043F\u0435\u0440\u0435\u0434 \u0440\u0435\u043B\u0456\u0437\u043E\u043C.",
+      ".checkout-consent span": "\u042F \u043F\u0440\u0438\u0439\u043C\u0430\u044E \u0443\u043C\u043E\u0432\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0442\u0430 \u043F\u043E\u043B\u0456\u0442\u0438\u043A\u0443 \u043A\u043E\u043D\u0444\u0456\u0434\u0435\u043D\u0446\u0456\u0439\u043D\u043E\u0441\u0442\u0456",
+      "#checkoutForm > .button": "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0431\u0435\u0437 \u043E\u043F\u043B\u0430\u0442\u0438",
+      "#checkoutSuccess .eyebrow": "\u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F \u0421\u0422\u0412\u041E\u0420\u0415\u041D\u041E",
+      "#checkoutSuccess h2": "\u0414\u044F\u043A\u0443\u0454\u043C\u043E!",
+      "#checkoutSuccess > p:nth-of-type(3)": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u0435 \u0443 \u0432\u0430\u0448\u043E\u043C\u0443 \u043A\u0430\u0431\u0456\u043D\u0435\u0442\u0456. \u041F\u0456\u0441\u043B\u044F \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043D\u044F \u043E\u043F\u043B\u0430\u0442\u0438 \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043D\u043D\u044F \u043D\u0430\u0434\u0445\u043E\u0434\u0438\u0442\u0438\u043C\u0435 \u0439 \u043D\u0430 \u043F\u043E\u0448\u0442\u0443.",
+      "#checkoutSuccess > .button": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438",
+      ".admin-orders-heading .eyebrow": "\u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F",
+      ".admin-orders-heading h3": "\u041E\u0441\u0442\u0430\u043D\u043D\u0456 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      ".passport-content > .eyebrow": "\u0407\u0407 \u041E\u0421\u041E\u0411\u0418\u0421\u0422\u0410 \u0406\u0421\u0422\u041E\u0420\u0406\u042F",
+      ".passport-facts div:nth-child(1) span": "\u0414\u0435\u043D\u044C \u043D\u0430\u0440\u043E\u0434\u0436\u0435\u043D\u043D\u044F",
+      ".passport-facts div:nth-child(2) span": "\u0421\u0442\u0430\u0442\u0443\u0441",
+      ".passport-facts div:nth-child(2) strong": "\u0427\u0430\u0441\u0442\u0438\u043D\u0430 \u0432\u0430\u0448\u043E\u0457 \u0440\u043E\u0434\u0438\u043D\u0438",
+      ".memory-form h3": "\u0414\u043E\u0434\u0430\u0442\u0438 \u043D\u043E\u0432\u0438\u0439 \u0440\u043E\u0437\u0434\u0456\u043B",
+      ".memory-form label:nth-of-type(1) span": "\u041D\u0430\u0437\u0432\u0430 \u043F\u043E\u0434\u0456\u0457",
+      ".memory-form label:nth-of-type(2) span": "\u0421\u043F\u043E\u0433\u0430\u0434",
+      ".memory-form .button": "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0432 \u0456\u0441\u0442\u043E\u0440\u0456\u0457",
+      ".nfc-admin-heading .eyebrow": "NFC-\u041F\u0410\u0421\u041F\u041E\u0420\u0422\u0418",
+      ".nfc-admin-heading h3": "\u0412\u0438\u043F\u0443\u0441\u0442\u0438\u0442\u0438 \u043D\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442",
+      ".nfc-admin-heading > p:last-child": "\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u043A\u043E\u0434 \u0434\u043B\u044F \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438. \u0410\u043A\u0442\u0438\u0432\u0443\u0432\u0430\u0442\u0438 \u0439\u043E\u0433\u043E \u0437\u043C\u043E\u0436\u0435 \u043B\u0438\u0448\u0435 \u043E\u0434\u0438\u043D \u043A\u043B\u0456\u0454\u043D\u0442.",
+      ".nfc-issue-form .admin-form-row label:nth-child(1) span": "\u0406\u043C'\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430 (RU)",
+      ".nfc-issue-form .admin-form-row label:nth-child(2) span": "\u0406\u043C'\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430 (EN)",
+      ".nfc-issue-form > label span": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043A\u043B\u0456\u0454\u043D\u0442\u0430",
+      ".nfc-issue-form > label small": "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0437\u0432'\u044F\u0436\u0435\u0442\u044C\u0441\u044F \u0437 \u0446\u0438\u043C \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F\u043C \u2014 \u043D\u043E\u043C\u0435\u0440 \u0432\u0432\u043E\u0434\u0438\u0442\u0438 \u043D\u0435 \u0442\u0440\u0435\u0431\u0430",
+      ".nfc-issue-form .button": "\u0421\u0442\u0432\u043E\u0440\u0438\u0442\u0438 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
+      "#cookieTitle": "\u0412\u0430\u0448 \u0432\u0438\u0431\u0456\u0440 \u0449\u043E\u0434\u043E \u043F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u0456",
+      "#cookieBanner p": "\u041D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0435 \u0441\u0445\u043E\u0432\u0438\u0449\u0435 \u0442\u0440\u0438\u043C\u0430\u0454 \u043C\u043E\u0432\u0443, \u043A\u043E\u0448\u0438\u043A \u0456 \u0432\u0445\u0456\u0434. \u041D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u0430 \u0430\u043D\u0430\u043B\u0456\u0442\u0438\u043A\u0430 \u0432\u043C\u0438\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043B\u0438\u0448\u0435 \u0437\u0430 \u0432\u0430\u0448\u043E\u044E \u0437\u0433\u043E\u0434\u043E\u044E.",
+      "#cookieBanner > div:first-child > a": "\u0414\u043E\u043A\u043B\u0430\u0434\u043D\u0456\u0448\u0435",
+      "#essentialCookies": "\u041B\u0438\u0448\u0435 \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0456",
+      "#acceptCookies": "\u0414\u043E\u0437\u0432\u043E\u043B\u0438\u0442\u0438 \u0430\u043D\u0430\u043B\u0456\u0442\u0438\u043A\u0443",
+      ".footer-legal a:nth-child(1)": "\u0423\u043C\u043E\u0432\u0438",
+      ".footer-legal a:nth-child(2)": "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u0456\u0441\u0442\u044C",
+      ".footer-legal a:nth-child(3)": "\u041F\u043E\u0432\u0435\u0440\u043D\u0435\u043D\u043D\u044F",
+      ".footer-legal a:nth-child(4)": "\u0411\u0435\u0437\u043F\u0435\u043A\u0430",
+      "#openCancellation": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#openCookieSettings": "Cookies",
+      "#cancellationFormView > .eyebrow": "\u041F\u0420\u0410\u0412\u041E \u041D\u0410 \u0421\u041A\u0410\u0421\u0423\u0412\u0410\u041D\u041D\u042F",
+      "#cancellationTitle": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#cancellationFormView > p:not(.eyebrow)": "\u041D\u0430\u0434\u0456\u0448\u043B\u0456\u0442\u044C \u0437\u0430\u043F\u0438\u0442 \u2014 \u043C\u0438 \u0437\u0430\u0444\u0456\u043A\u0441\u0443\u0454\u043C\u043E \u0439\u043E\u0433\u043E \u0434\u0430\u0442\u0443 \u0439 \u0437\u0432'\u044F\u0436\u0435\u043C\u043E\u0441\u044F \u0437 \u0432\u0430\u043C\u0438 \u043F\u0456\u0441\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \u0441\u0442\u0430\u0442\u0443\u0441\u0443 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F.",
+      "#cancellationForm label:nth-of-type(1) span": "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#cancellationForm label:nth-of-type(2) span": "Email \u0456\u0437 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#cancellationForm label:nth-of-type(3) span": "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 (\u043D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u043E)",
+      "#cancellationForm .button": "\u041D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438 \u0437\u0430\u043F\u0438\u0442 \u043D\u0430 \u0441\u043A\u0430\u0441\u0443\u0432\u0430\u043D\u043D\u044F",
+      "#cancellationSuccess .eyebrow": "\u0417\u0410\u041F\u0418\u0422 \u041E\u0422\u0420\u0418\u041C\u0410\u041D\u041E",
+      "#cancellationSuccess h2": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u043D\u043D\u044F \u0437\u0430\u0444\u0456\u043A\u0441\u043E\u0432\u0430\u043D\u043E",
+      "#cancellationSuccess .button": "\u0417\u0430\u043A\u0440\u0438\u0442\u0438",
+      '.dashboard-tab[data-dashboard-tab="admin-orders"]': "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "\u041A\u0430\u0442\u0430\u043B\u043E\u0433",
+      '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u0438",
+      ".admin-metrics article:nth-child(1) span": "\u041D\u043E\u0432\u0456",
+      ".admin-metrics article:nth-child(1) small": "\u043F\u043E\u0442\u0440\u0435\u0431\u0443\u044E\u0442\u044C \u0443\u0432\u0430\u0433\u0438",
+      ".admin-metrics article:nth-child(2) span": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      ".admin-metrics article:nth-child(2) small": "\u0437\u0430 \u0432\u0435\u0441\u044C \u0447\u0430\u0441",
+      ".admin-metrics article:nth-child(3) span": "\u0422\u043E\u0432\u0430\u0440\u0438",
+      ".admin-metrics article:nth-child(3) small": "\u0443 \u043A\u0430\u0442\u0430\u043B\u043E\u0437\u0456",
+      ".admin-metrics article:nth-child(4) small": "\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u0456\u0432 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E",
+      "#adminAddProductToggle": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
+      '.dashboard-tab[data-dashboard-tab="admin-requests"]': "\u0417\u0430\u044F\u0432\u043A\u0438",
+      '[data-dashboard-page="admin-requests"] .eyebrow': "\u0406\u041D\u0414\u0418\u0412\u0406\u0414\u0423\u0410\u041B\u042C\u041D\u0406 \u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F",
+      '[data-dashboard-page="admin-requests"] h3': "\u0417\u0430\u044F\u0432\u043A\u0438 \u0437 \u0441\u0430\u0439\u0442\u0443",
+      '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u043B\u0435\u043D\u043D\u044F \u0437 \u0444\u043E\u0440\u043C\u0438 \xAB\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0456\u0433\u0440\u0430\u0448\u043A\u0443 \u0437\u0430 \u0441\u0432\u043E\u0454\u044E \u0456\u0434\u0435\u0454\u044E\xBB \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0437\u0456."
+    },
     nl: {
       "title": "VIORI \u2014 handgemaakte gehaakte knuffels",
       'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
@@ -20608,15 +20836,15 @@ ${suffix}`;
   var languageButtons = document.querySelectorAll(".language-button");
   var languageSwitcher = document.querySelector(".language-switcher");
   var languageMenuButton = document.getElementById("languageMenuButton");
-  var languageLabels = { ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Fran\xE7ais" };
+  var languageLabels = { ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439", uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Fran\xE7ais" };
   var currentLanguage = "ru";
   function setLanguage(language) {
-    currentLanguage = ["ru", "en", "nl", "de", "fr"].includes(language) ? language : "ru";
+    currentLanguage = ["ru", "uk", "en", "nl", "de", "fr"].includes(language) ? language : "ru";
     document.documentElement.lang = currentLanguage;
     translatedElements.forEach((original, selector) => {
       const element = document.querySelector(selector);
       if (!element) return;
-      const regional = currentLanguage === "nl" || currentLanguage === "de" || currentLanguage === "fr" ? regionalTranslations[currentLanguage][selector] : void 0;
+      const regional = currentLanguage in regionalTranslations ? regionalTranslations[currentLanguage][selector] : void 0;
       const value = currentLanguage === "ru" ? original.html : regional || englishTranslations[selector];
       if (element.matches("meta")) {
         element.setAttribute("content", currentLanguage === "ru" ? original.content || "" : regional || englishTranslations[selector]);
@@ -21557,6 +21785,20 @@ ${suffix}`;
     }).join("");
     renderCart();
   }
+  function passportOrderNumber(passport) {
+    const linked = passport.orders;
+    if (!linked) return "";
+    return (Array.isArray(linked) ? linked[0]?.order_number : linked.order_number) || "";
+  }
+  function label(ru, uk, en) {
+    if (currentLanguage === "ru") return ru;
+    if (currentLanguage === "uk") return uk;
+    return en;
+  }
+  function passportDisplayName(passport) {
+    const fallback = currentLanguage === "ru" ? passport.character_name_ru : passport.character_name_en;
+    return passport.owner_name || fallback || passport.character_name_ru || passport.character_name_en || (currentLanguage !== "ru" ? "VIORI character" : "\u041F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 VIORI");
+  }
   var productionProfile = null;
   var productionPassports = [];
   var productionOrders = [];
@@ -21620,7 +21862,7 @@ ${suffix}`;
     renderCart();
     const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
       supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
       supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
     ]);
     if (profileError) throw profileError;
@@ -21665,7 +21907,7 @@ ${suffix}`;
     switchProductionDashboardPage(allowedPage);
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
-      const name = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
+      const name = passportDisplayName(passport);
       return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
     }).join("");
     document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} \xB7 \u20AC${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} \xB7 ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3></div>`;
@@ -21686,8 +21928,10 @@ ${suffix}`;
     const passport = productionPassports.find((item) => item.id === id);
     if (!passport) return;
     activePassportId = id;
-    document.getElementById("passportName").textContent = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
+    document.getElementById("passportName").textContent = passportDisplayName(passport);
     document.getElementById("passportCode").textContent = passport.public_code;
+    const nameInput = document.querySelector('#passportNameForm input[name="name"]');
+    if (nameInput) nameInput.value = passport.owner_name || "";
     document.getElementById("passportBorn").textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
     const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
     document.getElementById("passportTimeline").innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage !== "ru" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3></article>`;
@@ -21696,32 +21940,47 @@ ${suffix}`;
   }
   async function loadProductionAdmin() {
     if (!supabase || productionProfile?.role !== "admin") return;
-    const [{ data: products }, { data: passports }, { data: requests }] = await Promise.all([
+    const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
       supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
       supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
     ]);
     productionProducts = products || [];
+    let passports = passportResult.data;
+    if (passportResult.error) {
+      const fallback = await supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false });
+      passports = fallback.data;
+      const status = document.getElementById("nfcIssueStatus");
+      if (status && !fallback.error) {
+        status.textContent = label(
+          `\u0411\u0430\u0437\u0430 \u0435\u0449\u0451 \u043D\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430: ${passportResult.error.message}. \u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u043C\u0438\u0433\u0440\u0430\u0446\u0438\u044E.`,
+          `\u0411\u0430\u0437\u0443 \u0449\u0435 \u043D\u0435 \u043E\u043D\u043E\u0432\u043B\u0435\u043D\u043E: ${passportResult.error.message}. \u0412\u0438\u043A\u043E\u043D\u0430\u0439\u0442\u0435 \u043E\u0441\u0442\u0430\u043D\u043D\u044E \u043C\u0456\u0433\u0440\u0430\u0446\u0456\u044E.`,
+          `The database is out of date: ${passportResult.error.message}. Apply the latest migration.`
+        );
+      }
+    }
     productionPassports = passports || [];
     productionRequests = requests || [];
     renderProductionRequests();
     renderProductionAdmin();
   }
   var dbStatusLabels = {
-    new: { ru: "\u041D\u043E\u0432\u044B\u0439", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-    paid: { ru: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Pay\xE9e" },
-    making: { ru: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En cr\xE9ation" },
-    shipped: { ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Exp\xE9di\xE9e" },
-    completed: { ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Termin\xE9e" },
-    cancelled: { ru: "\u041E\u0442\u043C\u0435\u043D\u0451\u043D", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annul\xE9e" }
+    new: { ru: "\u041D\u043E\u0432\u044B\u0439", uk: "\u041D\u043E\u0432\u0435", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    paid: { ru: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D", uk: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D\u043E", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Pay\xE9e" },
+    making: { ru: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", uk: "\u0421\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En cr\xE9ation" },
+    shipped: { ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", uk: "\u0412\u0456\u0434\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Exp\xE9di\xE9e" },
+    completed: { ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", uk: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Termin\xE9e" },
+    cancelled: { ru: "\u041E\u0442\u043C\u0435\u043D\u0451\u043D", uk: "\u0421\u043A\u0430\u0441\u043E\u0432\u0430\u043D\u043E", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annul\xE9e" }
   };
   function dbOrderStatusLabel(status) {
     return dbStatusLabels[status]?.[currentLanguage] || safeText(status);
   }
+  var openStoryPassportId = "";
+  var storySavedMessage = "";
   var requestStatusLabels = {
-    new: { ru: "\u041D\u043E\u0432\u0430\u044F", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-    in_progress: { ru: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
-    done: { ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u0430", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Termin\xE9e" }
+    new: { ru: "\u041D\u043E\u0432\u0430\u044F", uk: "\u041D\u043E\u0432\u0430", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    in_progress: { ru: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", uk: "\u0412 \u0440\u043E\u0431\u043E\u0442\u0456", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
+    done: { ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u0430", uk: "\u0417\u0430\u043A\u0440\u0438\u0442\u0430", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Termin\xE9e" }
   };
   function renderProductionRequests() {
     const container = document.getElementById("adminRequests");
@@ -21744,14 +22003,35 @@ ${suffix}`;
     const address = order.shipping_address || {};
     const addressLine = [address.street, address.postcode, address.city, address.country].filter(Boolean).map((part) => safeText(String(part))).join(", ");
     const delivery = order.delivery_method === "pickup" ? ru ? "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437" : "Pickup" : ru ? "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Standard delivery";
-    const row = (label, value) => `<div><dt>${label}</dt><dd>${value || "\u2014"}</dd></div>`;
-    return `<details class="admin-order-details"><summary>${ru ? "\u0427\u0442\u043E \u0432 \u0437\u0430\u043A\u0430\u0437\u0435" : "Order details"}</summary><div class="admin-order-body"><ul class="admin-order-items">${items || `<li><span>${ru ? "\u041F\u043E\u0437\u0438\u0446\u0438\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B" : "No items"}</span></li>`}</ul><dl class="admin-order-meta">` + row(ru ? "\u041A\u043B\u0438\u0435\u043D\u0442" : "Customer", safeText(order.customer_name || "")) + row(ru ? "\u0422\u0435\u043B\u0435\u0444\u043E\u043D" : "Phone", safeText(order.customer_phone || "")) + row("Email", safeText(order.customer_email || "")) + row(ru ? "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Delivery", `${delivery} \xB7 \u20AC${((order.delivery_cents || 0) / 100).toFixed(2)}`) + row(ru ? "\u0410\u0434\u0440\u0435\u0441" : "Address", addressLine) + `</dl></div></details>`;
+    const row = (label2, value) => `<div><dt>${label2}</dt><dd>${value || "\u2014"}</dd></div>`;
+    return `<details class="admin-order-details"><summary>${ru ? "\u0427\u0442\u043E \u0432 \u0437\u0430\u043A\u0430\u0437\u0435" : "Order details"}</summary><div class="admin-order-body"><ul class="admin-order-items">${items || `<li><span>${ru ? "\u041F\u043E\u0437\u0438\u0446\u0438\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B" : "No items"}</span></li>`}</ul><dl class="admin-order-meta">` + row(ru ? "\u041A\u043B\u0438\u0435\u043D\u0442" : "Customer", safeText(order.customer_name || "")) + row(ru ? "\u0422\u0435\u043B\u0435\u0444\u043E\u043D" : "Phone", safeText(order.customer_phone || "")) + row("Email", safeText(order.customer_email || "")) + row(ru ? "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Delivery", `${delivery} \xB7 \u20AC${((order.delivery_cents || 0) / 100).toFixed(2)}`) + row(ru ? "\u0410\u0434\u0440\u0435\u0441" : "Address", addressLine) + row(
+      label("NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442", "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442", "NFC passport"),
+      productionPassports.filter((passport) => passport.order_id === order.id).map((passport) => safeText(passport.public_code)).join(", ") || label("\u043D\u0435 \u0432\u044B\u043F\u0443\u0449\u0435\u043D", "\u043D\u0435 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E", "not issued")
+    ) + `</dl></div></details>`;
+  }
+  function renderNfcOrderOptions() {
+    const select = document.getElementById("nfcOrderSelect");
+    if (!select) return;
+    const previous = select.value;
+    const linked = new Set(productionPassports.map((passport) => passport.order_id).filter(Boolean));
+    const options = productionOrders.map((order) => {
+      const date = new Date(order.created_at).toLocaleDateString(currentLanguage === "ru" ? "ru-RU" : "en-GB");
+      const mark = linked.has(order.id) ? ` \xB7 ${label("\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0432\u044B\u043F\u0443\u0449\u0435\u043D", "\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E", "passport already issued")}` : "";
+      return `<option value="${safeText(order.order_number)}">${safeText(order.order_number)} \xB7 ${safeText(order.customer_name || "")} \xB7 ${date}${mark}</option>`;
+    }).join("");
+    select.innerHTML = `<option value="">${label("\u0411\u0435\u0437 \u043F\u0440\u0438\u0432\u044F\u0437\u043A\u0438 \u043A \u0437\u0430\u043A\u0430\u0437\u0443", "\u0411\u0435\u0437 \u043F\u0440\u0438\u0432'\u044F\u0437\u043A\u0438 \u0434\u043E \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F", "Not linked to an order")}</option>${options}`;
+    select.value = previous;
   }
   function renderProductionAdmin() {
+    renderNfcOrderOptions();
     const productContainer = document.getElementById("adminProducts");
     if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? currentLanguage !== "ru" ? "PUBLISHED" : "\u041E\u041F\u0423\u0411\u041B\u0418\u041A\u041E\u0412\u0410\u041D\u041E" : currentLanguage !== "ru" ? "DRAFT" : "\u0427\u0415\u0420\u041D\u041E\u0412\u0418\u041A"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" : currentLanguage !== "ru" ? "Publish" : "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div></div>`).join("");
     const passportContainer = document.getElementById("nfcPassports");
-    if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+    if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => {
+      const ru = currentLanguage === "ru";
+      const photo = p.photo_path ? supabase.storage.from("product-images").getPublicUrl(p.photo_path).data.publicUrl : "";
+      return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div><div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b><button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("\u0423\u0434\u0430\u043B\u0438\u0442\u044C", "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438", "Delete")}</button></div></div><details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("\u0421\u043A\u0430\u0437\u043A\u0430 \u0438 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u044F", "\u041A\u0430\u0437\u043A\u0430 \u0456 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F", "Story and photo")}</summary><form class="account-form passport-story-form" data-passport-story="${p.id}">` + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "") + `<div class="story-langs" role="tablist">${["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>` + ["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("\u0421\u043A\u0430\u0437\u043A\u0430", "\u041A\u0430\u0437\u043A\u0430", "Story")} \xB7 ${code.toUpperCase()}</span><textarea name="story_${code}" rows="6" placeholder="${ru ? "\u041E\u043D\u0430 \u0440\u043E\u0434\u0438\u043B\u0430\u0441\u044C \u0442\u0438\u0445\u0438\u043C \u0443\u0442\u0440\u043E\u043C\u2026" : "She was born on a quiet morning\u2026"}">${safeText(p.story?.[code] || "")}</textarea></label>`).join("") + `<label class="image-upload"><span>${label("\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430", "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG \u0438\u043B\u0438 WebP. \u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u2014 \u043C\u043E\u0436\u043D\u043E \u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u044E\u044E.", "JPG, PNG \u0430\u0431\u043E WebP. \u041D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u043E \u2014 \u043C\u043E\u0436\u043D\u0430 \u043B\u0438\u0448\u0438\u0442\u0438 \u043F\u043E\u043F\u0435\u0440\u0435\u0434\u043D\u044E.", "JPG, PNG or WebP. Optional \u2014 the current one stays.")}</small></label><button class="button" type="submit">${label("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438", "Save")}</button><p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p></form></details></article>`;
+    }).join("");
     const orderContainer = document.getElementById("adminOrders");
     if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
     document.getElementById("adminMetricProducts").textContent = String(productionProducts.length);
@@ -21893,8 +22173,8 @@ ${suffix}`;
       if (!strength) return;
       strength.dataset.score = String(score);
       const labels = currentLanguage !== "ru" ? ["Use at least 8 characters", "Weak password", "Fair password", "Good password", "Strong password"] : ["\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432", "\u0421\u043B\u0430\u0431\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0425\u043E\u0440\u043E\u0448\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C"];
-      const label = strength.querySelector("span");
-      if (label) label.textContent = labels[score];
+      const label2 = strength.querySelector("span");
+      if (label2) label2.textContent = labels[score];
     });
     document.getElementById("forgotPasswordForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -21998,8 +22278,16 @@ ${suffix}`;
         if (status) status.textContent = productionMessage(error);
         return;
       }
-      const activationUrl = `${location.origin}${location.pathname}?nfc=${encodeURIComponent(result[0].claim_token)}`;
-      if (status) status.textContent = `${currentLanguage !== "ru" ? "Copy now \u2014 shown once" : "\u0421\u043A\u043E\u043F\u0438\u0440\u0443\u0439\u0442\u0435 \u0441\u0435\u0439\u0447\u0430\u0441 \u2014 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437"}: ${activationUrl}`;
+      const code = encodeURIComponent(result[0].public_code);
+      const chipUrl = `${PUBLIC_SITE_URL}passport.html?code=${code}`;
+      const localUrl = `${location.href.replace(/[^/]*$/, "")}passport.html?code=${code}`;
+      if (status) {
+        status.textContent = label(
+          `\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0432 \u0447\u0438\u043F: ${chipUrl} \xB7 \u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435: ${result[0].claim_token} (\u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437) \xB7 \u0414\u043B\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435: ${localUrl}`,
+          `\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0432 \u0447\u0456\u043F: ${chipUrl} \xB7 \u041D\u0430\u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u043D\u0430 \u043A\u0430\u0440\u0442\u0446\u0456: ${result[0].claim_token} (\u043F\u043E\u043A\u0430\u0437\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437) \xB7 \u0414\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F'\u044E\u0442\u0435\u0440\u0456: ${localUrl}`,
+          `Write on the chip: ${chipUrl} \xB7 Print on the card: ${result[0].claim_token} (shown once) \xB7 For testing on this computer: ${localUrl}`
+        );
+      }
       form.reset();
       await loadProductionAdmin();
     });
@@ -22049,6 +22337,68 @@ ${suffix}`;
         return;
       }
       await loadProductionAccount();
+    });
+    document.getElementById("passportNameForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!activePassportId) return;
+      const form = event.currentTarget;
+      const status = document.getElementById("passportNameStatus");
+      const name = String(new FormData(form).get("name") || "").trim();
+      const { error } = await supabase.rpc("set_passport_name", { target_passport: activePassportId, new_name: name });
+      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Name saved." : "\u0418\u043C\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E.";
+      if (!error) {
+        await loadProductionAccount();
+        await openProductionPassport(activePassportId);
+      }
+    });
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-delete-passport]");
+      if (!button?.dataset.deletePassport || productionProfile?.role !== "admin") return;
+      const code = button.dataset.passportCode || "";
+      const question = currentLanguage !== "ru" ? `Delete passport ${code}? Its story chapters will be lost for good.` : `\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442 ${code}? \u0413\u043B\u0430\u0432\u044B \u0435\u0433\u043E \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0440\u043E\u043F\u0430\u0434\u0443\u0442 \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E.`;
+      if (!window.confirm(question)) return;
+      const status = document.getElementById("nfcIssueStatus");
+      const { error } = await supabase.from("nfc_passports").delete().eq("id", button.dataset.deletePassport);
+      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Passport deleted." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0434\u0430\u043B\u0451\u043D.";
+      if (!error) await loadProductionAdmin();
+    });
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-story-lang]");
+      const form = button?.closest("form");
+      if (!button?.dataset.storyLang || !form) return;
+      openStoryPassportId = form.dataset.passportStory || openStoryPassportId;
+      form.querySelectorAll(".story-lang").forEach((item) => item.classList.toggle("active", item === button));
+      form.querySelectorAll("[data-story-field]").forEach((field) => field.classList.toggle("active", field.dataset.storyField === button.dataset.storyLang));
+    });
+    document.addEventListener("submit", async (event) => {
+      const form = event.target.closest("[data-passport-story]");
+      if (!form?.dataset.passportStory || productionProfile?.role !== "admin") return;
+      event.preventDefault();
+      const passportId = form.dataset.passportStory;
+      const data = new FormData(form);
+      const status = form.querySelector("[data-story-status]");
+      openStoryPassportId = passportId;
+      const story = {};
+      ["ru", "uk", "en", "nl", "de", "fr"].forEach((code) => {
+        const text = String(data.get(`story_${code}`) || "").trim();
+        if (text) story[code] = text;
+      });
+      const update = { story };
+      const photo = data.get("photo");
+      if (photo instanceof File && photo.size) {
+        const path = `passports/${passportId}/${crypto.randomUUID()}-${photo.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+        const upload = await supabase.storage.from("product-images").upload(path, photo, { contentType: photo.type, upsert: false });
+        if (upload.error) {
+          storySavedMessage = productionMessage(upload.error);
+          if (status) status.textContent = storySavedMessage;
+          return;
+        }
+        update.photo_path = path;
+      }
+      const { error } = await supabase.from("nfc_passports").update(update).eq("id", passportId);
+      storySavedMessage = error ? productionMessage(error) : label("\u0421\u043A\u0430\u0437\u043A\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430.", "\u041A\u0430\u0437\u043A\u0443 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u043E.", "Story saved.");
+      if (status) status.textContent = storySavedMessage;
+      if (!error) await loadProductionAdmin();
     });
     document.addEventListener("change", async (event) => {
       const select = event.target.closest("[data-request]");

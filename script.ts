@@ -4,6 +4,10 @@ declare global {
   interface Window { VIORI_CONFIG?: { supabaseUrl?: string; supabaseAnonKey?: string }; }
 }
 
+// Постоянный адрес сайта. Нужен для NFC-меток: их печатают один раз,
+// поэтому адрес не должен зависеть от того, где открыта админка.
+const PUBLIC_SITE_URL = "https://vioritoy.github.io/viori-website/";
+
 const backendConfig = window.VIORI_CONFIG;
 const arrivedFromOAuth = location.hash.includes("access_token=") || location.search.includes("code=");
 const supabase: SupabaseClient | null = backendConfig?.supabaseUrl && backendConfig?.supabaseAnonKey
@@ -14,7 +18,7 @@ document.documentElement.dataset.backend = supabase ? "supabase" : "local-demo";
 const menuButton = document.querySelector<HTMLButtonElement>(".menu-button");
 const mainNav = document.querySelector<HTMLElement>(".main-nav");
 
-type Language = "ru" | "en" | "nl" | "de" | "fr";
+type Language = "ru" | "uk" | "en" | "nl" | "de" | "fr";
 interface Memory { id: string; title: string; text: string; date: string; }
 interface Toy { code: string; name: string; born: string; nameRu?: string; nameEn?: string; memories?: Memory[]; }
 interface Order { product: FormDataEntryValue | string; date: string; status: string; }
@@ -213,7 +217,8 @@ const englishTranslations: Record<string, string> = {
   , '.nfc-admin-heading > p:last-child': "Create a protected code for a specific toy. It can be activated by one customer only."
   , '.nfc-issue-form .admin-form-row label:nth-child(1) span': "Character name (RU)"
   , '.nfc-issue-form .admin-form-row label:nth-child(2) span': "Character name (EN)"
-  , '.nfc-issue-form > label span': "Order number (optional)"
+  , '.nfc-issue-form > label span': "Customer order"
+  , '.nfc-issue-form > label small': "The passport will be linked to this order — no need to type the number"
   , '.nfc-issue-form .button': "Create NFC passport"
   , '#cookieTitle': "Your privacy choice"
   , '#cookieBanner p': "Essential storage keeps language, bag and sign-in working. Optional analytics will be enabled only with your consent."
@@ -253,7 +258,233 @@ const englishTranslations: Record<string, string> = {
   , '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the “Create your own toy” form in the catalogue."
 };
 
-const regionalTranslations: Record<"nl" | "de" | "fr", Record<string, string>> = {
+const regionalTranslations: Record<"uk" | "nl" | "de" | "fr", Record<string, string>> = {
+  uk: {
+    "title": "VIORI — в'язані іграшки ручної роботи",
+    'meta[name="description"]': "VIORI — в'язані іграшки ручної роботи. Унікальні подарунки, створені з любов'ю.",
+    ".main-nav a:nth-child(1)": "Іграшки",
+    ".main-nav a:nth-child(2)": "Каталог",
+    ".main-nav a:nth-child(3)": "Про бренд",
+    ".main-nav a:nth-child(4)": "Контакти",
+    ".account-button-text": "Особистий кабінет",
+    ".auth-home-button": '<span aria-hidden="true">←</span> На головну',
+    ".google-auth-button span": "Продовжити з Google",
+    ".auth-divider span": "або через email",
+    ".hero-copy .eyebrow": "VIORI · СТВОРЕНО ВРУЧНУ",
+    ".hero-copy h1": "Кожна іграшка <em>має власне життя</em>",
+    ".hero-text": "VIORI створюється вручну, отримує ім'я, характер і унікальний цифровий паспорт. Торкніться телефоном до NFC-мітки — і відкрийте її історію, спогади та нові розділи.",
+    ".hero-actions .button": "Подивитися іграшки",
+    ".hero-actions .text-link": "Замовити свою ідею <span>→</span>",
+    ".hero-points span:nth-child(1)": "♡ Ручна робота",
+    ".hero-points span:nth-child(2)": "♡ Унікальний персонаж",
+    ".hero-points span:nth-child(3)": "♡ Особистий NFC-паспорт",
+    ".tag-two": "Зроблено з турботою",
+    "#catalog .section-heading .eyebrow": "Невелика колекція",
+    "#catalog .section-heading h2": "Іграшки VIORI",
+    "#catalog .section-heading > p": "Тут можна додати справжні фото, розміри та ціни для кожної іграшки.",
+    '.filters [data-filter="all"]': "Усі",
+    '.filters [data-filter="animals"]': "Тварини",
+    '.filters [data-filter="dolls"]': "Ляльки",
+    '.filters [data-filter="baby"]': "Для малюків",
+    ".product-image span": "Додайте фото",
+    ".product-type": "В'язана іграшка",
+    ".product-info h3": "Зайка Мія",
+    ".price": "від €29",
+    ".product-description": "М'яка іграшка з довгими вушками. Колір одягу можна обрати.",
+    ".order-product": "Замовити",
+    "#about .eyebrow": "Про майстерню",
+    "#about h2": "Кожна петля розповідає історію",
+    "#about .story-copy > p:nth-of-type(2)": "VIORI — невелика сімейна майстерня в'язаних іграшок. Масового виробництва тут немає: кожна деталь дбайливо створюється руками.",
+    "#about .story-copy > p:nth-of-type(3)": "Ви можете обрати колір, розмір та вбрання іграшки й додати особисту деталь — ім'я, невеликий аксесуар чи подарункову упаковку.",
+    ".stats div:nth-child(1) span": "ручна робота",
+    ".stats div:nth-child(2) span": "унікальна іграшка",
+    ".stats div:nth-child(3) span": "тепла й турботи",
+    "#contacts .eyebrow": "Зв'язатися з VIORI",
+    "#contacts h2": "Створімо особливу іграшку",
+    "#contacts .contact-copy > p:nth-of-type(2)": "Розкажіть, яка іграшка вам сподобалася, або поділіться власною ідеєю. Ми відповімо, обговоримо деталі й порахуємо вартість.",
+    ".contact-link:nth-child(1) small": "Напишіть нам у",
+    ".contact-link:nth-child(2) small": "Дивіться наш",
+    ".small-note": "Перед публікацією замініть номер WhatsApp і посилання Instagram на справжні.",
+    '.form-row .label-text': "Ваше ім'я",
+    '.order-form > label:nth-of-type(1) .label-text': "Що хочете замовити?",
+    '.order-form > label:nth-of-type(2) .label-text': "Побажання",
+    "#productSelect option": "Зайка Мія",
+    ".form-submit": "Надіслати заявку",
+    ".footer > .container > p": '© <span id="year"></span> VIORI. В\'язані іграшки ручної роботи.',
+    ".auth-view > .eyebrow": "VIORI WORLD",
+    "#accountTitle": "Життя вашої іграшки",
+    ".account-intro": "Створіть акаунт, щоб робити замовлення, реєструвати іграшки за NFC-кодом і зберігати їхні історії.",
+    '.auth-tab[data-auth-tab="login"]': "Увійти",
+    '.auth-tab[data-auth-tab="register"]': "Реєстрація",
+    '#loginForm label:nth-child(1) span': "Email",
+    '#loginForm label:nth-child(2) span': "Пароль",
+    "#loginForm .button": "Увійти",
+    ".auth-story-panel .eyebrow": "ЇЇ СВІТ ПОЧИНАЄТЬСЯ ТУТ",
+    ".auth-story-panel h2": "Історія, що лишається у вашій родині",
+    ".auth-story-panel > div:nth-child(2) > p:last-child": "Один захищений дорослий акаунт тримає разом іграшки, замовлення та дорогі сімейні розділи.",
+    ".auth-benefits li:nth-child(1) span": "<strong>Особистий NFC-паспорт</strong><small>Історією іграшки керує лише власник</small>",
+    ".auth-benefits li:nth-child(2) span": "<strong>Сімейні спогади</strong><small>Зберігайте важливі моменти та нові розділи</small>",
+    ".auth-benefits li:nth-child(3) span": "<strong>Замовлення в одному місці</strong><small>Стежте за персонажем від створення до доставки</small>",
+    ".auth-trust": "Захищено Supabase · NFC не відстежує місцезнаходження",
+    "#registerForm .registration-progress p": "Безпечна реєстрація займає менше хвилини",
+    '#registerForm > label:nth-of-type(1) > span': "Ваше ім'я",
+    '#registerForm > label:nth-of-type(2) > span': "Email",
+    '#registerForm > label:nth-of-type(3) > span': "Придумайте пароль",
+    '#registerForm > label:nth-of-type(4) > span': "Повторіть пароль",
+    '#registerForm > label:nth-of-type(5) > span': "Я підтверджую, що акаунтом керує доросла людина",
+    '#registerForm > label:nth-of-type(6) > span': 'Я приймаю <a href="legal.html#terms" target="_blank">умови</a> та <a href="legal.html#privacy" target="_blank">політику конфіденційності</a>',
+    "#registerForm .registration-submit span": "Створити мій світ VIORI",
+    "#registerForm .registration-security": "Ваші дані зашифровані. Ми ніколи не продаємо особисту інформацію.",
+    "#registrationSuccess .eyebrow": "МАЙЖЕ ГОТОВО",
+    "#registrationSuccess h2": "Підтвердіть email",
+    "#registrationSuccess > p:not(.eyebrow)": "Ми надіслали вам захищене посилання. Після підтвердження відкриється ваш особистий світ VIORI.",
+    "#registrationSuccess .button": "Перейти до входу",
+    ".dashboard-head .eyebrow": "МІЙ КАБІНЕТ",
+    ".dashboard-greeting": "Вітаємо,",
+    '.dashboard-tab[data-dashboard-tab="toys"]': "Мої іграшки",
+    '.dashboard-tab[data-dashboard-tab="orders"]': "Замовлення",
+    '.dashboard-tab[data-dashboard-tab="profile"]': "Профіль",
+    "#logoutButton": "Вийти",
+    ".toy-empty h3": "Тут починається її життя",
+    ".toy-empty p": "Піднесіть телефон до NFC-мітки іграшки або введіть код вручну.",
+    ".nfc-form label span": "NFC-код іграшки",
+    ".nfc-form .button": "Додати іграшку",
+    '.dashboard-page[data-dashboard-page="orders"] > .button': "Обрати нову іграшку",
+    '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Ім'я",
+    '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
+    ".privacy-note": "Ваш кабінет зберігає історії іграшок, замовлення й доступ до особистого світу VIORI.",
+    '.admin-heading .eyebrow': "КАТАЛОГ VIORI",
+    '.admin-heading h3': "Іграшки на сайті",
+    '.admin-heading > p:not(.eyebrow)': "Опубліковані картки бачить кожен відвідувач каталогу.",
+    '.image-upload > span': "Фотографія іграшки",
+    '.image-upload small': "JPG, PNG або WebP, не більше 1,5 МБ",
+    '#adminProductForm > .button': "Опублікувати іграшку",
+    '#adminProductForm > label:nth-of-type(1) > span': "Назва (RU)",
+    '#adminProductForm > label:nth-of-type(2) > span': "Назва (EN)",
+    '.admin-form-row label:nth-child(1) > span': "Категорія",
+    '.admin-form-row label:nth-child(2) > span': "Ціна від, €",
+    '#adminProductForm > label:nth-of-type(3) > span': "Опис (RU)",
+    '#adminProductForm > label:nth-of-type(4) > span': "Опис (EN)",
+    '#adminProductForm select option:nth-child(1)': "Тварини",
+    '#adminProductForm select option:nth-child(2)': "Ляльки",
+    '#adminProductForm select option:nth-child(3)': "Для малюків",
+    '.life-intro .eyebrow': "НЕ ПРОСТО ІГРАШКА",
+    '.life-intro h2': "Її життя продовжується разом з вами",
+    '.life-intro > p:last-child': "Усередині кожної VIORI — ключ до особистого світу персонажа. NFC нічого не ускладнює: один дотик відкриває все важливе.",
+    '.life-step:nth-child(1) h3': "Вона народжується",
+    '.life-step:nth-child(1) p': "Майстер створює іграшку вручну й записує перший розділ її історії.",
+    '.life-step:nth-child(2) h3': "Ви знайомитеся",
+    '.life-step:nth-child(2) p': "Активуйте захищений NFC-паспорт і дайте персонажу місце у своїй родині.",
+    '.life-step:nth-child(3) h3': "Історія росте",
+    '.life-step:nth-child(3) p': "Зберігайте фотографії, сімейні спогади, аудіоказки та особливі дати.",
+    '.trust-section .section-heading .eyebrow': "СПОКІЙ ДЛЯ БАТЬКІВ",
+    '.trust-section .section-heading h2': "Створено дбайливо й прозоро",
+    '.trust-section .section-heading > p': "Ми хочемо, щоб ви знали історію не лише персонажа, а й кожного матеріалу, з якого він створений.",
+    '#cartTitle': "Кошик",
+    '.cart-checkout': "Оформити замовлення",
+    '.trust-card:nth-child(1) h3': "Ручна робота",
+    '.trust-card:nth-child(1) p': "Кожна деталь створюється невеликими партіями та перевіряється перед відправкою.",
+    '.trust-card:nth-child(2) h3': "Зрозумілі матеріали",
+    '.trust-card:nth-child(2) p': "Склад, наповнювач, рекомендації з догляду та вікове маркування вказані на сторінці товару.",
+    '.trust-card:nth-child(3) h3': "Перевірка перед відправкою",
+    '.trust-card:nth-child(3) p': "Кожна іграшка оглядається вручну: міцність швів, надійність кріплення очей, носа й дрібних деталей.",
+    '.trust-card:nth-child(4) h3': "Вікове маркування",
+    '.trust-card:nth-child(4) p': "До завершення офіційних випробувань іграшки не призначені для дітей молодших за 3 роки.",
+    '.faq details:nth-child(1) summary': "Як працює NFC?",
+    '.faq details:nth-child(1) p': "Піднесіть сумісний телефон до мітки всередині іграшки. Її захищений цифровий паспорт відкриється без встановлення застосунку.",
+    '.faq details:nth-child(2) summary': "Чи потрібен дитині акаунт?",
+    '.faq details:nth-child(2) p': "Ні. Кабінетом і сімейними даними керує доросла людина.",
+    '.faq details:nth-child(3) summary': "Чи можна подарувати або передати іграшку?",
+    '.faq details:nth-child(3) p': "Так. Власник може безпечно передати цифровий паспорт іншій дорослій людині, зберігши обрані розділи історії.",
+    '.product-specs div:nth-child(1) span': "Розмір",
+    '#productModalSize': "близько 32 см",
+    '.product-specs div:nth-child(2) span': "Створення",
+    '#productModalLead': "7–14 днів",
+    '.product-specs div:nth-child(3) span': "У комплекті",
+    '.product-specs div:nth-child(3) strong': "NFC-паспорт",
+    '.product-quantity': 'Кількість <input id="productQuantity" type="number" min="1" value="1">',
+    '#modalAddToCart': "Додати в кошик",
+    '.product-care': "Ручна робота · Персоналізація · Подарункова упаковка",
+    '.cart-summary span': "Разом",
+    '.cart-note': "Оплата буде підключена на наступному етапі. Поки що оформіть замовлення через форму VIORI.",
+    '#checkoutFormView > .eyebrow': "МАЙЖЕ ГОТОВО",
+    '#checkoutTitle': "Оформлення замовлення",
+    '#checkoutForm .checkout-grid label:nth-child(1) span': "Повне ім'я",
+    '#checkoutForm .checkout-grid label:nth-child(2) span': "Email",
+    '#checkoutForm .checkout-grid label:nth-child(3) span': "Телефон",
+    '#checkoutForm .checkout-grid label:nth-child(4) span': "Вулиця та номер будинку",
+    '#checkoutForm .checkout-grid label:nth-child(5) span': "Індекс",
+    '#checkoutForm .checkout-grid label:nth-child(6) span': "Місто",
+    '.delivery-options legend': "Доставка",
+    '.delivery-options label:nth-of-type(1) strong': "Стандартна доставка",
+    '.delivery-options label:nth-of-type(1) small': "2–3 робочі дні після виготовлення",
+    '.delivery-options label:nth-of-type(2) strong': "Самовивіз",
+    '.delivery-options label:nth-of-type(2) small': "За попередньою домовленістю",
+    '.delivery-options label:nth-of-type(2) b': "Безкоштовно",
+    '.checkout-total span': "До сплати",
+    '.payment-preview > span': "Спосіб оплати",
+    '.payment-preview small': "Безпечна онлайн-оплата буде підключена перед релізом.",
+    '.checkout-consent span': "Я приймаю умови замовлення та політику конфіденційності",
+    '#checkoutForm > .button': "Підтвердити замовлення без оплати",
+    '#checkoutSuccess .eyebrow': "ЗАМОВЛЕННЯ СТВОРЕНО",
+    '#checkoutSuccess h2': "Дякуємо!",
+    '#checkoutSuccess > p:nth-of-type(3)': "Замовлення збережене у вашому кабінеті. Після підключення оплати підтвердження надходитиме й на пошту.",
+    '#checkoutSuccess > .button': "Продовжити",
+    '.admin-orders-heading .eyebrow': "ЗАМОВЛЕННЯ",
+    '.admin-orders-heading h3': "Останні замовлення",
+    '.passport-content > .eyebrow': "ЇЇ ОСОБИСТА ІСТОРІЯ",
+    '.passport-facts div:nth-child(1) span': "День народження",
+    '.passport-facts div:nth-child(2) span': "Статус",
+    '.passport-facts div:nth-child(2) strong': "Частина вашої родини",
+    '.memory-form h3': "Додати новий розділ",
+    '.memory-form label:nth-of-type(1) span': "Назва події",
+    '.memory-form label:nth-of-type(2) span': "Спогад",
+    '.memory-form .button': "Зберегти в історії",
+    '.nfc-admin-heading .eyebrow': "NFC-ПАСПОРТИ",
+    '.nfc-admin-heading h3': "Випустити новий паспорт",
+    '.nfc-admin-heading > p:last-child': "Створіть захищений код для конкретної іграшки. Активувати його зможе лише один клієнт.",
+    '.nfc-issue-form .admin-form-row label:nth-child(1) span': "Ім'я персонажа (RU)",
+    '.nfc-issue-form .admin-form-row label:nth-child(2) span': "Ім'я персонажа (EN)",
+    '.nfc-issue-form > label span': "Замовлення клієнта",
+    '.nfc-issue-form > label small': "Паспорт зв'яжеться з цим замовленням — номер вводити не треба",
+    '.nfc-issue-form .button': "Створити NFC-паспорт",
+    '#cookieTitle': "Ваш вибір щодо приватності",
+    '#cookieBanner p': "Необхідне сховище тримає мову, кошик і вхід. Необов'язкова аналітика вмикається лише за вашою згодою.",
+    '#cookieBanner > div:first-child > a': "Докладніше",
+    '#essentialCookies': "Лише необхідні",
+    '#acceptCookies': "Дозволити аналітику",
+    '.footer-legal a:nth-child(1)': "Умови",
+    '.footer-legal a:nth-child(2)': "Приватність",
+    '.footer-legal a:nth-child(3)': "Повернення",
+    '.footer-legal a:nth-child(4)': "Безпека",
+    '#openCancellation': "Скасувати замовлення",
+    '#openCookieSettings': "Cookies",
+    '#cancellationFormView > .eyebrow': "ПРАВО НА СКАСУВАННЯ",
+    '#cancellationTitle': "Скасувати замовлення",
+    '#cancellationFormView > p:not(.eyebrow)': "Надішліть запит — ми зафіксуємо його дату й зв'яжемося з вами після перевірки статусу замовлення.",
+    '#cancellationForm label:nth-of-type(1) span': "Номер замовлення",
+    '#cancellationForm label:nth-of-type(2) span': "Email із замовлення",
+    '#cancellationForm label:nth-of-type(3) span': "Причина (необов'язково)",
+    '#cancellationForm .button': "Надіслати запит на скасування",
+    '#cancellationSuccess .eyebrow': "ЗАПИТ ОТРИМАНО",
+    '#cancellationSuccess h2': "Скасування зафіксовано",
+    '#cancellationSuccess .button': "Закрити",
+    '.dashboard-tab[data-dashboard-tab="admin-orders"]': "Замовлення",
+    '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "Каталог",
+    '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC-паспорти",
+    '.admin-metrics article:nth-child(1) span': "Нові",
+    '.admin-metrics article:nth-child(1) small': "потребують уваги",
+    '.admin-metrics article:nth-child(2) span': "Замовлення",
+    '.admin-metrics article:nth-child(2) small': "за весь час",
+    '.admin-metrics article:nth-child(3) span': "Товари",
+    '.admin-metrics article:nth-child(3) small': "у каталозі",
+    '.admin-metrics article:nth-child(4) small': "паспортів випущено",
+    '#adminAddProductToggle': "Додати іграшку",
+    '.dashboard-tab[data-dashboard-tab="admin-requests"]': "Заявки",
+    '[data-dashboard-page="admin-requests"] .eyebrow': "ІНДИВІДУАЛЬНІ ЗАМОВЛЕННЯ",
+    '[data-dashboard-page="admin-requests"] h3': "Заявки з сайту",
+    '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Повідомлення з форми «Створіть іграшку за своєю ідеєю» в каталозі."
+  },
   nl: {
     "title": "VIORI — handgemaakte gehaakte knuffels",
     'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
@@ -320,17 +551,17 @@ Object.keys(englishTranslations).forEach((selector) => {
 const languageButtons = document.querySelectorAll<HTMLButtonElement>(".language-button");
 const languageSwitcher = document.querySelector<HTMLElement>(".language-switcher");
 const languageMenuButton = document.getElementById("languageMenuButton") as HTMLButtonElement | null;
-const languageLabels: Record<Language, string> = { ru: "Русский", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Français" };
+const languageLabels: Record<Language, string> = { ru: "Русский", uk: "Українська", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Français" };
 let currentLanguage: Language = "ru";
 
 function setLanguage(language: string | undefined) {
-  currentLanguage = (["ru", "en", "nl", "de", "fr"] as Language[]).includes(language as Language) ? language as Language : "ru";
+  currentLanguage = (["ru", "uk", "en", "nl", "de", "fr"] as Language[]).includes(language as Language) ? language as Language : "ru";
   document.documentElement.lang = currentLanguage;
 
   translatedElements.forEach((original, selector) => {
     const element = document.querySelector(selector);
     if (!element) return;
-    const regional = currentLanguage === "nl" || currentLanguage === "de" || currentLanguage === "fr" ? regionalTranslations[currentLanguage][selector] : undefined;
+    const regional = currentLanguage in regionalTranslations ? regionalTranslations[currentLanguage as "uk" | "nl" | "de" | "fr"][selector] : undefined;
     const value = currentLanguage === "ru" ? original.html : (regional || englishTranslations[selector]);
     if (element.matches("meta")) {
       element.setAttribute("content", currentLanguage === "ru" ? (original.content || "") : (regional || englishTranslations[selector]));
@@ -1331,7 +1562,33 @@ async function renderCatalogProducts(): Promise<void> {
 }
 
 type DbProfile = { id: string; display_name: string; role: "customer" | "admin" };
-type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string };
+type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string; story?: Record<string, string> | null; photo_path?: string | null; owner_name?: string | null; order_id?: string | null; orders?: { order_number: string } | { order_number: string }[] | null };
+
+// Вложенную связь Supabase отдаёт то объектом, то массивом — зависит от того,
+// как выведена связь. Приводим к одному виду.
+function passportOrderNumber(passport: DbPassport): string {
+  const linked = passport.orders;
+  if (!linked) return "";
+  return (Array.isArray(linked) ? linked[0]?.order_number : linked.order_number) || "";
+}
+
+// Короткие подписи, которые рисует код, а не разметка: словарь переводов
+// до них не достаёт, поэтому язык выбираем здесь.
+function label(ru: string, uk: string, en: string): string {
+  if (currentLanguage === "ru") return ru;
+  if (currentLanguage === "uk") return uk;
+  return en;
+}
+
+// Имя даёт владелец; имя от мастера — только рабочая пометка в админке.
+function passportDisplayName(passport: DbPassport): string {
+  const fallback = currentLanguage === "ru" ? passport.character_name_ru : passport.character_name_en;
+  return passport.owner_name
+    || fallback
+    || passport.character_name_ru
+    || passport.character_name_en
+    || (currentLanguage !== "ru" ? "VIORI character" : "Персонаж VIORI");
+}
 type DbOrderItem = { product_name: string; unit_price_cents: number; quantity: number };
 type DbShippingAddress = { street?: string; postcode?: string; city?: string; country?: string };
 type DbOrder = {
@@ -1414,7 +1671,7 @@ async function loadProductionAccount(): Promise<void> {
   renderCart();
   const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
     supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
   ]);
   if (profileError) throw profileError;
@@ -1459,7 +1716,7 @@ function renderProductionDashboard(email: string): void {
   switchProductionDashboardPage(allowedPage);
   document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
   document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
-    const name = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
+    const name = passportDisplayName(passport);
     return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
   }).join("");
   document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
@@ -1480,8 +1737,11 @@ async function openProductionPassport(id: string): Promise<void> {
   const passport = productionPassports.find((item) => item.id === id);
   if (!passport) return;
   activePassportId = id;
-  document.getElementById("passportName")!.textContent = currentLanguage !== "ru" ? passport.character_name_en : passport.character_name_ru;
+  document.getElementById("passportName")!.textContent = passportDisplayName(passport);
   document.getElementById("passportCode")!.textContent = passport.public_code;
+  // Поле имени подставляем уже данное, чтобы владелец мог его исправить.
+  const nameInput = document.querySelector<HTMLInputElement>('#passportNameForm input[name="name"]');
+  if (nameInput) nameInput.value = passport.owner_name || "";
   document.getElementById("passportBorn")!.textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
   const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
   document.getElementById("passportTimeline")!.innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</h3></article>`;
@@ -1491,12 +1751,32 @@ async function openProductionPassport(id: string): Promise<void> {
 
 async function loadProductionAdmin(): Promise<void> {
   if (!supabase || productionProfile?.role !== "admin") return;
-  const [{ data: products }, { data: passports }, { data: requests }] = await Promise.all([
+  const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
     supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false }),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
     supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
   ]);
   productionProducts = (products || []) as DbProduct[];
+
+  // Если очередная миграция ещё не применена, запрос падает на отсутствующей
+  // колонке и список паспортов пропадал целиком. Показываем то, что есть,
+  // и говорим, чего не хватает, вместо пустого экрана.
+  let passports: DbPassport[] | null = passportResult.data as DbPassport[] | null;
+  if (passportResult.error) {
+    const fallback = await supabase
+      .from("nfc_passports")
+      .select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at")
+      .order("issued_at", { ascending: false });
+    passports = fallback.data as DbPassport[] | null;
+    const status = document.getElementById("nfcIssueStatus");
+    if (status && !fallback.error) {
+      status.textContent = label(
+        `База ещё не обновлена: ${passportResult.error.message}. Выполните последнюю миграцию.`,
+        `Базу ще не оновлено: ${passportResult.error.message}. Виконайте останню міграцію.`,
+        `The database is out of date: ${passportResult.error.message}. Apply the latest migration.`
+      );
+    }
+  }
   productionPassports = (passports || []) as DbPassport[];
   productionRequests = (requests || []) as DbCustomRequest[];
   renderProductionRequests();
@@ -1506,22 +1786,28 @@ async function loadProductionAdmin(): Promise<void> {
 // Статусы приходят из базы как есть (new, paid, ...) и раньше показывались
 // без перевода — в интерфейсе на любом языке оставались английские слова.
 const dbStatusLabels: Record<string, Record<Language, string>> = {
-  new: { ru: "Новый", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-  paid: { ru: "Оплачен", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Payée" },
-  making: { ru: "Создаётся", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En création" },
-  shipped: { ru: "Отправлен", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Expédiée" },
-  completed: { ru: "Завершён", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Terminée" },
-  cancelled: { ru: "Отменён", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annulée" }
+  new: { ru: "Новый", uk: "Нове", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+  paid: { ru: "Оплачен", uk: "Оплачено", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Payée" },
+  making: { ru: "Создаётся", uk: "Створюється", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En création" },
+  shipped: { ru: "Отправлен", uk: "Відправлено", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Expédiée" },
+  completed: { ru: "Завершён", uk: "Завершено", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Terminée" },
+  cancelled: { ru: "Отменён", uk: "Скасовано", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annulée" }
 };
 
 function dbOrderStatusLabel(status: string): string {
   return dbStatusLabels[status]?.[currentLanguage] || safeText(status);
 }
 
+// После сохранения список паспортов перерисовывается целиком, и раскрытый
+// редактор сказки схлопывался вместе с только что введённым текстом —
+// выглядело так, будто ничего не сохранилось. Запоминаем, что было открыто.
+let openStoryPassportId = "";
+let storySavedMessage = "";
+
 const requestStatusLabels: Record<string, Record<Language, string>> = {
-  new: { ru: "Новая", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-  in_progress: { ru: "В работе", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
-  done: { ru: "Закрыта", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Terminée" }
+  new: { ru: "Новая", uk: "Нова", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+  in_progress: { ru: "В работе", uk: "В роботі", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
+  done: { ru: "Закрыта", uk: "Закрита", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Terminée" }
 };
 
 function renderProductionRequests(): void {
@@ -1568,14 +1854,56 @@ function orderDetailsHtml(order: DbOrder): string {
     + row("Email", safeText(order.customer_email || ""))
     + row(ru ? "Доставка" : "Delivery", `${delivery} · €${((order.delivery_cents || 0) / 100).toFixed(2)}`)
     + row(ru ? "Адрес" : "Address", addressLine)
+    // Видно ли, что для заказа уже выпущен паспорт — иначе легко выпустить второй.
+    + row(
+        label("NFC-паспорт", "NFC-паспорт", "NFC passport"),
+        productionPassports.filter((passport) => passport.order_id === order.id)
+          .map((passport) => safeText(passport.public_code)).join(", ")
+          || label("не выпущен", "не випущено", "not issued")
+      )
     + `</dl></div></details>`;
 }
 
+// Номер заказа вводили руками, поэтому опечатка либо срывала выпуск, либо
+// привязывала паспорт не к тому заказу. Теперь выбираем из реальных заказов.
+function renderNfcOrderOptions(): void {
+  const select = document.getElementById("nfcOrderSelect") as HTMLSelectElement | null;
+  if (!select) return;
+  const previous = select.value;
+  const linked = new Set(productionPassports.map((passport) => passport.order_id).filter(Boolean));
+  const options = productionOrders.map((order) => {
+    const date = new Date(order.created_at).toLocaleDateString(currentLanguage === "ru" ? "ru-RU" : "en-GB");
+    const mark = linked.has(order.id) ? ` · ${label("паспорт уже выпущен", "паспорт уже випущено", "passport already issued")}` : "";
+    return `<option value="${safeText(order.order_number)}">${safeText(order.order_number)} · ${safeText(order.customer_name || "")} · ${date}${mark}</option>`;
+  }).join("");
+  select.innerHTML = `<option value="">${label("Без привязки к заказу", "Без прив'язки до замовлення", "Not linked to an order")}</option>${options}`;
+  select.value = previous;
+}
+
 function renderProductionAdmin(): void {
+  renderNfcOrderOptions();
   const productContainer = document.getElementById("adminProducts");
   if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? (currentLanguage !== "ru" ? "PUBLISHED" : "ОПУБЛИКОВАНО") : (currentLanguage !== "ru" ? "DRAFT" : "ЧЕРНОВИК")}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? (currentLanguage !== "ru" ? "Hide" : "Скрыть из каталога") : (currentLanguage !== "ru" ? "Publish" : "Опубликовать в каталоге")}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div></div>`).join("");
   const passportContainer = document.getElementById("nfcPassports");
-  if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.character_name_en : p.character_name_ru)}</strong><span>${safeText(p.public_code)}</span></div><b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b></article>`).join("");
+  if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => {
+    const ru = currentLanguage === "ru";
+    const photo = p.photo_path ? supabase!.storage.from("product-images").getPublicUrl(p.photo_path).data.publicUrl : "";
+    return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div>`
+      + `<div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b>`
+      + `<button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("Удалить", "Видалити", "Delete")}</button></div></div>`
+      + `<details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("Сказка и фотография", "Казка і фотографія", "Story and photo")}</summary>`
+      + `<form class="account-form passport-story-form" data-passport-story="${p.id}">`
+      + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "")
+      + `<div class="story-langs" role="tablist">${(["ru", "uk", "en", "nl", "de", "fr"] as Language[]).map((code, index) =>
+          `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>`
+      + (["ru", "uk", "en", "nl", "de", "fr"] as Language[]).map((code, index) =>
+          `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("Сказка", "Казка", "Story")} · ${code.toUpperCase()}</span>`
+          + `<textarea name="story_${code}" rows="6" placeholder="${ru ? "Она родилась тихим утром…" : "She was born on a quiet morning…"}">${safeText(p.story?.[code] || "")}</textarea></label>`).join("")
+      + `<label class="image-upload"><span>${label("Фотография персонажа", "Фотографія персонажа", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG или WebP. Необязательно — можно оставить прежнюю.", "JPG, PNG або WebP. Необов'язково — можна лишити попередню.", "JPG, PNG or WebP. Optional — the current one stays.")}</small></label>`
+      + `<button class="button" type="submit">${label("Сохранить", "Зберегти", "Save")}</button>`
+      + `<p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p>`
+      + `</form></details></article>`;
+  }).join("");
   const orderContainer = document.getElementById("adminOrders");
   if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
   document.getElementById("adminMetricProducts")!.textContent = String(productionProducts.length);
@@ -1727,8 +2055,23 @@ if (supabase) {
     event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const data = new FormData(form); const status = document.getElementById("nfcIssueStatus");
     const { data: result, error } = await supabase.rpc("issue_nfc_passport", { name_ru: String(data.get("nameRu")), name_en: String(data.get("nameEn")), target_order_number: String(data.get("orderNumber")) || null });
     if (error || !result?.[0]) { if (status) status.textContent = productionMessage(error); return; }
-    const activationUrl = `${location.origin}${location.pathname}?nfc=${encodeURIComponent(result[0].claim_token)}`;
-    if (status) status.textContent = `${currentLanguage !== "ru" ? "Copy now — shown once" : "Скопируйте сейчас — показывается один раз"}: ${activationUrl}`;
+    // Два разных кода: публичный уходит в чип, одноразовый печатается
+    // на карточке в коробке. В чипе кода активации быть не должно.
+    //
+    // Адрес для чипа берём постоянный, а не текущий: админку открывают
+    // на 127.0.0.1, и такая метка на телефоне ведёт в никуда — телефон
+    // считает 127.0.0.1 самим собой. Записать её на игрушку значило бы
+    // отправить клиенту нерабочий паспорт.
+    const code = encodeURIComponent(result[0].public_code);
+    const chipUrl = `${PUBLIC_SITE_URL}passport.html?code=${code}`;
+    const localUrl = `${location.href.replace(/[^/]*$/, "")}passport.html?code=${code}`;
+    if (status) {
+      status.textContent = label(
+        `Записать в чип: ${chipUrl} · Напечатать на карточке: ${result[0].claim_token} (показывается один раз) · Для проверки на этом компьютере: ${localUrl}`,
+        `Записати в чіп: ${chipUrl} · Надрукувати на картці: ${result[0].claim_token} (показується один раз) · Для перевірки на цьому комп'ютері: ${localUrl}`,
+        `Write on the chip: ${chipUrl} · Print on the card: ${result[0].claim_token} (shown once) · For testing on this computer: ${localUrl}`
+      );
+    }
     form.reset(); await loadProductionAdmin();
   });
   document.getElementById("adminProductForm")?.addEventListener("submit", async (event) => {
@@ -1758,6 +2101,79 @@ if (supabase) {
     const { error } = await supabase.from("orders").update({ status: select.value }).eq("id", select.dataset.dbOrder);
     if (error) { select.value = productionOrders.find((order) => order.id === select.dataset.dbOrder)?.status || "new"; return; }
     await loadProductionAccount();
+  });
+  document.getElementById("passportNameForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!activePassportId) return;
+    const form = event.currentTarget as HTMLFormElement;
+    const status = document.getElementById("passportNameStatus");
+    const name = String(new FormData(form).get("name") || "").trim();
+    const { error } = await supabase.rpc("set_passport_name", { target_passport: activePassportId, new_name: name });
+    if (status) status.textContent = error
+      ? productionMessage(error)
+      : (currentLanguage !== "ru" ? "Name saved." : "Имя сохранено.");
+    if (!error) { await loadProductionAccount(); await openProductionPassport(activePassportId); }
+  });
+  // Удаление паспорта необратимо и уносит с собой главы истории,
+  // поэтому спрашиваем подтверждение с кодом конкретного паспорта.
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLElement>("[data-delete-passport]");
+    if (!button?.dataset.deletePassport || productionProfile?.role !== "admin") return;
+    const code = button.dataset.passportCode || "";
+    const question = currentLanguage !== "ru"
+      ? `Delete passport ${code}? Its story chapters will be lost for good.`
+      : `Удалить паспорт ${code}? Главы его истории пропадут безвозвратно.`;
+    if (!window.confirm(question)) return;
+    const status = document.getElementById("nfcIssueStatus");
+    const { error } = await supabase.from("nfc_passports").delete().eq("id", button.dataset.deletePassport);
+    if (status) status.textContent = error
+      ? productionMessage(error)
+      : (currentLanguage !== "ru" ? "Passport deleted." : "Паспорт удалён.");
+    if (!error) await loadProductionAdmin();
+  });
+  // Переключатель языков в редакторе сказки: показываем одно поле за раз.
+  document.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-story-lang]");
+    const form = button?.closest<HTMLFormElement>("form");
+    if (!button?.dataset.storyLang || !form) return;
+    openStoryPassportId = form.dataset.passportStory || openStoryPassportId;
+    form.querySelectorAll(".story-lang").forEach((item) => item.classList.toggle("active", item === button));
+    form.querySelectorAll<HTMLElement>("[data-story-field]").forEach((field) =>
+      field.classList.toggle("active", field.dataset.storyField === button.dataset.storyLang));
+  });
+  document.addEventListener("submit", async (event) => {
+    const form = (event.target as HTMLElement).closest<HTMLFormElement>("[data-passport-story]");
+    if (!form?.dataset.passportStory || productionProfile?.role !== "admin") return;
+    event.preventDefault();
+    const passportId = form.dataset.passportStory;
+    const data = new FormData(form);
+    // Сообщение показываем рядом с формой, а не в шапке страницы:
+    // список длинный, и наверх никто не смотрит.
+    const status = form.querySelector<HTMLElement>("[data-story-status]");
+    openStoryPassportId = passportId;
+    // Пустые языки не храним — иначе страница покажет пустую сказку
+    // вместо того, чтобы взять запасной язык.
+    const story: Record<string, string> = {};
+    (["ru", "uk", "en", "nl", "de", "fr"] as Language[]).forEach((code) => {
+      const text = String(data.get(`story_${code}`) || "").trim();
+      if (text) story[code] = text;
+    });
+    const update: Record<string, unknown> = { story };
+    // Фотографии паспортов лежат в том же публичном бакете, что и товары,
+    // но в отдельной папке.
+    const photo = data.get("photo");
+    if (photo instanceof File && photo.size) {
+      const path = `passports/${passportId}/${crypto.randomUUID()}-${photo.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+      const upload = await supabase.storage.from("product-images").upload(path, photo, { contentType: photo.type, upsert: false });
+      if (upload.error) { storySavedMessage = productionMessage(upload.error); if (status) status.textContent = storySavedMessage; return; }
+      update.photo_path = path;
+    }
+    const { error } = await supabase.from("nfc_passports").update(update).eq("id", passportId);
+    storySavedMessage = error
+      ? productionMessage(error)
+      : label("Сказка сохранена.", "Казку збережено.", "Story saved.");
+    if (status) status.textContent = storySavedMessage;
+    if (!error) await loadProductionAdmin();
   });
   document.addEventListener("change", async (event) => {
     const select = (event.target as HTMLElement).closest<HTMLSelectElement>("[data-request]");

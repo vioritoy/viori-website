@@ -246,7 +246,8 @@ async function loadPageCatalog() {
     const code = localStorage.getItem('viori-language') || 'ru';
     const cardLabels = {
       ru: ['Познакомиться', 'Хочу такую'],
-      en: ['Meet the character', 'I want this one'],
+      uk: ['Познайомитися', 'Хочу таку'],
+  en: ['Meet the character', 'I want this one'],
       nl: ['Maak kennis', 'Deze wil ik'],
       de: ['Kennenlernen', 'Diese möchte ich'],
       fr: ['Découvrir', 'Je la veux']
@@ -320,6 +321,115 @@ document.getElementById('orderForm')?.addEventListener('submit', async (event) =
     if (submit) submit.disabled = false;
   }
 });
+// Страница после сканирования NFC-чипа. Чип ведёт сюда с публичным кодом,
+// поэтому здесь показываем только имя персонажа. Код активации печатается
+// на карточке в коробке и вводится вручную — так чужой человек с игрушкой
+// в руках не может привязать её к себе.
+async function loadPassportPage() {
+  const page = document.getElementById('passportPreview');
+  if (!page) return;
+
+  const ru = catalogLanguage() === 'ru';
+  const nameEl = document.getElementById('passportPageName');
+  const textEl = document.getElementById('passportPageText');
+  const form = document.getElementById('passportActivateForm');
+  const openAccount = document.getElementById('passportOpenAccount');
+  const code = new URLSearchParams(location.search).get('code') || '';
+  const config = window.VIORI_CONFIG;
+
+  const show = (title, text) => {
+    if (nameEl) nameEl.textContent = title;
+    if (textEl) textEl.textContent = text;
+  };
+
+  if (!code.trim()) {
+    show(ru ? 'Код не найден' : 'No code found',
+      ru ? 'Поднесите телефон к метке внутри игрушки ещё раз.' : 'Tap your phone against the tag inside the toy once more.');
+    return;
+  }
+  if (!config?.supabaseUrl || !config?.supabaseAnonKey) {
+    show(ru ? 'Паспорт недоступен' : 'Passport unavailable',
+      ru ? 'Сервис временно недоступен. Попробуйте позже.' : 'The service is temporarily unavailable. Please try again later.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${config.supabaseUrl}/rest/v1/rpc/passport_preview`, {
+      method: 'POST',
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ code })
+    });
+    if (!response.ok) throw new Error(await response.text());
+    const rows = await response.json();
+    const passport = Array.isArray(rows) ? rows[0] : null;
+
+    if (!passport) {
+      show(ru ? 'Такой паспорт не найден' : 'Passport not found',
+        ru ? 'Проверьте код на метке или напишите нам — мы поможем.' : 'Check the code on the tag or contact us — we will help.');
+      return;
+    }
+
+    // Имя даёт владелец после активации; до этого показываем рабочее имя
+    // от мастера, а если и его нет — нейтральную подпись.
+    const name = passport.owner_name
+      || (ru ? passport.character_name_ru : passport.character_name_en)
+      || passport.character_name_ru
+      || passport.character_name_en
+      || (ru ? 'Персонаж VIORI' : 'VIORI character');
+
+    // Сказка хранится по языкам. Если на языке посетителя её ещё не написали,
+    // показываем английскую, затем русскую, затем любую заполненную —
+    // пустая страница хуже, чем страница на другом языке.
+    const stories = passport.story || {};
+    const code = catalogLanguage();
+    const story = stories[code] || stories.en || stories.ru || Object.values(stories).find(Boolean) || '';
+    const storyEl = document.getElementById('passportPageStory');
+    if (story && storyEl) {
+      storyEl.textContent = story;
+      storyEl.classList.remove('hidden');
+    }
+    if (passport.photo_path) {
+      const photoEl = document.getElementById('passportPagePhoto');
+      if (photoEl) {
+        photoEl.src = `${config.supabaseUrl}/storage/v1/object/public/product-images/${encodeURI(passport.photo_path)}`;
+        photoEl.alt = name;
+        photoEl.classList.add('has-photo');
+      }
+    }
+
+    if (passport.is_activated) {
+      show(name, ru
+        ? 'Этот паспорт уже активирован. Откройте личный кабинет владельца, чтобы прочитать историю и добавить новую главу.'
+        : 'This passport is already activated. Open the owner account to read the story and add a new chapter.');
+      openAccount?.classList.remove('hidden');
+      if (openAccount) openAccount.textContent = ru ? 'Открыть в личном кабинете' : 'Open in my account';
+    } else {
+      show(name, ru
+        ? 'Это персонаж VIORI, связанный вручную. Активируйте паспорт — и его история станет частью вашей семьи.'
+        : 'This is a VIORI character, crocheted by hand. Activate the passport and its story becomes part of your family.');
+      form?.classList.remove('hidden');
+    }
+  } catch (error) {
+    console.error('VIORI passport error:', error);
+    show(ru ? 'Не удалось открыть паспорт' : 'Could not open the passport',
+      ru ? 'Проверьте связь и попробуйте ещё раз.' : 'Check your connection and try again.');
+  }
+}
+void loadPassportPage();
+
+// Активация требует входа в аккаунт, а форма входа живёт на главной,
+// поэтому просто передаём туда введённый код активации.
+document.getElementById('passportActivateForm')?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const token = String(new FormData(event.currentTarget).get('token') || '').trim();
+  if (!token) return;
+  location.href = `index.html?nfc=${encodeURIComponent(token)}`;
+});
+
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
 
@@ -327,7 +437,7 @@ const savedLanguage = localStorage.getItem('viori-language') || 'ru';
 
 // Переключатель языка теперь такой же, как на главной: раскрывающееся меню,
 // а не выпадающий select. Разметка одинаковая на всех страницах.
-const LANGUAGE_LABELS = { ru: 'Русский', en: 'English', nl: 'Nederlands', de: 'Deutsch', fr: 'Français' };
+const LANGUAGE_LABELS = { ru: 'Русский', uk: 'Українська', en: 'English', nl: 'Nederlands', de: 'Deutsch', fr: 'Français' };
 const languageSwitcher = document.querySelector('.language-switcher');
 const languageTrigger = document.getElementById('languageMenuButton');
 
@@ -378,6 +488,7 @@ function renderCartCount() {
 renderCartCount();
 
 const common = {
+  uk: ['Іграшки','Каталог','Про бренд','Контакти','Особистий кабінет'],
   en: ['Toys','Catalog','About','Contact','My account'],
   nl: ['Knuffels','Catalogus','Over VIORI','Contact','Mijn account'],
   de: ['Kuscheltiere','Katalog','Über VIORI','Kontakt','Mein Konto'],
@@ -385,37 +496,62 @@ const common = {
 };
 const pageCopy = {
   'toys.html': {
+    uk: ['СВІТ VIORI','Іграшки, що стають частиною родини','Кожен персонаж створюється вручну, отримує власний характер, особистий NFC-паспорт та історію, яку продовжуєте ви.'],
     en: ['VIORI COLLECTION','Toys that become part of the family','Choose a special handmade character. Every toy has a personality, a private NFC passport and a story you continue.'],
     nl: ['VIORI-COLLECTIE','Knuffels die deel worden van het gezin','Kies een bijzonder handgemaakt personage met een eigen karakter, NFC-paspoort en verhaal.'],
     de: ['VIORI KOLLEKTION','Spielzeuge, die Teil der Familie werden','Wähle einen besonderen handgefertigten Charakter mit Persönlichkeit, NFC-Pass und eigener Geschichte.'],
     fr: ['COLLECTION VIORI','Des peluches qui entrent dans la famille','Choisissez un personnage artisanal avec son caractère, son passeport NFC et une histoire à poursuivre.']
   },
   'catalog.html': {
+    uk: ['КАТАЛОГ VIORI','Знайдіть свого персонажа','Оберіть готову іграшку або розкажіть свою ідею — ми створимо особливого героя саме для вас.'],
     en: ['VIORI CATALOG','Find your character','Choose a ready-made toy or share your idea — we will create a special character just for you.'],
     nl: ['VIORI-CATALOGUS','Vind jouw personage','Kies een bestaande knuffel of deel je idee — wij maken een bijzonder personage speciaal voor jou.'],
     de: ['VIORI-KATALOG','Finde deinen Charakter','Wähle ein fertiges Spielzeug oder teile deine Idee — wir erschaffen einen besonderen Charakter für dich.'],
     fr: ['CATALOGUE VIORI','Trouvez votre personnage','Choisissez un jouet disponible ou partagez votre idée — nous créerons un personnage rien que pour vous.']
   },
   'about.html': {
+    uk: ['ПРО БРЕНД','Кожна іграшка має власне життя','VIORI поєднує теплу ручну роботу й дбайливу технологію, щоб улюблений персонаж лишався частиною сімейної історії.'],
     en: ['ABOUT THE BRAND','Every toy has a life of its own','VIORI combines warm craftsmanship with thoughtful technology so a beloved character remains part of the family story.'],
     nl: ['OVER HET MERK','Elke knuffel heeft een eigen leven','VIORI verbindt warm handwerk met zorgvuldige technologie, zodat een geliefd personage deel blijft van het familieverhaal.'],
     de: ['ÜBER DIE MARKE','Jedes Kuscheltier hat ein eigenes Leben','VIORI verbindet warmes Handwerk mit durchdachter Technik, damit ein geliebter Charakter Teil der Familiengeschichte bleibt.'],
     fr: ['À PROPOS DE LA MARQUE','Chaque peluche a sa propre vie','VIORI unit le savoir-faire artisanal et une technologie attentionnée pour préserver chaque histoire de famille.']
   },
   'contact.html': {
+    uk: ['КОНТАКТИ','Створімо когось особливого','Напишіть нам про замовлення, доставку, NFC-паспорт або співпрацю. Ми відповімо особисто.'],
     en: ['CONTACT','Let’s create someone special','Write to us about an order, delivery, NFC passport or collaboration. We will answer personally.'],
     nl: ['CONTACT','Laten we iets bijzonders maken','Schrijf ons over een bestelling, levering, NFC-paspoort of samenwerking. We antwoorden persoonlijk.'],
     de: ['KONTAKT','Lass uns etwas Besonderes erschaffen','Schreib uns zu Bestellung, Lieferung, NFC-Pass oder Zusammenarbeit. Wir antworten persönlich.'],
     fr: ['CONTACT','Créons quelque chose d’unique','Écrivez-nous au sujet d’une commande, livraison, passeport NFC ou collaboration. Nous répondrons personnellement.']
+  },
+  // Этой страницы здесь не было вовсе, поэтому её заголовок оставался
+  // русским на всех языках, а не только на украинском.
+  'faq.html': {
+    uk: ['ДОПОМОГА VIORI','Питання та відповіді','Усе важливе про замовлення, NFC-паспорт і особистий світ вашої іграшки — коротко й зрозуміло.'],
+    en: ['VIORI HELP','Questions and answers','Everything that matters about ordering, the NFC passport and your toy’s personal world — short and clear.'],
+    nl: ['VIORI HELP','Vragen en antwoorden','Alles wat belangrijk is over bestellen, het NFC-paspoort en de eigen wereld van je knuffel — kort en duidelijk.'],
+    de: ['VIORI HILFE','Fragen und Antworten','Alles Wichtige zur Bestellung, zum NFC-Pass und zur eigenen Welt deines Kuscheltiers — kurz und verständlich.'],
+    fr: ['AIDE VIORI','Questions et réponses','L’essentiel sur la commande, le passeport NFC et le monde personnel de votre peluche — court et clair.']
   }
 };
 const catalogCopy = {
+  uk: ['Каталог VIORI','Готові персонажі та іграшки, створені спеціально для вас.','ІНДИВІДУАЛЬНА ІГРАШКА','Створіть іграшку за своєю ідеєю'],
   en: ['VIORI catalog','Ready-made characters and toys created especially for you.','CUSTOM TOY','Create a toy from your idea'],
   nl: ['VIORI-catalogus','Kant-en-klare personages en speelgoed dat speciaal voor jou wordt gemaakt.','MAATWERK','Maak een knuffel naar jouw idee'],
   de: ['VIORI-Katalog','Fertige Charaktere und Spielzeuge, die speziell für dich entstehen.','INDIVIDUELLES SPIELZEUG','Gestalte ein Spielzeug nach deiner Idee'],
   fr: ['Catalogue VIORI','Des personnages disponibles et des créations réalisées spécialement pour vous.','CRÉATION SUR MESURE','Créez un jouet à partir de votre idée']
 };
 const orderCopy = {
+  uk: {
+    eyebrow: 'Простий процес',
+    title: 'Як замовити іграшку',
+    intro: 'Від першого повідомлення до гарної посилки — усього чотири кроки.',
+    steps: [
+      ['Оберіть іграшку', 'Оберіть модель з каталогу або надішліть свою ідею.'],
+      ['Узгодимо деталі', 'Погодимо колір, розмір, персоналізацію, вартість і термін створення.'],
+      ['Створимо вручну', 'Майстер зв\'яже персонажа й підготує його особистий NFC-паспорт.'],
+      ['Дбайливо доставимо', 'Ви отримаєте іграшку, активуєте паспорт і почнете її історію.']
+    ]
+  },
   en: {
     eyebrow: 'A simple process',
     title: 'How to order a toy',
@@ -461,6 +597,190 @@ const orderCopy = {
     ]
   }
 };
+// Тексты самих подстраниц раньше не переводились вообще: менялись только
+// шапка и заголовок страницы, а содержимое оставалось русским на всех языках.
+// Здесь — украинский; остальные языки пока берут русский оригинал.
+const bodyCopyUk = {
+  'toys.html': [
+    ['.subpage-hero .button', 'Відкрити каталог'],
+    ['.subpage-hero-stats div:nth-child(1) span', 'ручна робота'],
+    ['.subpage-hero-stats div:nth-child(2) span', 'унікальна іграшка'],
+    ['.subpage-hero-stats div:nth-child(3) span', 'тепла й турботи'],
+    ['.subpage-heading .eyebrow', 'НЕ ПРОСТО ІГРАШКА'],
+    ['.subpage-heading h2', 'У кожної іграшки свій характер'],
+    ['.subpage-heading p', 'Невеликі серії, ручна робота та увага до деталей роблять кожного персонажа особливим.'],
+    ['.editorial-card:nth-child(1) h3', 'Зв\'язано вручну'],
+    ['.editorial-card:nth-child(1) p', 'Кожна петля створюється людиною, тому дві іграшки ніколи не бувають повністю однаковими.'],
+    ['.editorial-card:nth-child(2) h3', 'Особистий паспорт'],
+    ['.editorial-card:nth-child(2) p', 'NFC відкриває захищену сторінку з ім\'ям, походженням і пам\'ятними подіями іграшки.'],
+    ['.editorial-card:nth-child(3) h3', 'Для вашої історії'],
+    ['.editorial-card:nth-child(3) p', 'Додавайте сімейні спогади й продовжуйте життя персонажа рік за роком.'],
+    ['.page-cta h2', 'Оберіть готову іграшку або створіть свою'],
+    ['.page-cta .button', 'Перейти в каталог']
+  ],
+  'about.html': [
+    ['.subpage-heading .eyebrow', 'НАША ФІЛОСОФІЯ'],
+    ['.subpage-heading h2', 'Зроблено петля за петлею'],
+    ['.subpage-heading p', 'Ми віримо, що цінність з\'являється не зі швидкості виробництва, а з турботи, характеру та спогадів, які лишаються разом із річчю.'],
+    ['.editorial-card:nth-child(1) h3', 'Людське тепло'],
+    ['.editorial-card:nth-child(1) p', 'Іграшки створюються вручну невеликими партіями, з увагою до форми, виразу й фактури.'],
+    ['.editorial-card:nth-child(2) h3', 'Безпечна пам\'ять'],
+    ['.editorial-card:nth-child(2) p', 'NFC — лише ключ до особистого світу іграшки. Він не відстежує місцезнаходження власника.'],
+    ['.editorial-card:nth-child(3) h3', 'Довге життя'],
+    ['.editorial-card:nth-child(3) p', 'Паспорт, історія володіння та спогади допомагають іграшці лишатися значущою багато років.'],
+    ['.trust-section .eyebrow', 'СПОКІЙ ДЛЯ БАТЬКІВ'],
+    ['.trust-section .section-heading h2', 'Створено дбайливо й прозоро'],
+    ['.trust-section .section-heading > p', 'Ми хочемо, щоб ви знали історію не лише персонажа, а й кожного матеріалу, з якого він створений.'],
+    ['.trust-card:nth-child(1) h3', 'Ручна робота'],
+    ['.trust-card:nth-child(1) p', 'Кожна деталь створюється невеликими партіями та перевіряється перед відправкою.'],
+    ['.trust-card:nth-child(2) h3', 'Зрозумілі матеріали'],
+    ['.trust-card:nth-child(2) p', 'Склад, наповнювач, рекомендації з догляду та вікове маркування вказані на сторінці товару.'],
+    ['.trust-card:nth-child(3) h3', 'Перевірка перед відправкою'],
+    ['.trust-card:nth-child(3) p', 'Кожна іграшка оглядається вручну: міцність швів, надійність кріплення очей, носа й дрібних деталей.'],
+    ['.trust-card:nth-child(4) h3', 'Вікове маркування'],
+    ['.trust-card:nth-child(4) p', 'До завершення офіційних випробувань іграшки не призначені для дітей молодших за 3 роки. Актуальне маркування вказується на сторінці товару.'],
+    ['.compliance-status span', 'Сертифікація за нормами ЄС для дитячих іграшок'],
+    ['.compliance-status span', 'Сертифікація за нормами ЄС для дитячих іграшок'],
+    ['.compliance-status strong', 'У процесі: оцінка ризиків, випробування та EU Declaration of Conformity ще не завершені'],
+    ['.compliance-note', 'Маркування CE наноситься й публікується лише після підтвердження відповідності. Подробиці — у розділі <a href="legal.html#safety">«Безпека іграшок»</a>.'],
+    ['.page-cta h2', 'Познайомтеся з героями VIORI'],
+    ['.page-cta .button-secondary', 'Питання та відповіді'],
+    ['.page-cta-actions .button:not(.button-secondary)', 'Перейти до колекції']
+  ],
+  'faq.html': [
+    ['.faq-layout .eyebrow', 'ЧАСТІ ЗАПИТАННЯ'],
+    ['.faq-layout h2', 'Тут є потрібна відповідь'],
+    ['.faq-layout > div:first-child > p', 'Якщо вашого питання немає у списку, напишіть нам — ми відповімо особисто.'],
+    ['.faq details:nth-child(1) summary', 'Як працює NFC?'],
+    ['.faq details:nth-child(1) p', 'Піднесіть сумісний телефон до мітки всередині іграшки. Відкриється захищена сторінка її цифрового паспорта — застосунок встановлювати не потрібно.'],
+    ['.faq details:nth-child(2) summary', 'Чи потрібно дитині створювати акаунт?'],
+    ['.faq details:nth-child(2) p', 'Ні. Кабінетом і сімейними даними керує доросла людина — власник акаунта.'],
+    ['.faq details:nth-child(3) summary', 'Чи можна подарувати або передати іграшку?'],
+    ['.faq details:nth-child(3) p', 'Так. Власник може безпечно передати цифровий паспорт іншій дорослій людині, зберігши обрані розділи історії.'],
+    ['.faq details:nth-child(4) summary', 'Як оформити замовлення?'],
+    ['.faq details:nth-child(4) p', 'Оберіть іграшку в каталозі та натисніть «Хочу таку». Ми зв\'яжемося з вами, уточнимо колір, розмір і персональні деталі, а потім підтвердимо вартість і термін виготовлення.'],
+    ['.faq details:nth-child(5) summary', 'Що робити, якщо NFC не зчитується?'],
+    ['.faq details:nth-child(5) p', 'Розблокуйте телефон і піднесіть верхню частину корпусу до мітки на кілька секунд. Якщо сторінка не відкривається, напишіть нам — ми допоможемо перевірити паспорт.'],
+    ['.faq details:nth-child(6) summary', 'Як доглядати за іграшкою?'],
+    ['.faq details:nth-child(6) p', 'Точні рекомендації залежать від матеріалів і вказуються на сторінці товару та в замовленні. Для ручної роботи зазвичай підходить особливо дбайливе чищення без агресивних засобів.'],
+    ['.page-cta h2', 'Не знайшли потрібної відповіді?'],
+    ['.page-cta .button', 'Зв\'язатися з VIORI']
+  ],
+  'catalog.html': [
+    ['.subpage-hero .button', 'Дивитися іграшки'],
+    ['#custom .contact-link:nth-child(1) small', 'Написати нам'],
+    ['#custom .contact-link:nth-child(2) small', 'Допомога із замовленням'],
+    ['#custom .contact-link:nth-child(2) strong', 'Підтримка VIORI'],
+    ['.filters [data-filter="all"]', 'Усі'],
+    ['.filters [data-filter="animals"]', 'Тварини'],
+    ['.filters [data-filter="dolls"]', 'Ляльки'],
+    ['.filters [data-filter="baby"]', 'Для малюків'],
+    ['#custom .contact-copy > p:not(.eyebrow)', 'Розкажіть, кого ви уявляєте. Ми уточнимо колір, розмір, одяг і персональні деталі, а потім розрахуємо вартість.'],
+    ['.form-row .label-text', 'Ваше ім\'я'],
+    ['.order-form > label:nth-of-type(1) .label-text', 'Ваш email'],
+    ['.order-form > label:nth-of-type(2) .label-text', 'Що хочете замовити?'],
+    ['.order-form > label:nth-of-type(3) .label-text', 'Побажання'],
+    ['.form-submit', 'Надіслати заявку']
+  ],
+  'contact.html': [
+    ['.subpage-heading .eyebrow', 'ЗВ\'ЯЗАТИСЯ З VIORI'],
+    ['.subpage-heading h2', 'Ми поруч на кожному етапі'],
+    ['.subpage-heading p', 'Для питань щодо наявного замовлення вкажіть його номер і email, використаний при оформленні.'],
+    ['.subpage-contact-card:nth-child(1) small', 'Email'],
+    ['.subpage-contact-card:nth-child(2) small', 'Підтримка й замовлення'],
+    ['.subpage-contact-card:nth-child(2) strong', 'Відкрити особистий кабінет →'],
+    ['.subpage-contact-card:nth-child(3) small', 'Допомога'],
+    ['.subpage-contact-card:nth-child(3) strong', 'Питання та відповіді →'],
+    ['.subpage-contact-card:nth-child(4) small', 'Новий персонаж'],
+    ['.subpage-contact-card:nth-child(4) strong', 'Залишити заявку →'],
+    ['.subpage-contact-card:nth-child(5) small', 'Документи'],
+    ['.subpage-contact-card:nth-child(5) strong', 'Умови та конфіденційність →'],
+    ['.page-cta h2', 'Почніть з персонажа, який стане вашим'],
+    ['.page-cta .button', 'Дивитися колекцію']
+  ],
+  // Юридические тексты. Перевод — для удобства читателя; эталоном остаётся
+  // русская версия, а перед реальным запуском формулировки должен проверить
+  // юрист, знакомый с правом Нидерландов.
+  'legal.html': [
+    ['.legal-hero .eyebrow', 'VIORI · ЮРИДИЧНИЙ ЦЕНТР'],
+    ['.legal-hero h1', 'Турбота починається <em>з прозорості</em>'],
+    ['.legal-hero > .container > p', 'Тут зібрані правила магазину, обробки даних, NFC-паспортів, доставки та повернення.'],
+    ['.legal-nav a:nth-child(1)', 'Продавець'],
+    ['.legal-nav a:nth-child(2)', 'Умови'],
+    ['.legal-nav a:nth-child(3)', 'Повернення'],
+    ['.legal-nav a:nth-child(4)', 'Приватність'],
+    ['.legal-nav a:nth-child(5)', 'NFC'],
+    ['.legal-nav a:nth-child(6)', 'Безпека'],
+    ['.legal-warning strong', 'Перед реальним запуском'],
+    ['.legal-warning p', 'Заповніть позначені поля: юридичну назву, адресу, email, телефон, KVK і BTW-id. Поки вони не заповнені, магазин не можна вважати юридично готовим до приймання оплати.'],
+    ['#seller h2', 'Інформація про продавця'],
+    ['#seller dt:nth-of-type(1), #seller div:nth-child(1) dt', 'Торгова назва'],
+    ['#seller div:nth-child(2) dt', 'Юридична назва'],
+    ['#seller div:nth-child(3) dt', 'Адреса в Нідерландах'],
+    ['#seller div:nth-child(5) dt', 'Телефон'],
+    ['#seller div:nth-child(6) dd', 'Реєстрація запланована'],
+    ['#seller div:nth-child(7) dd', 'Буде додано після реєстрації'],
+    ['#terms h2', 'Умови продажу'],
+    ['#terms h3:nth-of-type(1)', 'Пропозиція та замовлення'],
+    ['#terms p:nth-of-type(1)', 'На сторінці товару вказуються основні характеристики, ціна з застосовними податками, персоналізація, орієнтовний строк виготовлення та вартість доставки. Договір вважається укладеним після підтвердження замовлення продавцем. Очевидні помилки в ціні чи описі не створюють обовʼязку постачити товар на помилкових умовах.'],
+    ['#terms h3:nth-of-type(2)', 'Ручна робота'],
+    ['#terms p:nth-of-type(2)', 'Іграшки створюються вручну, тому невеликі відмінності у формі, відтінку та розташуванні деталей є особливістю виробу, а не дефектом. Погоджені персональні параметри фіксуються в підтвердженні замовлення.'],
+    ['#terms h3:nth-of-type(3)', 'Оплата'],
+    ['#terms p:nth-of-type(3)', 'Доступні способи оплати та повна сума показуються до підтвердження. Реальна оплата стане доступною лише після підключення сертифікованого платіжного провайдера.'],
+    ['#terms h3:nth-of-type(4)', 'Доставка'],
+    ['#terms p:nth-of-type(4)', 'Строк виготовлення й доставки повідомляється до замовлення. Якщо не погоджено інше, продавець виконує замовлення не пізніше ніж за 30 днів. Ризик пошкодження або втрати лишається у продавця до отримання замовлення покупцем.'],
+    ['#terms h3:nth-of-type(5)', 'Гарантія та скарги'],
+    ['#terms p:nth-of-type(5)', 'Товар має відповідати розумним очікуванням покупця. Про дефект слід повідомити продавця з номером замовлення та фотографіями. Відповідь на скаргу надається в розумний строк.'],
+    ['#returns h2', 'Повернення та скасування'],
+    ['#returns p:nth-of-type(1)', 'Для стандартних товарів покупець зазвичай може відмовитися від дистанційної покупки протягом 14 календарних днів після отримання без пояснення причини. Після повідомлення товар слід повернути у встановлений законом строк.'],
+    ['#returns p:nth-of-type(2)', 'Виняток може застосовуватися до товару, виготовленого за індивідуальним вибором або явно персоналізованого. Виняток застосовується лише тоді, коли персоналізація справді робить товар індивідуальним, і покупця було чітко попереджено до оплати.'],
+    ['#returns p:nth-of-type(3)', 'Товар можна оглянути так, як це припустимо у звичайному магазині. Покупець може відповідати за зменшення вартості через використання понад необхідну перевірку. Порядок і вартість зворотної доставки повідомляються до покупки.'],
+    ['#returns .button', 'Скасувати замовлення онлайн'],
+    ['#privacy h2', 'Політика конфіденційності'],
+    ['#privacy h3:nth-of-type(1)', 'Які дані обробляються'],
+    ['#privacy p:nth-of-type(1)', 'Імʼя, контактні дані, адреса доставки, зміст замовлення, історія оплати й доставки, дані акаунта, активовані NFC-паспорти та добровільно додані сімейні спогади.'],
+    ['#privacy h3:nth-of-type(2)', 'Цілі та підстави'],
+    ['#privacy p:nth-of-type(2)', 'Дані використовуються для виконання замовлення й договору, дотримання юридичних обовʼязків, забезпечення безпеки сервісу та — лише за окремою згодою — маркетингу чи необовʼязкової аналітики.'],
+    ['#privacy h3:nth-of-type(3)', 'Дані дітей'],
+    ['#privacy p:nth-of-type(3)', 'Акаунт створює й контролює доросла людина. VIORI не просить дитину створювати акаунт і не використовує NFC для геолокації чи стеження. Не додавайте чутливі відомості про дитину у вільні поля.'],
+    ['#privacy h3:nth-of-type(4)', 'Одержувачі'],
+    ['#privacy p:nth-of-type(4)', 'Дані можуть передаватися лише необхідним постачальникам: хостингу, платіжному провайдеру, службі доставки, email-сервісу та технічним підрядникам на підставі відповідних договорів.'],
+    ['#privacy h3:nth-of-type(5)', 'Строки та права'],
+    ['#privacy p:nth-of-type(5)', 'Дані зберігаються не довше, ніж потрібно для мети та обовʼязкового бухгалтерського строку. Користувач може запросити доступ, виправлення, видалення, обмеження, перенесення даних або заперечити проти обробки. Контакт для таких запитів: [УКАЗАТЬ EMAIL].'],
+    ['#privacy h3:nth-of-type(6)', 'Захист'],
+    ['#privacy p:nth-of-type(6)', 'На релізі використовуються HTTPS, хешування паролів, розмежування ролей, резервні копії та журналювання важливих операцій. Поточна локальна демоверсія не призначена для зберігання реальних клієнтських даних.'],
+    ['#nfc h2', 'Правила NFC-паспорта'],
+    ['#nfc p:nth-of-type(1)', 'NFC-мітка містить посилання або ідентифікатор і не призначена для визначення місцезнаходження. Один паспорт активується одним дорослим акаунтом. Власник зобовʼязаний берегти посилання активації й не публікувати його до прив\'язки.'],
+    ['#nfc p:nth-of-type(2)', 'При передачі іграшки новий власник отримує доступ лише після підтвердженої процедури передачі. Сімейні спогади не передаються автоматично без рішення попереднього власника. VIORI може тимчасово заблокувати паспорт за підозри на зловживання.'],
+    ['#cookies h2', 'Cookies'],
+    ['#cookies p', 'Необхідні cookies і локальне сховище використовуються для мови, кошика, входу та безпеки. Необовʼязкова аналітика чи рекламні технології вмикаються лише після згоди. Користувач може змінити вибір кнопкою «Налаштування cookies» внизу сайту.'],
+    ['#safety h2', 'Безпека іграшок'],
+    ['#safety p:nth-of-type(1)', 'До початку продажів для кожної моделі мають бути завершені оцінка ризиків, застосовні випробування, технічний файл та EU Declaration of Conformity. CE, вікове маркування й попередження публікуються лише після підтвердження відповідності.'],
+    ['#safety .compliance-status span', 'Статус підготовки'],
+    ['#safety .compliance-status strong', 'Документи та випробування ще не підтверджені'],
+    ['#safety p:nth-of-type(2)', 'До зміни цього статусу сайт є демонстрацією і не має приймати оплату за дитячі іграшки.'],
+    ['#legalUpdated', 'Останнє оновлення: 2 серпня 2026']
+  ],
+  'passport.html': [
+    ['#passportActivateLabel', 'Код активації з картки в коробці'],
+    ['#passportActivateButton', 'Активувати паспорт'],
+    ['#passportActivateNote', 'Паспорт можна прив\'язати лише до одного дорослого акаунта.'],
+    ['#passportPageEyebrow', 'ЦИФРОВИЙ ПАСПОРТ']
+  ]
+};
+
+function applyBodyCopy(code, file) {
+  if (code !== 'uk') return;
+  (bodyCopyUk[file] || []).forEach(([selector, text]) => {
+    const element = document.querySelector(selector);
+    if (!element) return;
+    // Часть строк содержит ссылки, поэтому вставляем как разметку.
+    // Тексты здесь наши собственные, не пользовательские.
+    if (text.includes('<')) element.innerHTML = text;
+    else element.textContent = text;
+  });
+}
+
 function applyPageLanguage(code) {
   markActiveLanguage(code);
   document.documentElement.lang = code;
@@ -470,6 +790,7 @@ function applyPageLanguage(code) {
   const accountText = document.querySelector('.account-button-text');
   if (accountText && navCopy) accountText.textContent = navCopy[4];
   const file = location.pathname.split('/').pop() || '';
+  applyBodyCopy(code, file);
   const copy = pageCopy[file]?.[code];
   if (copy) {
     const hero = document.querySelector('.subpage-hero');

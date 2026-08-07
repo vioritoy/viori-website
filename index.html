@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260807-9" />
+  <link rel="stylesheet" href="styles.css?v=20260807-22" />
 </head>
 <body>
   <header class="site-header">
@@ -36,7 +36,7 @@
           <span class="language-chevron" aria-hidden="true">⌄</span>
         </button>
         <div class="language-menu" id="languageMenu" role="menu" aria-labelledby="languageMenuButton">
-          <button class="language-button active" type="button" data-language="ru" role="menuitemradio" aria-checked="true"><span>Русский</span><small>RU</small><b aria-hidden="true">✓</b></button>
+          <button class="language-button active" type="button" data-language="ru" role="menuitemradio" aria-checked="true"><span>Русский</span><small>RU</small><b aria-hidden="true">✓</b></button><button class="language-button" type="button" data-language="uk" role="menuitemradio" aria-checked="false"><span>Українська</span><small>UA</small><b aria-hidden="true">✓</b></button>
           <button class="language-button" type="button" data-language="en" role="menuitemradio" aria-checked="false"><span>English</span><small>EN</small><b aria-hidden="true">✓</b></button>
           <button class="language-button" type="button" data-language="nl" role="menuitemradio" aria-checked="false"><span>Nederlands</span><small>NL</small><b aria-hidden="true">✓</b></button>
           <button class="language-button" type="button" data-language="de" role="menuitemradio" aria-checked="false"><span>Deutsch</span><small>DE</small><b aria-hidden="true">✓</b></button>
@@ -181,6 +181,7 @@
       <div class="passport-content">
         <p class="eyebrow">ЕЁ ЛИЧНАЯ ИСТОРИЯ</p><h2 id="passportName"></h2>
         <div class="passport-facts"><div><span>День рождения</span><strong id="passportBorn"></strong></div><div><span>Статус</span><strong>Часть вашей семьи</strong></div></div>
+        <form class="memory-form passport-name-form" id="passportNameForm"><h3>Как её зовут?</h3><p>Имя даёте вы — так игрушка становится частью семьи.</p><label><span>Имя персонажа</span><input type="text" name="name" maxlength="60" placeholder="Например, Зайка Мия" required></label><button class="card-button" type="submit">Сохранить имя</button><p class="account-status" id="passportNameStatus" aria-live="polite"></p></form>
         <div class="passport-timeline" id="passportTimeline"></div>
         <form class="memory-form" id="memoryForm"><h3>Добавить новую главу</h3><label><span>Название события</span><input type="text" name="title" placeholder="Например, Первая поездка к морю" required></label><label><span>Воспоминание</span><textarea name="text" rows="3" placeholder="Что особенного произошло в этот день?" required></textarea></label><button class="button" type="submit">Сохранить в истории</button></form>
         <form class="memory-form passport-transfer-form" id="passportTransferForm"><h3>Передать игрушку</h3><p>Получатель должен заранее создать взрослый аккаунт VIORI. Семейные воспоминания не передаются автоматически.</p><label><span>Email нового владельца</span><input type="email" name="email" autocomplete="email" required></label><button class="card-button" type="submit">Создать ссылку передачи</button><p class="account-status" id="passportTransferStatus" aria-live="polite"></p></form>
@@ -347,7 +348,7 @@
 
         <div class="dashboard-page admin-only hidden" data-dashboard-page="admin-nfc">
           <div class="admin-orders-heading nfc-admin-heading"><p class="eyebrow">NFC-ПАСПОРТА</p><h3>Выпустить новый паспорт</h3><p>Создайте защищённый код для конкретной игрушки. Активировать его сможет только один клиент.</p></div>
-          <form class="account-form nfc-issue-form" id="nfcIssueForm"><div class="admin-form-row"><label><span>Имя персонажа (RU)</span><input type="text" name="nameRu" placeholder="Зайка Мия" required></label><label><span>Имя персонажа (EN)</span><input type="text" name="nameEn" placeholder="Mia the Bunny" required></label></div><label><span>Номер заказа (необязательно)</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001"></label><button class="button" type="submit">Создать NFC-паспорт</button></form>
+          <form class="account-form nfc-issue-form" id="nfcIssueForm"><div class="admin-form-row"><label><span>Имя персонажа (RU)</span><input type="text" name="nameRu" placeholder="Зайка Мия" required></label><label><span>Имя персонажа (EN)</span><input type="text" name="nameEn" placeholder="Mia the Bunny" required></label></div><label><span>Заказ клиента</span><select name="orderNumber" id="nfcOrderSelect"><option value="">Без привязки к заказу</option></select><small>Паспорт свяжется с этим заказом — номер не нужно вводить вручную</small></label><button class="button" type="submit">Создать NFC-паспорт</button></form>
           <p class="account-status" id="nfcIssueStatus" aria-live="polite"></p>
           <div class="nfc-passports" id="nfcPassports"></div>
         </div>
@@ -377,6 +378,6 @@
   <div class="cancellation-modal" id="cancellationModal" aria-hidden="true"><button class="shop-backdrop" type="button" data-close-cancellation aria-label="Закрыть"></button><section class="cancellation-dialog" role="dialog" aria-modal="true" aria-labelledby="cancellationTitle"><button class="shop-close" type="button" data-close-cancellation aria-label="Закрыть">×</button><div id="cancellationFormView"><p class="eyebrow">ПРАВО НА ОТМЕНУ</p><h2 id="cancellationTitle">Отменить заказ</h2><p>Отправьте запрос — мы сохраним дату обращения и свяжемся с вами после проверки статуса заказа.</p><form class="checkout-form" id="cancellationForm"><label><span>Номер заказа</span><input type="text" name="orderNumber" placeholder="VIO-2026-000001" required></label><label><span>Email заказа</span><input type="email" name="email" required></label><label><span>Причина (необязательно)</span><textarea name="reason" rows="3"></textarea></label><button class="button" type="submit">Отправить запрос на отмену</button><p class="account-status" id="cancellationStatus" aria-live="polite"></p></form></div><div class="checkout-success hidden" id="cancellationSuccess"><div>✓</div><p class="eyebrow">ЗАПРОС ПРИНЯТ</p><h2>Отмена зарегистрирована</h2><p id="cancellationReference"></p><button class="button" type="button" data-close-cancellation>Закрыть</button></div></section></div>
 
   <script src="config.js"></script>
-  <script src="script.js?v=20260807-9"></script>
+  <script src="script.js?v=20260807-22"></script>
 </body>
 </html>
