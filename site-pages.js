@@ -329,12 +329,25 @@ document.getElementById('orderForm')?.addEventListener('submit', async (event) =
 // сторонний сервис, ни ключи, ни оплата, и языки те же, что у сказки.
 const SPEECH_LOCALES = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-GB', nl: 'nl-NL', de: 'de-DE', fr: 'fr-FR' };
 
+// Часть браузеров отдаёт через тот же интерфейс нейронные голоса — они звучат
+// живо, с интонацией и паузами, в отличие от служебных системных. Раньше брался
+// первый попавшийся, поэтому вместо хорошего голоса мог достаться механический.
+const NATURAL_VOICE = /natural|neural|online|enhanced|premium|siri/i;
+
 function pickVoice(locale) {
   const voices = window.speechSynthesis?.getVoices?.() || [];
-  const exact = voices.find((voice) => voice.lang.replace('_', '-').toLowerCase() === locale.toLowerCase());
-  if (exact) return exact;
-  const prefix = locale.split('-')[0].toLowerCase();
-  return voices.find((voice) => voice.lang.replace('_', '-').toLowerCase().startsWith(prefix)) || null;
+  const wanted = locale.toLowerCase();
+  const prefix = wanted.split('-')[0];
+  const normalise = (voice) => voice.lang.replace('_', '-').toLowerCase();
+
+  const exact = voices.filter((voice) => normalise(voice) === wanted);
+  const sameLanguage = voices.filter((voice) => normalise(voice).startsWith(prefix));
+  const candidates = exact.length ? exact : sameLanguage;
+  if (!candidates.length) return null;
+
+  return candidates.find((voice) => NATURAL_VOICE.test(voice.name))
+    || candidates.find((voice) => !voice.localService)
+    || candidates[0];
 }
 
 // Длинный текст в одном запросе часть браузеров обрывает на середине,
@@ -384,11 +397,22 @@ function setUpStoryVoice(story, lang) {
       const utterance = new SpeechSynthesisUtterance(chunk);
       utterance.lang = locale;
       if (voice) utterance.voice = voice;
-      utterance.rate = 0.95;
-      utterance.pitch = 1.05;
+      // Чуть медленнее обычного и с мягким тоном: сказку не зачитывают,
+      // а рассказывают. Пауза между предложениями — отдельной репликой,
+      // иначе фразы сливаются в сплошной поток.
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
       if (index === chunks.length - 1) utterance.onend = reset;
       utterance.onerror = reset;
       speech.speak(utterance);
+      if (index < chunks.length - 1) {
+        const pause = new SpeechSynthesisUtterance(' ');
+        pause.lang = locale;
+        if (voice) pause.voice = voice;
+        pause.rate = 0.5;
+        pause.volume = 0;
+        speech.speak(pause);
+      }
     });
     labelEl.textContent = stopText;
     button.classList.add('speaking');
