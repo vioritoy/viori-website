@@ -1268,6 +1268,8 @@ body.shop-open { overflow: hidden; }
 .passport-story-photo { width:120px; height:120px; border-radius:16px; object-fit:cover; }
 .nfc-passport-head { display:flex; align-items:start; justify-content:space-between; gap:12px; }
 .nfc-passport-actions { display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+.toy-life-card.pending { border-style:dashed; }
+.toy-pending { margin:14px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
 .nfc-order { padding:5px 10px; border-radius:999px; background:var(--soft); color:var(--accent-dark); font-size:10px; font-weight:800; white-space:nowrap; }
 .nfc-delete { padding:6px 12px; border:1px solid rgba(154,79,51,.35); border-radius:999px; background:transparent; color:#9a4f33; font:800 11px/1 "Montserrat",sans-serif; cursor:pointer; }
 .nfc-delete:hover { background:#9a4f33; color:#fff; }

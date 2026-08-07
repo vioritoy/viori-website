@@ -119,7 +119,7 @@ const englishTranslations: Record<string, string> = {
   "#logoutButton": "Sign out",
   ".toy-empty h3": "This is where her life begins",
   ".toy-empty p": "Tap the toy’s NFC tag with your phone or enter the code manually.",
-  ".nfc-form label span": "Toy NFC code",
+  ".nfc-form label span": "Activation code from the card",
   ".nfc-form .button": "Add toy",
   '.dashboard-page[data-dashboard-page="orders"] > .button': "Choose a new toy",
   '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Name",
@@ -347,7 +347,7 @@ const regionalTranslations: Record<"uk" | "nl" | "de" | "fr", Record<string, str
     "#logoutButton": "Вийти",
     ".toy-empty h3": "Тут починається її життя",
     ".toy-empty p": "Піднесіть телефон до NFC-мітки іграшки або введіть код вручну.",
-    ".nfc-form label span": "NFC-код іграшки",
+    ".nfc-form label span": "Код активації з картки",
     ".nfc-form .button": "Додати іграшку",
     '.dashboard-page[data-dashboard-page="orders"] > .button': "Обрати нову іграшку",
     '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Ім'я",
@@ -1562,7 +1562,7 @@ async function renderCatalogProducts(): Promise<void> {
 }
 
 type DbProfile = { id: string; display_name: string; role: "customer" | "admin" };
-type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string; story?: Record<string, string> | null; photo_path?: string | null; owner_name?: string | null; order_id?: string | null; orders?: { order_number: string } | { order_number: string }[] | null };
+type DbPassport = { id: string; public_code: string; character_name_ru: string; character_name_en: string; status: string; claimed_at: string | null; issued_at: string; story?: Record<string, string> | null; photo_path?: string | null; owner_name?: string | null; order_id?: string | null; owner_id?: string | null; orders?: { order_number: string } | { order_number: string }[] | null };
 
 // Вложенную связь Supabase отдаёт то объектом, то массивом — зависит от того,
 // как выведена связь. Приводим к одному виду.
@@ -1671,7 +1671,7 @@ async function loadProductionAccount(): Promise<void> {
   renderCart();
   const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
     supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
   ]);
   if (profileError) throw profileError;
@@ -1717,7 +1717,19 @@ function renderProductionDashboard(email: string): void {
   document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
   document.getElementById("toyList")!.innerHTML = productionPassports.map((passport) => {
     const name = passportDisplayName(passport);
-    return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
+    // Паспорт, выпущенный для заказа этого человека, виден ему сразу, но до
+    // ввода кода с карточки владельца у него нет — историю открывать нечего.
+    const mine = passport.owner_id === productionProfile?.id;
+    const head = `<div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div>`;
+    if (mine) {
+      return `<article class="toy-life-card">${head}<button class="card-button" type="button" data-production-passport="${passport.id}">${label("Открыть паспорт", "Відкрити паспорт", "Open passport")}</button></article>`;
+    }
+    return `<article class="toy-life-card pending">${head}`
+      + `<p class="toy-pending">${label(
+          "Паспорт готов. Активируйте его кодом с карточки в коробке — и история откроется.",
+          "Паспорт готовий. Активуйте його кодом із картки в коробці — і історія відкриється.",
+          "The passport is ready. Activate it with the code from the card in the box to open the story."
+        )}</p></article>`;
   }).join("");
   document.getElementById("ordersList")!.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
   if (isAdmin) void loadProductionAdmin();
@@ -1773,7 +1785,7 @@ async function loadProductionAdmin(): Promise<void> {
   if (!supabase || productionProfile?.role !== "admin") return;
   const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
     supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
     supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
   ]);
   productionProducts = (products || []) as DbProduct[];
