@@ -493,8 +493,20 @@ async function loadPassportPage() {
       // Голоса подгружаются асинхронно; без ожидания список бывает пустым
       // и подходящий язык не находится.
       const storyLang = stories[lang] ? lang : stories.en ? 'en' : stories.ru ? 'ru' : lang;
-      if (window.speechSynthesis?.getVoices?.().length) setUpStoryVoice(story, storyLang);
-      else window.speechSynthesis?.addEventListener?.('voiceschanged', () => setUpStoryVoice(story, storyLang), { once: true });
+
+      // Записанная озвучка звучит одинаково у всех и всегда лучше синтеза,
+      // поэтому синтез предлагаем только когда файла нет.
+      const audioFiles = passport.audio || {};
+      const audioPath = audioFiles[storyLang] || audioFiles[lang] || '';
+      const audioEl = document.getElementById('passportAudio');
+      if (audioPath && audioEl) {
+        audioEl.src = `${config.supabaseUrl}/storage/v1/object/public/product-images/${encodeURI(audioPath)}`;
+        audioEl.classList.remove('hidden');
+      } else if (window.speechSynthesis?.getVoices?.().length) {
+        setUpStoryVoice(story, storyLang);
+      } else {
+        window.speechSynthesis?.addEventListener?.('voiceschanged', () => setUpStoryVoice(story, storyLang), { once: true });
+      }
     }
     if (passport.photo_path) {
       const photoEl = document.getElementById('passportPagePhoto');

@@ -1255,6 +1255,11 @@ body.shop-open { overflow: hidden; }
 .passport-page-seal { width:96px; height:96px; margin-bottom:22px; border-radius:50%; }
 .passport-page h1 { margin:6px 0 16px; font-size:clamp(38px,9vw,56px); }
 .passport-page-seal.has-photo { width:min(260px,72vw); height:auto; aspect-ratio:1/1; object-fit:cover; border-radius:28px; box-shadow:0 24px 60px rgba(76,47,30,.18); }
+.passport-audio { width:min(420px,100%); margin:0 auto 22px; }
+.story-audio { display:block; width:100%; margin-top:10px; }
+.story-audio-upload { display:block; margin-top:12px; }
+.story-audio-upload input { margin-top:6px; }
+.story-audio-upload small { display:block; margin-top:5px; color:var(--muted); font-size:9px; font-weight:500; }
 .passport-listen { display:inline-flex; align-items:center; gap:10px; width:auto; margin:0 auto 20px; padding:12px 22px; }
 .passport-listen-icon { font-size:15px; }
 .passport-listen.speaking { border-color:var(--accent); color:var(--accent-dark); }

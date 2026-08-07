@@ -21862,7 +21862,7 @@ ${suffix}`;
     renderCart();
     const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
       supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
       supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
     ]);
     if (profileError) throw profileError;
@@ -21962,7 +21962,7 @@ ${suffix}`;
     if (!supabase || productionProfile?.role !== "admin") return;
     const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
       supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
       supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
     ]);
     productionProducts = products || [];
@@ -22050,7 +22050,11 @@ ${suffix}`;
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => {
       const ru = currentLanguage === "ru";
       const photo = p.photo_path ? supabase.storage.from("product-images").getPublicUrl(p.photo_path).data.publicUrl : "";
-      return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div><div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b><button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("Удалить", "Видалити", "Delete")}</button></div></div><details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("Сказка и фотография", "Казка і фотографія", "Story and photo")}</summary><form class="account-form passport-story-form" data-passport-story="${p.id}">` + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "") + `<div class="story-langs" role="tablist">${["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>` + ["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("Сказка", "Казка", "Story")} · ${code.toUpperCase()}</span><textarea name="story_${code}" rows="6" placeholder="${ru ? "Она родилась тихим утром…" : "She was born on a quiet morning…"}">${safeText(p.story?.[code] || "")}</textarea></label>`).join("") + `<label class="image-upload"><span>${label("Фотография персонажа", "Фотографія персонажа", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG или WebP. Необязательно — можно оставить прежнюю.", "JPG, PNG або WebP. Необов'язково — можна лишити попередню.", "JPG, PNG or WebP. Optional — the current one stays.")}</small></label><button class="button" type="submit">${label("Сохранить", "Зберегти", "Save")}</button><p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p></form></details></article>`;
+      return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div><div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b><button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("Удалить", "Видалити", "Delete")}</button></div></div><details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("Сказка и фотография", "Казка і фотографія", "Story and photo")}</summary><form class="account-form passport-story-form" data-passport-story="${p.id}">` + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "") + `<div class="story-langs" role="tablist">${["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>` + ["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("Сказка", "Казка", "Story")} · ${code.toUpperCase()}</span><textarea name="story_${code}" rows="6" placeholder="${ru ? "Она родилась тихим утром…" : "She was born on a quiet morning…"}">${safeText(p.story?.[code] || "")}</textarea>` + (p.audio?.[code] ? `<audio class="story-audio" controls preload="none" src="${supabase.storage.from("product-images").getPublicUrl(p.audio[code]).data.publicUrl}"></audio>` : "") + `<span class="story-audio-upload">${label("Озвученная сказка", "Озвучена казка", "Narrated story")}<input type="file" name="audio_${code}" accept="audio/mpeg,audio/mp4,audio/ogg,audio/wav,audio/webm"><small>${label(
+        "MP3, M4A, OGG или WAV. Запишите сами или создайте на любом сервисе озвучки — этот файл услышат все.",
+        "MP3, M4A, OGG або WAV. Запишіть самі або створіть на будь-якому сервісі озвучення — цей файл почують усі.",
+        "MP3, M4A, OGG or WAV. Record it yourself or make it on any narration service — everyone will hear this file."
+      )}</small></span></label>`).join("") + `<label class="image-upload"><span>${label("Фотография персонажа", "Фотографія персонажа", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG или WebP. Необязательно — можно оставить прежнюю.", "JPG, PNG або WebP. Необов'язково — можна лишити попередню.", "JPG, PNG or WebP. Optional — the current one stays.")}</small></label><button class="button" type="submit">${label("Сохранить", "Зберегти", "Save")}</button><p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p></form></details></article>`;
     }).join("");
     const orderContainer = document.getElementById("adminOrders");
     if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
@@ -22404,6 +22408,25 @@ ${suffix}`;
         if (text) story[code] = text;
       });
       const update = { story };
+      const audio = { ...productionPassports.find((item) => item.id === passportId)?.audio || {} };
+      for (const code of ["ru", "uk", "en", "nl", "de", "fr"]) {
+        const file = data.get(`audio_${code}`);
+        if (!(file instanceof File) || !file.size) continue;
+        if (file.size > 15 * 1024 * 1024) {
+          storySavedMessage = label("Аудио больше 15 МБ — загрузите файл поменьше.", "Аудіо більше за 15 МБ — завантажте менший файл.", "The audio is over 15 MB — please upload a smaller file.");
+          if (status) status.textContent = storySavedMessage;
+          return;
+        }
+        const path = `passports/${passportId}/audio-${code}-${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
+        const upload = await supabase.storage.from("product-images").upload(path, file, { contentType: file.type, upsert: false });
+        if (upload.error) {
+          storySavedMessage = productionMessage(upload.error);
+          if (status) status.textContent = storySavedMessage;
+          return;
+        }
+        audio[code] = path;
+      }
+      update.audio = audio;
       const photo = data.get("photo");
       if (photo instanceof File && photo.size) {
         const path = `passports/${passportId}/${crypto.randomUUID()}-${photo.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
