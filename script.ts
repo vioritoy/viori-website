@@ -1734,8 +1734,19 @@ async function claimProductionPassport(token: string): Promise<void> {
   const status = document.getElementById("nfcStatus");
   if (status) status.textContent = message;
   if (accountStatus) accountStatus.textContent = message;
-  const clean = new URL(location.href); clean.searchParams.delete("nfc"); history.replaceState({}, "", clean);
+  // Читаем до очистки адреса: сюда человек вернётся после активации.
+  const back = new URLSearchParams(location.search).get("back") || "";
+  const clean = new URL(location.href);
+  clean.searchParams.delete("nfc");
+  clean.searchParams.delete("back");
+  history.replaceState({}, "", clean);
   if (!error) {
+    // Игрушка уже сохранена в кабинете, поэтому показываем сразу историю —
+    // ради неё человек и подносил телефон.
+    if (back) {
+      location.href = `passport.html?code=${encodeURIComponent(back)}&claimed=1`;
+      return;
+    }
     switchProductionDashboardPage("toys");
     await loadProductionAccount();
   }

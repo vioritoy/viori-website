@@ -21920,10 +21920,16 @@ ${suffix}`;
     const status = document.getElementById("nfcStatus");
     if (status) status.textContent = message;
     if (accountStatus) accountStatus.textContent = message;
+    const back = new URLSearchParams(location.search).get("back") || "";
     const clean = new URL(location.href);
     clean.searchParams.delete("nfc");
+    clean.searchParams.delete("back");
     history.replaceState({}, "", clean);
     if (!error) {
+      if (back) {
+        location.href = `passport.html?code=${encodeURIComponent(back)}&claimed=1`;
+        return;
+      }
       switchProductionDashboardPage("toys");
       await loadProductionAccount();
     }

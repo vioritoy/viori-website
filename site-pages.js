@@ -404,11 +404,22 @@ async function loadPassportPage() {
     }
 
     if (passport.is_activated) {
-      show(name, ru
-        ? 'Этот паспорт уже активирован. Откройте личный кабинет владельца, чтобы прочитать историю и добавить новую главу.'
-        : 'This passport is already activated. Open the owner account to read the story and add a new chapter.');
+      // Сразу после активации человек попадает сюда: показываем историю
+      // и говорим, что игрушка уже сохранена в кабинете.
+      const justClaimed = new URLSearchParams(location.search).has('claimed');
+      if (justClaimed) {
+        show(name, ru
+          ? 'Паспорт активирован. История этой игрушки теперь ваша — она сохранена в разделе «Мои игрушки», и вы можете добавлять новые главы.'
+          : 'Passport activated. This toy’s story is yours now — it is saved under “My toys”, and you can add new chapters.');
+      } else {
+        show(name, ru
+          ? 'Этот паспорт уже активирован. Откройте личный кабинет владельца, чтобы прочитать историю и добавить новую главу.'
+          : 'This passport is already activated. Open the owner account to read the story and add a new chapter.');
+      }
       openAccount?.classList.remove('hidden');
-      if (openAccount) openAccount.textContent = ru ? 'Открыть в личном кабинете' : 'Open in my account';
+      if (openAccount) openAccount.textContent = justClaimed
+        ? (ru ? 'Добавить главу истории' : 'Add a chapter to the story')
+        : (ru ? 'Открыть в личном кабинете' : 'Open in my account');
     } else {
       show(name, ru
         ? 'Это персонаж VIORI, связанный вручную. Активируйте паспорт — и его история станет частью вашей семьи.'
@@ -429,7 +440,10 @@ document.getElementById('passportActivateForm')?.addEventListener('submit', (eve
   event.preventDefault();
   const token = String(new FormData(event.currentTarget).get('token') || '').trim();
   if (!token) return;
-  location.href = `index.html?nfc=${encodeURIComponent(token)}`;
+  // Передаём код паспорта в `back`, чтобы после входа вернуть человека сюда,
+  // к истории игрушки, а не оставить его в кабинете.
+  const code = new URLSearchParams(location.search).get('code') || '';
+  location.href = `index.html?nfc=${encodeURIComponent(token)}&back=${encodeURIComponent(code)}`;
 });
 
 const year = document.getElementById('year');
