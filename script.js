@@ -21915,13 +21915,18 @@ ${suffix}`;
   }
   async function claimProductionPassport(token) {
     if (!supabase) return;
-    const status = document.getElementById("nfcStatus");
     const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
-    if (status) status.textContent = error ? currentLanguage !== "ru" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован." : currentLanguage !== "ru" ? "Passport activated." : "Паспорт активирован.";
+    const message = error ? label("Код недействителен или паспорт уже активирован.", "Код недійсний або паспорт уже активовано.", "Invalid or already activated passport.") : label("Паспорт активирован. Игрушка теперь ваша.", "Паспорт активовано. Іграшка тепер ваша.", "Passport activated. The toy is yours now.");
+    const status = document.getElementById("nfcStatus");
+    if (status) status.textContent = message;
+    if (accountStatus) accountStatus.textContent = message;
     const clean = new URL(location.href);
     clean.searchParams.delete("nfc");
     history.replaceState({}, "", clean);
-    if (!error) await loadProductionAccount();
+    if (!error) {
+      switchProductionDashboardPage("toys");
+      await loadProductionAccount();
+    }
   }
   async function openProductionPassport(id) {
     if (!supabase) return;
@@ -22434,6 +22439,13 @@ ${suffix}`;
   if (new URLSearchParams(window.location.search).has("nfc")) {
     if (supabase) productionOpenAccount();
     else openAccount();
+    if (accountStatus) {
+      accountStatus.textContent = label(
+        "Войдите или создайте аккаунт — и паспорт игрушки активируется автоматически.",
+        "Увійдіть або створіть акаунт — і паспорт іграшки активується автоматично.",
+        "Sign in or create an account and the toy's passport will be activated automatically."
+      );
+    }
   }
   if (new URLSearchParams(window.location.search).has("account")) {
     window.setTimeout(() => {

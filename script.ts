@@ -1725,11 +1725,20 @@ function renderProductionDashboard(email: string): void {
 
 async function claimProductionPassport(token: string): Promise<void> {
   if (!supabase) return;
-  const status = document.getElementById("nfcStatus");
   const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
-  if (status) status.textContent = error ? (currentLanguage !== "ru" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован.") : (currentLanguage !== "ru" ? "Passport activated." : "Паспорт активирован.");
+  const message = error
+    ? label("Код недействителен или паспорт уже активирован.", "Код недійсний або паспорт уже активовано.", "Invalid or already activated passport.")
+    : label("Паспорт активирован. Игрушка теперь ваша.", "Паспорт активовано. Іграшка тепер ваша.", "Passport activated. The toy is yours now.");
+  // Результат раньше уходил только в «Мои игрушки», где его можно было
+  // не заметить. Показываем и там, и в шапке кабинета.
+  const status = document.getElementById("nfcStatus");
+  if (status) status.textContent = message;
+  if (accountStatus) accountStatus.textContent = message;
   const clean = new URL(location.href); clean.searchParams.delete("nfc"); history.replaceState({}, "", clean);
-  if (!error) await loadProductionAccount();
+  if (!error) {
+    switchProductionDashboardPage("toys");
+    await loadProductionAccount();
+  }
 }
 
 async function openProductionPassport(id: string): Promise<void> {
@@ -2201,6 +2210,17 @@ setLanguage(localStorage.getItem("viori-language") || "ru");
 
 if (new URLSearchParams(window.location.search).has("nfc")) {
   if (supabase) productionOpenAccount(); else openAccount();
+  // Человек пришёл с кодом активации и видит форму входа без объяснений.
+  // Говорим прямо, зачем она.
+  // Если человек уже вошёл, claimProductionPassport перезапишет это
+  // сообщение результатом активации через мгновение.
+  if (accountStatus) {
+    accountStatus.textContent = label(
+      "Войдите или создайте аккаунт — и паспорт игрушки активируется автоматически.",
+      "Увійдіть або створіть акаунт — і паспорт іграшки активується автоматично.",
+      "Sign in or create an account and the toy's passport will be activated automatically."
+    );
+  }
 }
 if (new URLSearchParams(window.location.search).has("account")) {
   window.setTimeout(() => { if (supabase) productionOpenAccount(); else openAccount(); }, 0);
