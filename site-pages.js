@@ -366,6 +366,11 @@ function setUpStoryVoice(story, lang) {
   const stopText = ru ? 'Остановить' : uk ? 'Зупинити' : 'Stop';
   const locale = SPEECH_LOCALES[lang] || SPEECH_LOCALES.en;
 
+  // Без голоса нужного языка браузер читает текст чужим синтезатором:
+  // кириллицу — английским движком, со сплошными ошибками. Лучше не
+  // предлагать озвучку вовсе, чем предлагать заведомо испорченную.
+  if (!pickVoice(locale)) return;
+
   labelEl.textContent = listenText;
   button.classList.remove('hidden');
 
