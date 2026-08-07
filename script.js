@@ -18181,7 +18181,7 @@ ${suffix}`;
             const storedNow = await getItemAsync(this.storage, this.storageKey);
             const accessTokenStillValid = !!((storedNow === null || storedNow === void 0 ? void 0 : storedNow.expires_at) && storedNow.expires_at * 1e3 > Date.now());
             if (accessTokenStillValid) {
-              this._debug(debugName, "proactive refresh failed, access token still valid \u2014 preserving session");
+              this._debug(debugName, "proactive refresh failed, access token still valid — preserving session");
             } else {
               await this._removeSession();
             }
@@ -20237,7 +20237,7 @@ ${suffix}`;
     if (!versionMatch) return false;
     return parseInt(versionMatch[1], 10) <= 20;
   }
-  if (shouldShowDeprecationWarning()) console.warn("\u26A0\uFE0F  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715");
+  if (shouldShowDeprecationWarning()) console.warn("⚠️  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715");
 
   // script.ts
   var PUBLIC_SITE_URL = "https://vioritoy.github.io/viori-website/";
@@ -20248,24 +20248,24 @@ ${suffix}`;
   var menuButton = document.querySelector(".menu-button");
   var mainNav = document.querySelector(".main-nav");
   var englishTranslations = {
-    "title": "VIORI \u2014 handmade crochet toys",
-    'meta[name="description"]': "VIORI \u2014 handmade crochet toys. Unique gifts made with love.",
+    "title": "VIORI — handmade crochet toys",
+    'meta[name="description"]': "VIORI — handmade crochet toys. Unique gifts made with love.",
     ".main-nav a:nth-child(1)": "Toys",
     ".main-nav a:nth-child(2)": "Catalog",
     ".main-nav a:nth-child(3)": "About",
     ".main-nav a:nth-child(4)": "Contacts",
     ".account-button-text": "My account",
-    ".auth-home-button": '<span aria-hidden="true">\u2190</span> Home',
+    ".auth-home-button": '<span aria-hidden="true">←</span> Home',
     ".google-auth-button span": "Continue with Google",
     ".auth-divider span": "or use email",
-    ".hero-copy .eyebrow": "VIORI \xB7 MADE BY HAND",
+    ".hero-copy .eyebrow": "VIORI · MADE BY HAND",
     ".hero-copy h1": "Every toy <em>has a life of its own</em>",
     ".hero-text": "Every VIORI is handmade and receives a name, a character and a unique digital passport. Tap the NFC tag with your phone to discover her story, memories and new chapters.",
     ".hero-actions .button": "View toys",
-    ".hero-actions .text-link": "Order your own idea <span>\u2192</span>",
-    ".hero-points span:nth-child(1)": "\u2661 Handmade",
-    ".hero-points span:nth-child(2)": "\u2661 Unique character",
-    ".hero-points span:nth-child(3)": "\u2661 Personal NFC passport",
+    ".hero-actions .text-link": "Order your own idea <span>→</span>",
+    ".hero-points span:nth-child(1)": "♡ Handmade",
+    ".hero-points span:nth-child(2)": "♡ Unique character",
+    ".hero-points span:nth-child(3)": "♡ Personal NFC passport",
     ".tag-two": "Made with care",
     "#catalog .section-heading .eyebrow": "A small collection",
     "#catalog .section-heading h2": "VIORI toys",
@@ -20277,19 +20277,19 @@ ${suffix}`;
     ".product-image span": "Add a photo",
     ".product-type": "Crochet toy",
     ".product-info h3": "Mia the Bunny",
-    ".price": "from \u20AC29",
+    ".price": "from €29",
     ".product-description": "A soft toy with long ears. You can choose the colour of the outfit.",
     ".order-product": "Order",
     "#about .eyebrow": "About the studio",
     "#about h2": "Every stitch tells a story",
     "#about .story-copy > p:nth-of-type(2)": "VIORI is a small family studio making crochet toys. There is no mass production here: every detail is carefully made by hand.",
-    "#about .story-copy > p:nth-of-type(3)": "You can choose the toy\u2019s colour, size and outfit, and add a personal detail \u2014 a name, a small accessory or gift wrapping.",
+    "#about .story-copy > p:nth-of-type(3)": "You can choose the toy’s colour, size and outfit, and add a personal detail — a name, a small accessory or gift wrapping.",
     ".stats div:nth-child(1) span": "handmade",
     ".stats div:nth-child(2) span": "unique toy",
     ".stats div:nth-child(3) span": "warmth and care",
     "#contacts .eyebrow": "Get in touch with VIORI",
-    "#contacts h2": "Let\u2019s create a special toy",
-    "#contacts .contact-copy > p:nth-of-type(2)": "Tell us which toy you like or share your own idea. We\u2019ll reply, discuss the details and calculate the price.",
+    "#contacts h2": "Let’s create a special toy",
+    "#contacts .contact-copy > p:nth-of-type(2)": "Tell us which toy you like or share your own idea. We’ll reply, discuss the details and calculate the price.",
     ".contact-link:nth-child(1) small": "Message us on",
     ".contact-link:nth-child(2) small": "View our",
     ".small-note": "Before publishing, replace the WhatsApp number and Instagram link with the real ones.",
@@ -20298,9 +20298,9 @@ ${suffix}`;
     ".order-form > label:nth-of-type(2) .label-text": "Your wishes",
     "#productSelect option": "Mia the Bunny",
     ".form-submit": "Send request",
-    ".footer > .container > p": '\xA9 <span id="year"></span> VIORI. Handmade crochet toys.',
+    ".footer > .container > p": '© <span id="year"></span> VIORI. Handmade crochet toys.',
     ".auth-view > .eyebrow": "VIORI WORLD",
-    "#accountTitle": "Your toy\u2019s life",
+    "#accountTitle": "Your toy’s life",
     ".account-intro": "Create an account to place orders, register toys using their NFC code and keep their stories safe.",
     '.auth-tab[data-auth-tab="login"]': "Sign in",
     '.auth-tab[data-auth-tab="register"]': "Register",
@@ -20313,7 +20313,7 @@ ${suffix}`;
     ".auth-benefits li:nth-child(1) span": "<strong>Personal NFC passport</strong><small>Only the owner controls the toy's story</small>",
     ".auth-benefits li:nth-child(2) span": "<strong>Family memories</strong><small>Save meaningful moments and new chapters</small>",
     ".auth-benefits li:nth-child(3) span": "<strong>Orders in one place</strong><small>Follow your character from creation to delivery</small>",
-    ".auth-trust": "Protected by Supabase \xB7 NFC does not track location",
+    ".auth-trust": "Protected by Supabase · NFC does not track location",
     "#registerForm .registration-progress p": "Secure registration takes less than a minute",
     "#registerForm > label:nth-of-type(1) > span": "Your name",
     "#registerForm > label:nth-of-type(2) > span": "Email",
@@ -20334,13 +20334,13 @@ ${suffix}`;
     '.dashboard-tab[data-dashboard-tab="profile"]': "Profile",
     "#logoutButton": "Sign out",
     ".toy-empty h3": "This is where her life begins",
-    ".toy-empty p": "Tap the toy\u2019s NFC tag with your phone or enter the code manually.",
+    ".toy-empty p": "Tap the toy’s NFC tag with your phone or enter the code manually.",
     ".nfc-form label span": "Toy NFC code",
     ".nfc-form .button": "Add toy",
     '.dashboard-page[data-dashboard-page="orders"] > .button': "Choose a new toy",
     '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Name",
     '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
-    ".privacy-note": "Your account keeps your toys\u2019 stories, orders and access to the personal VIORI world.",
+    ".privacy-note": "Your account keeps your toys’ stories, orders and access to the personal VIORI world.",
     ".admin-heading .eyebrow": "VIORI CATALOGUE",
     ".admin-heading h3": "Toys on the site",
     ".admin-heading > p:not(.eyebrow)": "Published cards are visible to every catalogue visitor.",
@@ -20350,7 +20350,7 @@ ${suffix}`;
     "#adminProductForm > label:nth-of-type(1) > span": "Name (RU)",
     "#adminProductForm > label:nth-of-type(2) > span": "Name (EN)",
     ".admin-form-row label:nth-child(1) > span": "Category",
-    ".admin-form-row label:nth-child(2) > span": "Price from, \u20AC",
+    ".admin-form-row label:nth-child(2) > span": "Price from, €",
     "#adminProductForm > label:nth-of-type(3) > span": "Description (RU)",
     "#adminProductForm > label:nth-of-type(4) > span": "Description (EN)",
     "#adminProductForm select option:nth-child(1)": "Animals",
@@ -20358,7 +20358,7 @@ ${suffix}`;
     "#adminProductForm select option:nth-child(3)": "For babies",
     ".life-intro .eyebrow": "MORE THAN A TOY",
     ".life-intro h2": "Her life continues with you",
-    ".life-intro > p:last-child": "Inside every VIORI is a key to the character\u2019s personal world. NFC keeps it simple: one tap opens everything that matters.",
+    ".life-intro > p:last-child": "Inside every VIORI is a key to the character’s personal world. NFC keeps it simple: one tap opens everything that matters.",
     ".life-step:nth-child(1) h3": "She is born",
     ".life-step:nth-child(1) p": "The maker creates the toy by hand and writes the first chapter of her story.",
     ".life-step:nth-child(2) h3": "You meet",
@@ -20375,7 +20375,7 @@ ${suffix}`;
     ".trust-card:nth-child(2) h3": "Clear materials",
     ".trust-card:nth-child(2) p": "Composition, filling, care instructions and age guidance are shown on every product page.",
     ".trust-card:nth-child(3) h3": "Family privacy",
-    ".trust-card:nth-child(3) p": "NFC does not track the child. The digital passport is available only to the toy\u2019s owner.",
+    ".trust-card:nth-child(3) p": "NFC does not track the child. The digital passport is available only to the toy’s owner.",
     ".trust-card:nth-child(4) h3": "A long life",
     ".trust-card:nth-child(4) p": "The story can grow, while the toy can be carefully restored or passed to a new owner.",
     ".faq details:nth-child(1) summary": "How does NFC work?",
@@ -20387,12 +20387,12 @@ ${suffix}`;
     ".product-specs div:nth-child(1) span": "Size",
     "#productModalSize": "about 32 cm",
     ".product-specs div:nth-child(2) span": "Creation",
-    "#productModalLead": "7\u201314 days",
+    "#productModalLead": "7–14 days",
     ".product-specs div:nth-child(3) span": "Included",
     ".product-specs div:nth-child(3) strong": "NFC passport",
     ".product-quantity": 'Quantity <input id="productQuantity" type="number" min="1" value="1">',
     "#modalAddToCart": "Add to bag",
-    ".product-care": "Handmade \xB7 Personalisation \xB7 Gift wrapping",
+    ".product-care": "Handmade · Personalisation · Gift wrapping",
     ".cart-summary span": "Total",
     ".cart-note": "Payment will be connected in the next stage. For now, prepare the order through the VIORI form.",
     "#checkoutFormView > .eyebrow": "ALMOST THERE",
@@ -20405,7 +20405,7 @@ ${suffix}`;
     "#checkoutForm .checkout-grid label:nth-child(6) span": "City",
     ".delivery-options legend": "Delivery",
     ".delivery-options label:nth-of-type(1) strong": "Standard delivery",
-    ".delivery-options label:nth-of-type(1) small": "2\u20133 working days after production",
+    ".delivery-options label:nth-of-type(1) small": "2–3 working days after production",
     ".delivery-options label:nth-of-type(2) strong": "Collection",
     ".delivery-options label:nth-of-type(2) small": "By prior arrangement",
     ".delivery-options label:nth-of-type(2) b": "Free",
@@ -20434,7 +20434,7 @@ ${suffix}`;
     ".nfc-issue-form .admin-form-row label:nth-child(1) span": "Character name (RU)",
     ".nfc-issue-form .admin-form-row label:nth-child(2) span": "Character name (EN)",
     ".nfc-issue-form > label span": "Customer order",
-    ".nfc-issue-form > label small": "The passport will be linked to this order \u2014 no need to type the number",
+    ".nfc-issue-form > label small": "The passport will be linked to this order — no need to type the number",
     ".nfc-issue-form .button": "Create NFC passport",
     "#cookieTitle": "Your privacy choice",
     "#cookieBanner p": "Essential storage keeps language, bag and sign-in working. Optional analytics will be enabled only with your consent.",
@@ -20449,7 +20449,7 @@ ${suffix}`;
     "#openCookieSettings": "Cookies",
     "#cancellationFormView > .eyebrow": "RIGHT TO CANCEL",
     "#cancellationTitle": "Cancel an order",
-    "#cancellationFormView > p:not(.eyebrow)": "Send a request \u2014 we will record its date and contact you after checking the order status.",
+    "#cancellationFormView > p:not(.eyebrow)": "Send a request — we will record its date and contact you after checking the order status.",
     "#cancellationForm label:nth-of-type(1) span": "Order number",
     "#cancellationForm label:nth-of-type(2) span": "Order email",
     "#cancellationForm label:nth-of-type(3) span": "Reason (optional)",
@@ -20471,248 +20471,248 @@ ${suffix}`;
     '.dashboard-tab[data-dashboard-tab="admin-requests"]': "Requests",
     '[data-dashboard-page="admin-requests"] .eyebrow': "CUSTOM ORDERS",
     '[data-dashboard-page="admin-requests"] h3': "Requests from the site",
-    '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the \u201CCreate your own toy\u201D form in the catalogue."
+    '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Messages from the “Create your own toy” form in the catalogue."
   };
   var regionalTranslations = {
     uk: {
-      "title": "VIORI \u2014 \u0432'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438",
-      'meta[name="description"]': "VIORI \u2014 \u0432'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438. \u0423\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0456 \u043F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u0438, \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u0456 \u0437 \u043B\u044E\u0431\u043E\u0432'\u044E.",
-      ".main-nav a:nth-child(1)": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438",
-      ".main-nav a:nth-child(2)": "\u041A\u0430\u0442\u0430\u043B\u043E\u0433",
-      ".main-nav a:nth-child(3)": "\u041F\u0440\u043E \u0431\u0440\u0435\u043D\u0434",
-      ".main-nav a:nth-child(4)": "\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u0438",
-      ".account-button-text": "\u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 \u043A\u0430\u0431\u0456\u043D\u0435\u0442",
-      ".auth-home-button": '<span aria-hidden="true">\u2190</span> \u041D\u0430 \u0433\u043E\u043B\u043E\u0432\u043D\u0443',
-      ".google-auth-button span": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438 \u0437 Google",
-      ".auth-divider span": "\u0430\u0431\u043E \u0447\u0435\u0440\u0435\u0437 email",
-      ".hero-copy .eyebrow": "VIORI \xB7 \u0421\u0422\u0412\u041E\u0420\u0415\u041D\u041E \u0412\u0420\u0423\u0427\u041D\u0423",
-      ".hero-copy h1": "\u041A\u043E\u0436\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 <em>\u043C\u0430\u0454 \u0432\u043B\u0430\u0441\u043D\u0435 \u0436\u0438\u0442\u0442\u044F</em>",
-      ".hero-text": "VIORI \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443, \u043E\u0442\u0440\u0438\u043C\u0443\u0454 \u0456\u043C'\u044F, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0456 \u0443\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0438\u0439 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442. \u0422\u043E\u0440\u043A\u043D\u0456\u0442\u044C\u0441\u044F \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u043E\u043C \u0434\u043E NFC-\u043C\u0456\u0442\u043A\u0438 \u2014 \u0456 \u0432\u0456\u0434\u043A\u0440\u0438\u0439\u0442\u0435 \u0457\u0457 \u0456\u0441\u0442\u043E\u0440\u0456\u044E, \u0441\u043F\u043E\u0433\u0430\u0434\u0438 \u0442\u0430 \u043D\u043E\u0432\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438.",
-      ".hero-actions .button": "\u041F\u043E\u0434\u0438\u0432\u0438\u0442\u0438\u0441\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
-      ".hero-actions .text-link": "\u0417\u0430\u043C\u043E\u0432\u0438\u0442\u0438 \u0441\u0432\u043E\u044E \u0456\u0434\u0435\u044E <span>\u2192</span>",
-      ".hero-points span:nth-child(1)": "\u2661 \u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
-      ".hero-points span:nth-child(2)": "\u2661 \u0423\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0438\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436",
-      ".hero-points span:nth-child(3)": "\u2661 \u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
-      ".tag-two": "\u0417\u0440\u043E\u0431\u043B\u0435\u043D\u043E \u0437 \u0442\u0443\u0440\u0431\u043E\u0442\u043E\u044E",
-      "#catalog .section-heading .eyebrow": "\u041D\u0435\u0432\u0435\u043B\u0438\u043A\u0430 \u043A\u043E\u043B\u0435\u043A\u0446\u0456\u044F",
-      "#catalog .section-heading h2": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438 VIORI",
-      "#catalog .section-heading > p": "\u0422\u0443\u0442 \u043C\u043E\u0436\u043D\u0430 \u0434\u043E\u0434\u0430\u0442\u0438 \u0441\u043F\u0440\u0430\u0432\u0436\u043D\u0456 \u0444\u043E\u0442\u043E, \u0440\u043E\u0437\u043C\u0456\u0440\u0438 \u0442\u0430 \u0446\u0456\u043D\u0438 \u0434\u043B\u044F \u043A\u043E\u0436\u043D\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438.",
-      '.filters [data-filter="all"]': "\u0423\u0441\u0456",
-      '.filters [data-filter="animals"]': "\u0422\u0432\u0430\u0440\u0438\u043D\u0438",
-      '.filters [data-filter="dolls"]': "\u041B\u044F\u043B\u044C\u043A\u0438",
-      '.filters [data-filter="baby"]': "\u0414\u043B\u044F \u043C\u0430\u043B\u044E\u043A\u0456\u0432",
-      ".product-image span": "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0444\u043E\u0442\u043E",
-      ".product-type": "\u0412'\u044F\u0437\u0430\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430",
-      ".product-info h3": "\u0417\u0430\u0439\u043A\u0430 \u041C\u0456\u044F",
-      ".price": "\u0432\u0456\u0434 \u20AC29",
-      ".product-description": "\u041C'\u044F\u043A\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u0437 \u0434\u043E\u0432\u0433\u0438\u043C\u0438 \u0432\u0443\u0448\u043A\u0430\u043C\u0438. \u041A\u043E\u043B\u0456\u0440 \u043E\u0434\u044F\u0433\u0443 \u043C\u043E\u0436\u043D\u0430 \u043E\u0431\u0440\u0430\u0442\u0438.",
-      ".order-product": "\u0417\u0430\u043C\u043E\u0432\u0438\u0442\u0438",
-      "#about .eyebrow": "\u041F\u0440\u043E \u043C\u0430\u0439\u0441\u0442\u0435\u0440\u043D\u044E",
-      "#about h2": "\u041A\u043E\u0436\u043D\u0430 \u043F\u0435\u0442\u043B\u044F \u0440\u043E\u0437\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0456\u0441\u0442\u043E\u0440\u0456\u044E",
-      "#about .story-copy > p:nth-of-type(2)": "VIORI \u2014 \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0430 \u0441\u0456\u043C\u0435\u0439\u043D\u0430 \u043C\u0430\u0439\u0441\u0442\u0435\u0440\u043D\u044F \u0432'\u044F\u0437\u0430\u043D\u0438\u0445 \u0456\u0433\u0440\u0430\u0448\u043E\u043A. \u041C\u0430\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0438\u0440\u043E\u0431\u043D\u0438\u0446\u0442\u0432\u0430 \u0442\u0443\u0442 \u043D\u0435\u043C\u0430\u0454: \u043A\u043E\u0436\u043D\u0430 \u0434\u0435\u0442\u0430\u043B\u044C \u0434\u0431\u0430\u0439\u043B\u0438\u0432\u043E \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u0443\u043A\u0430\u043C\u0438.",
-      "#about .story-copy > p:nth-of-type(3)": "\u0412\u0438 \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0431\u0440\u0430\u0442\u0438 \u043A\u043E\u043B\u0456\u0440, \u0440\u043E\u0437\u043C\u0456\u0440 \u0442\u0430 \u0432\u0431\u0440\u0430\u043D\u043D\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0439 \u0434\u043E\u0434\u0430\u0442\u0438 \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0443 \u0434\u0435\u0442\u0430\u043B\u044C \u2014 \u0456\u043C'\u044F, \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u0439 \u0430\u043A\u0441\u0435\u0441\u0443\u0430\u0440 \u0447\u0438 \u043F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u043E\u0432\u0443 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0443.",
-      ".stats div:nth-child(1) span": "\u0440\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
-      ".stats div:nth-child(2) span": "\u0443\u043D\u0456\u043A\u0430\u043B\u044C\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430",
-      ".stats div:nth-child(3) span": "\u0442\u0435\u043F\u043B\u0430 \u0439 \u0442\u0443\u0440\u0431\u043E\u0442\u0438",
-      "#contacts .eyebrow": "\u0417\u0432'\u044F\u0437\u0430\u0442\u0438\u0441\u044F \u0437 VIORI",
-      "#contacts h2": "\u0421\u0442\u0432\u043E\u0440\u0456\u043C\u043E \u043E\u0441\u043E\u0431\u043B\u0438\u0432\u0443 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
-      "#contacts .contact-copy > p:nth-of-type(2)": "\u0420\u043E\u0437\u043A\u0430\u0436\u0456\u0442\u044C, \u044F\u043A\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u0432\u0430\u043C \u0441\u043F\u043E\u0434\u043E\u0431\u0430\u043B\u0430\u0441\u044F, \u0430\u0431\u043E \u043F\u043E\u0434\u0456\u043B\u0456\u0442\u044C\u0441\u044F \u0432\u043B\u0430\u0441\u043D\u043E\u044E \u0456\u0434\u0435\u0454\u044E. \u041C\u0438 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u043C\u043E, \u043E\u0431\u0433\u043E\u0432\u043E\u0440\u0438\u043C\u043E \u0434\u0435\u0442\u0430\u043B\u0456 \u0439 \u043F\u043E\u0440\u0430\u0445\u0443\u0454\u043C\u043E \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044C.",
-      ".contact-link:nth-child(1) small": "\u041D\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u043D\u0430\u043C \u0443",
-      ".contact-link:nth-child(2) small": "\u0414\u0438\u0432\u0456\u0442\u044C\u0441\u044F \u043D\u0430\u0448",
-      ".small-note": "\u041F\u0435\u0440\u0435\u0434 \u043F\u0443\u0431\u043B\u0456\u043A\u0430\u0446\u0456\u0454\u044E \u0437\u0430\u043C\u0456\u043D\u0456\u0442\u044C \u043D\u043E\u043C\u0435\u0440 WhatsApp \u0456 \u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F Instagram \u043D\u0430 \u0441\u043F\u0440\u0430\u0432\u0436\u043D\u0456.",
-      ".form-row .label-text": "\u0412\u0430\u0448\u0435 \u0456\u043C'\u044F",
-      ".order-form > label:nth-of-type(1) .label-text": "\u0429\u043E \u0445\u043E\u0447\u0435\u0442\u0435 \u0437\u0430\u043C\u043E\u0432\u0438\u0442\u0438?",
-      ".order-form > label:nth-of-type(2) .label-text": "\u041F\u043E\u0431\u0430\u0436\u0430\u043D\u043D\u044F",
-      "#productSelect option": "\u0417\u0430\u0439\u043A\u0430 \u041C\u0456\u044F",
-      ".form-submit": "\u041D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438 \u0437\u0430\u044F\u0432\u043A\u0443",
-      ".footer > .container > p": `\xA9 <span id="year"></span> VIORI. \u0412'\u044F\u0437\u0430\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0440\u0443\u0447\u043D\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438.`,
+      "title": "VIORI — в'язані іграшки ручної роботи",
+      'meta[name="description"]': "VIORI — в'язані іграшки ручної роботи. Унікальні подарунки, створені з любов'ю.",
+      ".main-nav a:nth-child(1)": "Іграшки",
+      ".main-nav a:nth-child(2)": "Каталог",
+      ".main-nav a:nth-child(3)": "Про бренд",
+      ".main-nav a:nth-child(4)": "Контакти",
+      ".account-button-text": "Особистий кабінет",
+      ".auth-home-button": '<span aria-hidden="true">←</span> На головну',
+      ".google-auth-button span": "Продовжити з Google",
+      ".auth-divider span": "або через email",
+      ".hero-copy .eyebrow": "VIORI · СТВОРЕНО ВРУЧНУ",
+      ".hero-copy h1": "Кожна іграшка <em>має власне життя</em>",
+      ".hero-text": "VIORI створюється вручну, отримує ім'я, характер і унікальний цифровий паспорт. Торкніться телефоном до NFC-мітки — і відкрийте її історію, спогади та нові розділи.",
+      ".hero-actions .button": "Подивитися іграшки",
+      ".hero-actions .text-link": "Замовити свою ідею <span>→</span>",
+      ".hero-points span:nth-child(1)": "♡ Ручна робота",
+      ".hero-points span:nth-child(2)": "♡ Унікальний персонаж",
+      ".hero-points span:nth-child(3)": "♡ Особистий NFC-паспорт",
+      ".tag-two": "Зроблено з турботою",
+      "#catalog .section-heading .eyebrow": "Невелика колекція",
+      "#catalog .section-heading h2": "Іграшки VIORI",
+      "#catalog .section-heading > p": "Тут можна додати справжні фото, розміри та ціни для кожної іграшки.",
+      '.filters [data-filter="all"]': "Усі",
+      '.filters [data-filter="animals"]': "Тварини",
+      '.filters [data-filter="dolls"]': "Ляльки",
+      '.filters [data-filter="baby"]': "Для малюків",
+      ".product-image span": "Додайте фото",
+      ".product-type": "В'язана іграшка",
+      ".product-info h3": "Зайка Мія",
+      ".price": "від €29",
+      ".product-description": "М'яка іграшка з довгими вушками. Колір одягу можна обрати.",
+      ".order-product": "Замовити",
+      "#about .eyebrow": "Про майстерню",
+      "#about h2": "Кожна петля розповідає історію",
+      "#about .story-copy > p:nth-of-type(2)": "VIORI — невелика сімейна майстерня в'язаних іграшок. Масового виробництва тут немає: кожна деталь дбайливо створюється руками.",
+      "#about .story-copy > p:nth-of-type(3)": "Ви можете обрати колір, розмір та вбрання іграшки й додати особисту деталь — ім'я, невеликий аксесуар чи подарункову упаковку.",
+      ".stats div:nth-child(1) span": "ручна робота",
+      ".stats div:nth-child(2) span": "унікальна іграшка",
+      ".stats div:nth-child(3) span": "тепла й турботи",
+      "#contacts .eyebrow": "Зв'язатися з VIORI",
+      "#contacts h2": "Створімо особливу іграшку",
+      "#contacts .contact-copy > p:nth-of-type(2)": "Розкажіть, яка іграшка вам сподобалася, або поділіться власною ідеєю. Ми відповімо, обговоримо деталі й порахуємо вартість.",
+      ".contact-link:nth-child(1) small": "Напишіть нам у",
+      ".contact-link:nth-child(2) small": "Дивіться наш",
+      ".small-note": "Перед публікацією замініть номер WhatsApp і посилання Instagram на справжні.",
+      ".form-row .label-text": "Ваше ім'я",
+      ".order-form > label:nth-of-type(1) .label-text": "Що хочете замовити?",
+      ".order-form > label:nth-of-type(2) .label-text": "Побажання",
+      "#productSelect option": "Зайка Мія",
+      ".form-submit": "Надіслати заявку",
+      ".footer > .container > p": `© <span id="year"></span> VIORI. В'язані іграшки ручної роботи.`,
       ".auth-view > .eyebrow": "VIORI WORLD",
-      "#accountTitle": "\u0416\u0438\u0442\u0442\u044F \u0432\u0430\u0448\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
-      ".account-intro": "\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043A\u0430\u0443\u043D\u0442, \u0449\u043E\u0431 \u0440\u043E\u0431\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0440\u0435\u0454\u0441\u0442\u0440\u0443\u0432\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0437\u0430 NFC-\u043A\u043E\u0434\u043E\u043C \u0456 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0442\u0438 \u0457\u0445\u043D\u0456 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
-      '.auth-tab[data-auth-tab="login"]': "\u0423\u0432\u0456\u0439\u0442\u0438",
-      '.auth-tab[data-auth-tab="register"]': "\u0420\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044F",
+      "#accountTitle": "Життя вашої іграшки",
+      ".account-intro": "Створіть акаунт, щоб робити замовлення, реєструвати іграшки за NFC-кодом і зберігати їхні історії.",
+      '.auth-tab[data-auth-tab="login"]': "Увійти",
+      '.auth-tab[data-auth-tab="register"]': "Реєстрація",
       "#loginForm label:nth-child(1) span": "Email",
-      "#loginForm label:nth-child(2) span": "\u041F\u0430\u0440\u043E\u043B\u044C",
-      "#loginForm .button": "\u0423\u0432\u0456\u0439\u0442\u0438",
-      ".auth-story-panel .eyebrow": "\u0407\u0407 \u0421\u0412\u0406\u0422 \u041F\u041E\u0427\u0418\u041D\u0410\u0404\u0422\u042C\u0421\u042F \u0422\u0423\u0422",
-      ".auth-story-panel h2": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F, \u0449\u043E \u043B\u0438\u0448\u0430\u0454\u0442\u044C\u0441\u044F \u0443 \u0432\u0430\u0448\u0456\u0439 \u0440\u043E\u0434\u0438\u043D\u0456",
-      ".auth-story-panel > div:nth-child(2) > p:last-child": "\u041E\u0434\u0438\u043D \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u0434\u043E\u0440\u043E\u0441\u043B\u0438\u0439 \u0430\u043A\u0430\u0443\u043D\u0442 \u0442\u0440\u0438\u043C\u0430\u0454 \u0440\u0430\u0437\u043E\u043C \u0456\u0433\u0440\u0430\u0448\u043A\u0438, \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0442\u0430 \u0434\u043E\u0440\u043E\u0433\u0456 \u0441\u0456\u043C\u0435\u0439\u043D\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438.",
-      ".auth-benefits li:nth-child(1) span": "<strong>\u041E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442</strong><small>\u0406\u0441\u0442\u043E\u0440\u0456\u0454\u044E \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u043A\u0435\u0440\u0443\u0454 \u043B\u0438\u0448\u0435 \u0432\u043B\u0430\u0441\u043D\u0438\u043A</small>",
-      ".auth-benefits li:nth-child(2) span": "<strong>\u0421\u0456\u043C\u0435\u0439\u043D\u0456 \u0441\u043F\u043E\u0433\u0430\u0434\u0438</strong><small>\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0439\u0442\u0435 \u0432\u0430\u0436\u043B\u0438\u0432\u0456 \u043C\u043E\u043C\u0435\u043D\u0442\u0438 \u0442\u0430 \u043D\u043E\u0432\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438</small>",
-      ".auth-benefits li:nth-child(3) span": "<strong>\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u043E\u0434\u043D\u043E\u043C\u0443 \u043C\u0456\u0441\u0446\u0456</strong><small>\u0421\u0442\u0435\u0436\u0442\u0435 \u0437\u0430 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u043C \u0432\u0456\u0434 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u044F \u0434\u043E \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438</small>",
-      ".auth-trust": "\u0417\u0430\u0445\u0438\u0449\u0435\u043D\u043E Supabase \xB7 NFC \u043D\u0435 \u0432\u0456\u0434\u0441\u0442\u0435\u0436\u0443\u0454 \u043C\u0456\u0441\u0446\u0435\u0437\u043D\u0430\u0445\u043E\u0434\u0436\u0435\u043D\u043D\u044F",
-      "#registerForm .registration-progress p": "\u0411\u0435\u0437\u043F\u0435\u0447\u043D\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044F \u0437\u0430\u0439\u043C\u0430\u0454 \u043C\u0435\u043D\u0448\u0435 \u0445\u0432\u0438\u043B\u0438\u043D\u0438",
-      "#registerForm > label:nth-of-type(1) > span": "\u0412\u0430\u0448\u0435 \u0456\u043C'\u044F",
+      "#loginForm label:nth-child(2) span": "Пароль",
+      "#loginForm .button": "Увійти",
+      ".auth-story-panel .eyebrow": "ЇЇ СВІТ ПОЧИНАЄТЬСЯ ТУТ",
+      ".auth-story-panel h2": "Історія, що лишається у вашій родині",
+      ".auth-story-panel > div:nth-child(2) > p:last-child": "Один захищений дорослий акаунт тримає разом іграшки, замовлення та дорогі сімейні розділи.",
+      ".auth-benefits li:nth-child(1) span": "<strong>Особистий NFC-паспорт</strong><small>Історією іграшки керує лише власник</small>",
+      ".auth-benefits li:nth-child(2) span": "<strong>Сімейні спогади</strong><small>Зберігайте важливі моменти та нові розділи</small>",
+      ".auth-benefits li:nth-child(3) span": "<strong>Замовлення в одному місці</strong><small>Стежте за персонажем від створення до доставки</small>",
+      ".auth-trust": "Захищено Supabase · NFC не відстежує місцезнаходження",
+      "#registerForm .registration-progress p": "Безпечна реєстрація займає менше хвилини",
+      "#registerForm > label:nth-of-type(1) > span": "Ваше ім'я",
       "#registerForm > label:nth-of-type(2) > span": "Email",
-      "#registerForm > label:nth-of-type(3) > span": "\u041F\u0440\u0438\u0434\u0443\u043C\u0430\u0439\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C",
-      "#registerForm > label:nth-of-type(4) > span": "\u041F\u043E\u0432\u0442\u043E\u0440\u0456\u0442\u044C \u043F\u0430\u0440\u043E\u043B\u044C",
-      "#registerForm > label:nth-of-type(5) > span": "\u042F \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0443\u044E, \u0449\u043E \u0430\u043A\u0430\u0443\u043D\u0442\u043E\u043C \u043A\u0435\u0440\u0443\u0454 \u0434\u043E\u0440\u043E\u0441\u043B\u0430 \u043B\u044E\u0434\u0438\u043D\u0430",
-      "#registerForm > label:nth-of-type(6) > span": '\u042F \u043F\u0440\u0438\u0439\u043C\u0430\u044E <a href="legal.html#terms" target="_blank">\u0443\u043C\u043E\u0432\u0438</a> \u0442\u0430 <a href="legal.html#privacy" target="_blank">\u043F\u043E\u043B\u0456\u0442\u0438\u043A\u0443 \u043A\u043E\u043D\u0444\u0456\u0434\u0435\u043D\u0446\u0456\u0439\u043D\u043E\u0441\u0442\u0456</a>',
-      "#registerForm .registration-submit span": "\u0421\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u043C\u0456\u0439 \u0441\u0432\u0456\u0442 VIORI",
-      "#registerForm .registration-security": "\u0412\u0430\u0448\u0456 \u0434\u0430\u043D\u0456 \u0437\u0430\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u043D\u0456. \u041C\u0438 \u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u043F\u0440\u043E\u0434\u0430\u0454\u043C\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0443 \u0456\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0456\u044E.",
-      "#registrationSuccess .eyebrow": "\u041C\u0410\u0419\u0416\u0415 \u0413\u041E\u0422\u041E\u0412\u041E",
-      "#registrationSuccess h2": "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0456\u0442\u044C email",
-      "#registrationSuccess > p:not(.eyebrow)": "\u041C\u0438 \u043D\u0430\u0434\u0456\u0441\u043B\u0430\u043B\u0438 \u0432\u0430\u043C \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0435 \u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F. \u041F\u0456\u0441\u043B\u044F \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043D\u043D\u044F \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F \u0432\u0430\u0448 \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u0438\u0439 \u0441\u0432\u0456\u0442 VIORI.",
-      "#registrationSuccess .button": "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u0434\u043E \u0432\u0445\u043E\u0434\u0443",
-      ".dashboard-head .eyebrow": "\u041C\u0406\u0419 \u041A\u0410\u0411\u0406\u041D\u0415\u0422",
-      ".dashboard-greeting": "\u0412\u0456\u0442\u0430\u0454\u043C\u043E,",
-      '.dashboard-tab[data-dashboard-tab="toys"]': "\u041C\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
-      '.dashboard-tab[data-dashboard-tab="orders"]': "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      '.dashboard-tab[data-dashboard-tab="profile"]': "\u041F\u0440\u043E\u0444\u0456\u043B\u044C",
-      "#logoutButton": "\u0412\u0438\u0439\u0442\u0438",
-      ".toy-empty h3": "\u0422\u0443\u0442 \u043F\u043E\u0447\u0438\u043D\u0430\u0454\u0442\u044C\u0441\u044F \u0457\u0457 \u0436\u0438\u0442\u0442\u044F",
-      ".toy-empty p": "\u041F\u0456\u0434\u043D\u0435\u0441\u0456\u0442\u044C \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0434\u043E NFC-\u043C\u0456\u0442\u043A\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u0430\u0431\u043E \u0432\u0432\u0435\u0434\u0456\u0442\u044C \u043A\u043E\u0434 \u0432\u0440\u0443\u0447\u043D\u0443.",
-      ".nfc-form label span": "NFC-\u043A\u043E\u0434 \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
-      ".nfc-form .button": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
-      '.dashboard-page[data-dashboard-page="orders"] > .button': "\u041E\u0431\u0440\u0430\u0442\u0438 \u043D\u043E\u0432\u0443 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
-      '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "\u0406\u043C'\u044F",
+      "#registerForm > label:nth-of-type(3) > span": "Придумайте пароль",
+      "#registerForm > label:nth-of-type(4) > span": "Повторіть пароль",
+      "#registerForm > label:nth-of-type(5) > span": "Я підтверджую, що акаунтом керує доросла людина",
+      "#registerForm > label:nth-of-type(6) > span": 'Я приймаю <a href="legal.html#terms" target="_blank">умови</a> та <a href="legal.html#privacy" target="_blank">політику конфіденційності</a>',
+      "#registerForm .registration-submit span": "Створити мій світ VIORI",
+      "#registerForm .registration-security": "Ваші дані зашифровані. Ми ніколи не продаємо особисту інформацію.",
+      "#registrationSuccess .eyebrow": "МАЙЖЕ ГОТОВО",
+      "#registrationSuccess h2": "Підтвердіть email",
+      "#registrationSuccess > p:not(.eyebrow)": "Ми надіслали вам захищене посилання. Після підтвердження відкриється ваш особистий світ VIORI.",
+      "#registrationSuccess .button": "Перейти до входу",
+      ".dashboard-head .eyebrow": "МІЙ КАБІНЕТ",
+      ".dashboard-greeting": "Вітаємо,",
+      '.dashboard-tab[data-dashboard-tab="toys"]': "Мої іграшки",
+      '.dashboard-tab[data-dashboard-tab="orders"]': "Замовлення",
+      '.dashboard-tab[data-dashboard-tab="profile"]': "Профіль",
+      "#logoutButton": "Вийти",
+      ".toy-empty h3": "Тут починається її життя",
+      ".toy-empty p": "Піднесіть телефон до NFC-мітки іграшки або введіть код вручну.",
+      ".nfc-form label span": "NFC-код іграшки",
+      ".nfc-form .button": "Додати іграшку",
+      '.dashboard-page[data-dashboard-page="orders"] > .button': "Обрати нову іграшку",
+      '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(1) span': "Ім'я",
       '.dashboard-page[data-dashboard-page="profile"] .profile-card:nth-child(2) span': "Email",
-      ".privacy-note": "\u0412\u0430\u0448 \u043A\u0430\u0431\u0456\u043D\u0435\u0442 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454 \u0456\u0441\u0442\u043E\u0440\u0456\u0457 \u0456\u0433\u0440\u0430\u0448\u043E\u043A, \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u0434\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u043E\u0433\u043E \u0441\u0432\u0456\u0442\u0443 VIORI.",
-      ".admin-heading .eyebrow": "\u041A\u0410\u0422\u0410\u041B\u041E\u0413 VIORI",
-      ".admin-heading h3": "\u0406\u0433\u0440\u0430\u0448\u043A\u0438 \u043D\u0430 \u0441\u0430\u0439\u0442\u0456",
-      ".admin-heading > p:not(.eyebrow)": "\u041E\u043F\u0443\u0431\u043B\u0456\u043A\u043E\u0432\u0430\u043D\u0456 \u043A\u0430\u0440\u0442\u043A\u0438 \u0431\u0430\u0447\u0438\u0442\u044C \u043A\u043E\u0436\u0435\u043D \u0432\u0456\u0434\u0432\u0456\u0434\u0443\u0432\u0430\u0447 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443.",
-      ".image-upload > span": "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F \u0456\u0433\u0440\u0430\u0448\u043A\u0438",
-      ".image-upload small": "JPG, PNG \u0430\u0431\u043E WebP, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 1,5 \u041C\u0411",
-      "#adminProductForm > .button": "\u041E\u043F\u0443\u0431\u043B\u0456\u043A\u0443\u0432\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
-      "#adminProductForm > label:nth-of-type(1) > span": "\u041D\u0430\u0437\u0432\u0430 (RU)",
-      "#adminProductForm > label:nth-of-type(2) > span": "\u041D\u0430\u0437\u0432\u0430 (EN)",
-      ".admin-form-row label:nth-child(1) > span": "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0456\u044F",
-      ".admin-form-row label:nth-child(2) > span": "\u0426\u0456\u043D\u0430 \u0432\u0456\u0434, \u20AC",
-      "#adminProductForm > label:nth-of-type(3) > span": "\u041E\u043F\u0438\u0441 (RU)",
-      "#adminProductForm > label:nth-of-type(4) > span": "\u041E\u043F\u0438\u0441 (EN)",
-      "#adminProductForm select option:nth-child(1)": "\u0422\u0432\u0430\u0440\u0438\u043D\u0438",
-      "#adminProductForm select option:nth-child(2)": "\u041B\u044F\u043B\u044C\u043A\u0438",
-      "#adminProductForm select option:nth-child(3)": "\u0414\u043B\u044F \u043C\u0430\u043B\u044E\u043A\u0456\u0432",
-      ".life-intro .eyebrow": "\u041D\u0415 \u041F\u0420\u041E\u0421\u0422\u041E \u0406\u0413\u0420\u0410\u0428\u041A\u0410",
-      ".life-intro h2": "\u0407\u0457 \u0436\u0438\u0442\u0442\u044F \u043F\u0440\u043E\u0434\u043E\u0432\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0440\u0430\u0437\u043E\u043C \u0437 \u0432\u0430\u043C\u0438",
-      ".life-intro > p:last-child": "\u0423\u0441\u0435\u0440\u0435\u0434\u0438\u043D\u0456 \u043A\u043E\u0436\u043D\u043E\u0457 VIORI \u2014 \u043A\u043B\u044E\u0447 \u0434\u043E \u043E\u0441\u043E\u0431\u0438\u0441\u0442\u043E\u0433\u043E \u0441\u0432\u0456\u0442\u0443 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430. NFC \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0443\u0441\u043A\u043B\u0430\u0434\u043D\u044E\u0454: \u043E\u0434\u0438\u043D \u0434\u043E\u0442\u0438\u043A \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \u0432\u0441\u0435 \u0432\u0430\u0436\u043B\u0438\u0432\u0435.",
-      ".life-step:nth-child(1) h3": "\u0412\u043E\u043D\u0430 \u043D\u0430\u0440\u043E\u0434\u0436\u0443\u0454\u0442\u044C\u0441\u044F",
-      ".life-step:nth-child(1) p": "\u041C\u0430\u0439\u0441\u0442\u0435\u0440 \u0441\u0442\u0432\u043E\u0440\u044E\u0454 \u0456\u0433\u0440\u0430\u0448\u043A\u0443 \u0432\u0440\u0443\u0447\u043D\u0443 \u0439 \u0437\u0430\u043F\u0438\u0441\u0443\u0454 \u043F\u0435\u0440\u0448\u0438\u0439 \u0440\u043E\u0437\u0434\u0456\u043B \u0457\u0457 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
-      ".life-step:nth-child(2) h3": "\u0412\u0438 \u0437\u043D\u0430\u0439\u043E\u043C\u0438\u0442\u0435\u0441\u044F",
-      ".life-step:nth-child(2) p": "\u0410\u043A\u0442\u0438\u0432\u0443\u0439\u0442\u0435 \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0456 \u0434\u0430\u0439\u0442\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0443 \u043C\u0456\u0441\u0446\u0435 \u0443 \u0441\u0432\u043E\u0457\u0439 \u0440\u043E\u0434\u0438\u043D\u0456.",
-      ".life-step:nth-child(3) h3": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F \u0440\u043E\u0441\u0442\u0435",
-      ".life-step:nth-child(3) p": "\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0439\u0442\u0435 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u0457, \u0441\u0456\u043C\u0435\u0439\u043D\u0456 \u0441\u043F\u043E\u0433\u0430\u0434\u0438, \u0430\u0443\u0434\u0456\u043E\u043A\u0430\u0437\u043A\u0438 \u0442\u0430 \u043E\u0441\u043E\u0431\u043B\u0438\u0432\u0456 \u0434\u0430\u0442\u0438.",
-      ".trust-section .section-heading .eyebrow": "\u0421\u041F\u041E\u041A\u0406\u0419 \u0414\u041B\u042F \u0411\u0410\u0422\u042C\u041A\u0406\u0412",
-      ".trust-section .section-heading h2": "\u0421\u0442\u0432\u043E\u0440\u0435\u043D\u043E \u0434\u0431\u0430\u0439\u043B\u0438\u0432\u043E \u0439 \u043F\u0440\u043E\u0437\u043E\u0440\u043E",
-      ".trust-section .section-heading > p": "\u041C\u0438 \u0445\u043E\u0447\u0435\u043C\u043E, \u0449\u043E\u0431 \u0432\u0438 \u0437\u043D\u0430\u043B\u0438 \u0456\u0441\u0442\u043E\u0440\u0456\u044E \u043D\u0435 \u043B\u0438\u0448\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430, \u0430 \u0439 \u043A\u043E\u0436\u043D\u043E\u0433\u043E \u043C\u0430\u0442\u0435\u0440\u0456\u0430\u043B\u0443, \u0437 \u044F\u043A\u043E\u0433\u043E \u0432\u0456\u043D \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u0439.",
-      "#cartTitle": "\u041A\u043E\u0448\u0438\u043A",
-      ".cart-checkout": "\u041E\u0444\u043E\u0440\u043C\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      ".trust-card:nth-child(1) h3": "\u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430",
-      ".trust-card:nth-child(1) p": "\u041A\u043E\u0436\u043D\u0430 \u0434\u0435\u0442\u0430\u043B\u044C \u0441\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u043C\u0438 \u043F\u0430\u0440\u0442\u0456\u044F\u043C\u0438 \u0442\u0430 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u044F\u0454\u0442\u044C\u0441\u044F \u043F\u0435\u0440\u0435\u0434 \u0432\u0456\u0434\u043F\u0440\u0430\u0432\u043A\u043E\u044E.",
-      ".trust-card:nth-child(2) h3": "\u0417\u0440\u043E\u0437\u0443\u043C\u0456\u043B\u0456 \u043C\u0430\u0442\u0435\u0440\u0456\u0430\u043B\u0438",
-      ".trust-card:nth-child(2) p": "\u0421\u043A\u043B\u0430\u0434, \u043D\u0430\u043F\u043E\u0432\u043D\u044E\u0432\u0430\u0447, \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0456\u0457 \u0437 \u0434\u043E\u0433\u043B\u044F\u0434\u0443 \u0442\u0430 \u0432\u0456\u043A\u043E\u0432\u0435 \u043C\u0430\u0440\u043A\u0443\u0432\u0430\u043D\u043D\u044F \u0432\u043A\u0430\u0437\u0430\u043D\u0456 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \u0442\u043E\u0432\u0430\u0440\u0443.",
-      ".trust-card:nth-child(3) h3": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u043F\u0435\u0440\u0435\u0434 \u0432\u0456\u0434\u043F\u0440\u0430\u0432\u043A\u043E\u044E",
-      ".trust-card:nth-child(3) p": "\u041A\u043E\u0436\u043D\u0430 \u0456\u0433\u0440\u0430\u0448\u043A\u0430 \u043E\u0433\u043B\u044F\u0434\u0430\u0454\u0442\u044C\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443: \u043C\u0456\u0446\u043D\u0456\u0441\u0442\u044C \u0448\u0432\u0456\u0432, \u043D\u0430\u0434\u0456\u0439\u043D\u0456\u0441\u0442\u044C \u043A\u0440\u0456\u043F\u043B\u0435\u043D\u043D\u044F \u043E\u0447\u0435\u0439, \u043D\u043E\u0441\u0430 \u0439 \u0434\u0440\u0456\u0431\u043D\u0438\u0445 \u0434\u0435\u0442\u0430\u043B\u0435\u0439.",
-      ".trust-card:nth-child(4) h3": "\u0412\u0456\u043A\u043E\u0432\u0435 \u043C\u0430\u0440\u043A\u0443\u0432\u0430\u043D\u043D\u044F",
-      ".trust-card:nth-child(4) p": "\u0414\u043E \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044F \u043E\u0444\u0456\u0446\u0456\u0439\u043D\u0438\u0445 \u0432\u0438\u043F\u0440\u043E\u0431\u0443\u0432\u0430\u043D\u044C \u0456\u0433\u0440\u0430\u0448\u043A\u0438 \u043D\u0435 \u043F\u0440\u0438\u0437\u043D\u0430\u0447\u0435\u043D\u0456 \u0434\u043B\u044F \u0434\u0456\u0442\u0435\u0439 \u043C\u043E\u043B\u043E\u0434\u0448\u0438\u0445 \u0437\u0430 3 \u0440\u043E\u043A\u0438.",
-      ".faq details:nth-child(1) summary": "\u042F\u043A \u043F\u0440\u0430\u0446\u044E\u0454 NFC?",
-      ".faq details:nth-child(1) p": "\u041F\u0456\u0434\u043D\u0435\u0441\u0456\u0442\u044C \u0441\u0443\u043C\u0456\u0441\u043D\u0438\u0439 \u0442\u0435\u043B\u0435\u0444\u043E\u043D \u0434\u043E \u043C\u0456\u0442\u043A\u0438 \u0432\u0441\u0435\u0440\u0435\u0434\u0438\u043D\u0456 \u0456\u0433\u0440\u0430\u0448\u043A\u0438. \u0407\u0457 \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F \u0431\u0435\u0437 \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0430\u0441\u0442\u043E\u0441\u0443\u043D\u043A\u0443.",
-      ".faq details:nth-child(2) summary": "\u0427\u0438 \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0434\u0438\u0442\u0438\u043D\u0456 \u0430\u043A\u0430\u0443\u043D\u0442?",
-      ".faq details:nth-child(2) p": "\u041D\u0456. \u041A\u0430\u0431\u0456\u043D\u0435\u0442\u043E\u043C \u0456 \u0441\u0456\u043C\u0435\u0439\u043D\u0438\u043C\u0438 \u0434\u0430\u043D\u0438\u043C\u0438 \u043A\u0435\u0440\u0443\u0454 \u0434\u043E\u0440\u043E\u0441\u043B\u0430 \u043B\u044E\u0434\u0438\u043D\u0430.",
-      ".faq details:nth-child(3) summary": "\u0427\u0438 \u043C\u043E\u0436\u043D\u0430 \u043F\u043E\u0434\u0430\u0440\u0443\u0432\u0430\u0442\u0438 \u0430\u0431\u043E \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443?",
-      ".faq details:nth-child(3) p": "\u0422\u0430\u043A. \u0412\u043B\u0430\u0441\u043D\u0438\u043A \u043C\u043E\u0436\u0435 \u0431\u0435\u0437\u043F\u0435\u0447\u043D\u043E \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u0438 \u0446\u0438\u0444\u0440\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0456\u043D\u0448\u0456\u0439 \u0434\u043E\u0440\u043E\u0441\u043B\u0456\u0439 \u043B\u044E\u0434\u0438\u043D\u0456, \u0437\u0431\u0435\u0440\u0456\u0433\u0448\u0438 \u043E\u0431\u0440\u0430\u043D\u0456 \u0440\u043E\u0437\u0434\u0456\u043B\u0438 \u0456\u0441\u0442\u043E\u0440\u0456\u0457.",
-      ".product-specs div:nth-child(1) span": "\u0420\u043E\u0437\u043C\u0456\u0440",
-      "#productModalSize": "\u0431\u043B\u0438\u0437\u044C\u043A\u043E 32 \u0441\u043C",
-      ".product-specs div:nth-child(2) span": "\u0421\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u044F",
-      "#productModalLead": "7\u201314 \u0434\u043D\u0456\u0432",
-      ".product-specs div:nth-child(3) span": "\u0423 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0456",
-      ".product-specs div:nth-child(3) strong": "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
-      ".product-quantity": '\u041A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C <input id="productQuantity" type="number" min="1" value="1">',
-      "#modalAddToCart": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0432 \u043A\u043E\u0448\u0438\u043A",
-      ".product-care": "\u0420\u0443\u0447\u043D\u0430 \u0440\u043E\u0431\u043E\u0442\u0430 \xB7 \u041F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0456\u0437\u0430\u0446\u0456\u044F \xB7 \u041F\u043E\u0434\u0430\u0440\u0443\u043D\u043A\u043E\u0432\u0430 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0430",
-      ".cart-summary span": "\u0420\u0430\u0437\u043E\u043C",
-      ".cart-note": "\u041E\u043F\u043B\u0430\u0442\u0430 \u0431\u0443\u0434\u0435 \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0430 \u043D\u0430 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u043C\u0443 \u0435\u0442\u0430\u043F\u0456. \u041F\u043E\u043A\u0438 \u0449\u043E \u043E\u0444\u043E\u0440\u043C\u0456\u0442\u044C \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0447\u0435\u0440\u0435\u0437 \u0444\u043E\u0440\u043C\u0443 VIORI.",
-      "#checkoutFormView > .eyebrow": "\u041C\u0410\u0419\u0416\u0415 \u0413\u041E\u0422\u041E\u0412\u041E",
-      "#checkoutTitle": "\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u043D\u044F \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      "#checkoutForm .checkout-grid label:nth-child(1) span": "\u041F\u043E\u0432\u043D\u0435 \u0456\u043C'\u044F",
+      ".privacy-note": "Ваш кабінет зберігає історії іграшок, замовлення й доступ до особистого світу VIORI.",
+      ".admin-heading .eyebrow": "КАТАЛОГ VIORI",
+      ".admin-heading h3": "Іграшки на сайті",
+      ".admin-heading > p:not(.eyebrow)": "Опубліковані картки бачить кожен відвідувач каталогу.",
+      ".image-upload > span": "Фотографія іграшки",
+      ".image-upload small": "JPG, PNG або WebP, не більше 1,5 МБ",
+      "#adminProductForm > .button": "Опублікувати іграшку",
+      "#adminProductForm > label:nth-of-type(1) > span": "Назва (RU)",
+      "#adminProductForm > label:nth-of-type(2) > span": "Назва (EN)",
+      ".admin-form-row label:nth-child(1) > span": "Категорія",
+      ".admin-form-row label:nth-child(2) > span": "Ціна від, €",
+      "#adminProductForm > label:nth-of-type(3) > span": "Опис (RU)",
+      "#adminProductForm > label:nth-of-type(4) > span": "Опис (EN)",
+      "#adminProductForm select option:nth-child(1)": "Тварини",
+      "#adminProductForm select option:nth-child(2)": "Ляльки",
+      "#adminProductForm select option:nth-child(3)": "Для малюків",
+      ".life-intro .eyebrow": "НЕ ПРОСТО ІГРАШКА",
+      ".life-intro h2": "Її життя продовжується разом з вами",
+      ".life-intro > p:last-child": "Усередині кожної VIORI — ключ до особистого світу персонажа. NFC нічого не ускладнює: один дотик відкриває все важливе.",
+      ".life-step:nth-child(1) h3": "Вона народжується",
+      ".life-step:nth-child(1) p": "Майстер створює іграшку вручну й записує перший розділ її історії.",
+      ".life-step:nth-child(2) h3": "Ви знайомитеся",
+      ".life-step:nth-child(2) p": "Активуйте захищений NFC-паспорт і дайте персонажу місце у своїй родині.",
+      ".life-step:nth-child(3) h3": "Історія росте",
+      ".life-step:nth-child(3) p": "Зберігайте фотографії, сімейні спогади, аудіоказки та особливі дати.",
+      ".trust-section .section-heading .eyebrow": "СПОКІЙ ДЛЯ БАТЬКІВ",
+      ".trust-section .section-heading h2": "Створено дбайливо й прозоро",
+      ".trust-section .section-heading > p": "Ми хочемо, щоб ви знали історію не лише персонажа, а й кожного матеріалу, з якого він створений.",
+      "#cartTitle": "Кошик",
+      ".cart-checkout": "Оформити замовлення",
+      ".trust-card:nth-child(1) h3": "Ручна робота",
+      ".trust-card:nth-child(1) p": "Кожна деталь створюється невеликими партіями та перевіряється перед відправкою.",
+      ".trust-card:nth-child(2) h3": "Зрозумілі матеріали",
+      ".trust-card:nth-child(2) p": "Склад, наповнювач, рекомендації з догляду та вікове маркування вказані на сторінці товару.",
+      ".trust-card:nth-child(3) h3": "Перевірка перед відправкою",
+      ".trust-card:nth-child(3) p": "Кожна іграшка оглядається вручну: міцність швів, надійність кріплення очей, носа й дрібних деталей.",
+      ".trust-card:nth-child(4) h3": "Вікове маркування",
+      ".trust-card:nth-child(4) p": "До завершення офіційних випробувань іграшки не призначені для дітей молодших за 3 роки.",
+      ".faq details:nth-child(1) summary": "Як працює NFC?",
+      ".faq details:nth-child(1) p": "Піднесіть сумісний телефон до мітки всередині іграшки. Її захищений цифровий паспорт відкриється без встановлення застосунку.",
+      ".faq details:nth-child(2) summary": "Чи потрібен дитині акаунт?",
+      ".faq details:nth-child(2) p": "Ні. Кабінетом і сімейними даними керує доросла людина.",
+      ".faq details:nth-child(3) summary": "Чи можна подарувати або передати іграшку?",
+      ".faq details:nth-child(3) p": "Так. Власник може безпечно передати цифровий паспорт іншій дорослій людині, зберігши обрані розділи історії.",
+      ".product-specs div:nth-child(1) span": "Розмір",
+      "#productModalSize": "близько 32 см",
+      ".product-specs div:nth-child(2) span": "Створення",
+      "#productModalLead": "7–14 днів",
+      ".product-specs div:nth-child(3) span": "У комплекті",
+      ".product-specs div:nth-child(3) strong": "NFC-паспорт",
+      ".product-quantity": 'Кількість <input id="productQuantity" type="number" min="1" value="1">',
+      "#modalAddToCart": "Додати в кошик",
+      ".product-care": "Ручна робота · Персоналізація · Подарункова упаковка",
+      ".cart-summary span": "Разом",
+      ".cart-note": "Оплата буде підключена на наступному етапі. Поки що оформіть замовлення через форму VIORI.",
+      "#checkoutFormView > .eyebrow": "МАЙЖЕ ГОТОВО",
+      "#checkoutTitle": "Оформлення замовлення",
+      "#checkoutForm .checkout-grid label:nth-child(1) span": "Повне ім'я",
       "#checkoutForm .checkout-grid label:nth-child(2) span": "Email",
-      "#checkoutForm .checkout-grid label:nth-child(3) span": "\u0422\u0435\u043B\u0435\u0444\u043E\u043D",
-      "#checkoutForm .checkout-grid label:nth-child(4) span": "\u0412\u0443\u043B\u0438\u0446\u044F \u0442\u0430 \u043D\u043E\u043C\u0435\u0440 \u0431\u0443\u0434\u0438\u043D\u043A\u0443",
-      "#checkoutForm .checkout-grid label:nth-child(5) span": "\u0406\u043D\u0434\u0435\u043A\u0441",
-      "#checkoutForm .checkout-grid label:nth-child(6) span": "\u041C\u0456\u0441\u0442\u043E",
-      ".delivery-options legend": "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430",
-      ".delivery-options label:nth-of-type(1) strong": "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430",
-      ".delivery-options label:nth-of-type(1) small": "2\u20133 \u0440\u043E\u0431\u043E\u0447\u0456 \u0434\u043D\u0456 \u043F\u0456\u0441\u043B\u044F \u0432\u0438\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      ".delivery-options label:nth-of-type(2) strong": "\u0421\u0430\u043C\u043E\u0432\u0438\u0432\u0456\u0437",
-      ".delivery-options label:nth-of-type(2) small": "\u0417\u0430 \u043F\u043E\u043F\u0435\u0440\u0435\u0434\u043D\u044C\u043E\u044E \u0434\u043E\u043C\u043E\u0432\u043B\u0435\u043D\u0456\u0441\u0442\u044E",
-      ".delivery-options label:nth-of-type(2) b": "\u0411\u0435\u0437\u043A\u043E\u0448\u0442\u043E\u0432\u043D\u043E",
-      ".checkout-total span": "\u0414\u043E \u0441\u043F\u043B\u0430\u0442\u0438",
-      ".payment-preview > span": "\u0421\u043F\u043E\u0441\u0456\u0431 \u043E\u043F\u043B\u0430\u0442\u0438",
-      ".payment-preview small": "\u0411\u0435\u0437\u043F\u0435\u0447\u043D\u0430 \u043E\u043D\u043B\u0430\u0439\u043D-\u043E\u043F\u043B\u0430\u0442\u0430 \u0431\u0443\u0434\u0435 \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0430 \u043F\u0435\u0440\u0435\u0434 \u0440\u0435\u043B\u0456\u0437\u043E\u043C.",
-      ".checkout-consent span": "\u042F \u043F\u0440\u0438\u0439\u043C\u0430\u044E \u0443\u043C\u043E\u0432\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0442\u0430 \u043F\u043E\u043B\u0456\u0442\u0438\u043A\u0443 \u043A\u043E\u043D\u0444\u0456\u0434\u0435\u043D\u0446\u0456\u0439\u043D\u043E\u0441\u0442\u0456",
-      "#checkoutForm > .button": "\u041F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0431\u0435\u0437 \u043E\u043F\u043B\u0430\u0442\u0438",
-      "#checkoutSuccess .eyebrow": "\u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F \u0421\u0422\u0412\u041E\u0420\u0415\u041D\u041E",
-      "#checkoutSuccess h2": "\u0414\u044F\u043A\u0443\u0454\u043C\u043E!",
-      "#checkoutSuccess > p:nth-of-type(3)": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u0435 \u0443 \u0432\u0430\u0448\u043E\u043C\u0443 \u043A\u0430\u0431\u0456\u043D\u0435\u0442\u0456. \u041F\u0456\u0441\u043B\u044F \u043F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043D\u044F \u043E\u043F\u043B\u0430\u0442\u0438 \u043F\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043D\u043D\u044F \u043D\u0430\u0434\u0445\u043E\u0434\u0438\u0442\u0438\u043C\u0435 \u0439 \u043D\u0430 \u043F\u043E\u0448\u0442\u0443.",
-      "#checkoutSuccess > .button": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438",
-      ".admin-orders-heading .eyebrow": "\u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F",
-      ".admin-orders-heading h3": "\u041E\u0441\u0442\u0430\u043D\u043D\u0456 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      ".passport-content > .eyebrow": "\u0407\u0407 \u041E\u0421\u041E\u0411\u0418\u0421\u0422\u0410 \u0406\u0421\u0422\u041E\u0420\u0406\u042F",
-      ".passport-facts div:nth-child(1) span": "\u0414\u0435\u043D\u044C \u043D\u0430\u0440\u043E\u0434\u0436\u0435\u043D\u043D\u044F",
-      ".passport-facts div:nth-child(2) span": "\u0421\u0442\u0430\u0442\u0443\u0441",
-      ".passport-facts div:nth-child(2) strong": "\u0427\u0430\u0441\u0442\u0438\u043D\u0430 \u0432\u0430\u0448\u043E\u0457 \u0440\u043E\u0434\u0438\u043D\u0438",
-      ".memory-form h3": "\u0414\u043E\u0434\u0430\u0442\u0438 \u043D\u043E\u0432\u0438\u0439 \u0440\u043E\u0437\u0434\u0456\u043B",
-      ".memory-form label:nth-of-type(1) span": "\u041D\u0430\u0437\u0432\u0430 \u043F\u043E\u0434\u0456\u0457",
-      ".memory-form label:nth-of-type(2) span": "\u0421\u043F\u043E\u0433\u0430\u0434",
-      ".memory-form .button": "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0432 \u0456\u0441\u0442\u043E\u0440\u0456\u0457",
-      ".nfc-admin-heading .eyebrow": "NFC-\u041F\u0410\u0421\u041F\u041E\u0420\u0422\u0418",
-      ".nfc-admin-heading h3": "\u0412\u0438\u043F\u0443\u0441\u0442\u0438\u0442\u0438 \u043D\u043E\u0432\u0438\u0439 \u043F\u0430\u0441\u043F\u043E\u0440\u0442",
-      ".nfc-admin-heading > p:last-child": "\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0437\u0430\u0445\u0438\u0449\u0435\u043D\u0438\u0439 \u043A\u043E\u0434 \u0434\u043B\u044F \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0457 \u0456\u0433\u0440\u0430\u0448\u043A\u0438. \u0410\u043A\u0442\u0438\u0432\u0443\u0432\u0430\u0442\u0438 \u0439\u043E\u0433\u043E \u0437\u043C\u043E\u0436\u0435 \u043B\u0438\u0448\u0435 \u043E\u0434\u0438\u043D \u043A\u043B\u0456\u0454\u043D\u0442.",
-      ".nfc-issue-form .admin-form-row label:nth-child(1) span": "\u0406\u043C'\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430 (RU)",
-      ".nfc-issue-form .admin-form-row label:nth-child(2) span": "\u0406\u043C'\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430 (EN)",
-      ".nfc-issue-form > label span": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043A\u043B\u0456\u0454\u043D\u0442\u0430",
-      ".nfc-issue-form > label small": "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0437\u0432'\u044F\u0436\u0435\u0442\u044C\u0441\u044F \u0437 \u0446\u0438\u043C \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F\u043C \u2014 \u043D\u043E\u043C\u0435\u0440 \u0432\u0432\u043E\u0434\u0438\u0442\u0438 \u043D\u0435 \u0442\u0440\u0435\u0431\u0430",
-      ".nfc-issue-form .button": "\u0421\u0442\u0432\u043E\u0440\u0438\u0442\u0438 NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442",
-      "#cookieTitle": "\u0412\u0430\u0448 \u0432\u0438\u0431\u0456\u0440 \u0449\u043E\u0434\u043E \u043F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u0456",
-      "#cookieBanner p": "\u041D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0435 \u0441\u0445\u043E\u0432\u0438\u0449\u0435 \u0442\u0440\u0438\u043C\u0430\u0454 \u043C\u043E\u0432\u0443, \u043A\u043E\u0448\u0438\u043A \u0456 \u0432\u0445\u0456\u0434. \u041D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u0430 \u0430\u043D\u0430\u043B\u0456\u0442\u0438\u043A\u0430 \u0432\u043C\u0438\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043B\u0438\u0448\u0435 \u0437\u0430 \u0432\u0430\u0448\u043E\u044E \u0437\u0433\u043E\u0434\u043E\u044E.",
-      "#cookieBanner > div:first-child > a": "\u0414\u043E\u043A\u043B\u0430\u0434\u043D\u0456\u0448\u0435",
-      "#essentialCookies": "\u041B\u0438\u0448\u0435 \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0456",
-      "#acceptCookies": "\u0414\u043E\u0437\u0432\u043E\u043B\u0438\u0442\u0438 \u0430\u043D\u0430\u043B\u0456\u0442\u0438\u043A\u0443",
-      ".footer-legal a:nth-child(1)": "\u0423\u043C\u043E\u0432\u0438",
-      ".footer-legal a:nth-child(2)": "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u0456\u0441\u0442\u044C",
-      ".footer-legal a:nth-child(3)": "\u041F\u043E\u0432\u0435\u0440\u043D\u0435\u043D\u043D\u044F",
-      ".footer-legal a:nth-child(4)": "\u0411\u0435\u0437\u043F\u0435\u043A\u0430",
-      "#openCancellation": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+      "#checkoutForm .checkout-grid label:nth-child(3) span": "Телефон",
+      "#checkoutForm .checkout-grid label:nth-child(4) span": "Вулиця та номер будинку",
+      "#checkoutForm .checkout-grid label:nth-child(5) span": "Індекс",
+      "#checkoutForm .checkout-grid label:nth-child(6) span": "Місто",
+      ".delivery-options legend": "Доставка",
+      ".delivery-options label:nth-of-type(1) strong": "Стандартна доставка",
+      ".delivery-options label:nth-of-type(1) small": "2–3 робочі дні після виготовлення",
+      ".delivery-options label:nth-of-type(2) strong": "Самовивіз",
+      ".delivery-options label:nth-of-type(2) small": "За попередньою домовленістю",
+      ".delivery-options label:nth-of-type(2) b": "Безкоштовно",
+      ".checkout-total span": "До сплати",
+      ".payment-preview > span": "Спосіб оплати",
+      ".payment-preview small": "Безпечна онлайн-оплата буде підключена перед релізом.",
+      ".checkout-consent span": "Я приймаю умови замовлення та політику конфіденційності",
+      "#checkoutForm > .button": "Підтвердити замовлення без оплати",
+      "#checkoutSuccess .eyebrow": "ЗАМОВЛЕННЯ СТВОРЕНО",
+      "#checkoutSuccess h2": "Дякуємо!",
+      "#checkoutSuccess > p:nth-of-type(3)": "Замовлення збережене у вашому кабінеті. Після підключення оплати підтвердження надходитиме й на пошту.",
+      "#checkoutSuccess > .button": "Продовжити",
+      ".admin-orders-heading .eyebrow": "ЗАМОВЛЕННЯ",
+      ".admin-orders-heading h3": "Останні замовлення",
+      ".passport-content > .eyebrow": "ЇЇ ОСОБИСТА ІСТОРІЯ",
+      ".passport-facts div:nth-child(1) span": "День народження",
+      ".passport-facts div:nth-child(2) span": "Статус",
+      ".passport-facts div:nth-child(2) strong": "Частина вашої родини",
+      ".memory-form h3": "Додати новий розділ",
+      ".memory-form label:nth-of-type(1) span": "Назва події",
+      ".memory-form label:nth-of-type(2) span": "Спогад",
+      ".memory-form .button": "Зберегти в історії",
+      ".nfc-admin-heading .eyebrow": "NFC-ПАСПОРТИ",
+      ".nfc-admin-heading h3": "Випустити новий паспорт",
+      ".nfc-admin-heading > p:last-child": "Створіть захищений код для конкретної іграшки. Активувати його зможе лише один клієнт.",
+      ".nfc-issue-form .admin-form-row label:nth-child(1) span": "Ім'я персонажа (RU)",
+      ".nfc-issue-form .admin-form-row label:nth-child(2) span": "Ім'я персонажа (EN)",
+      ".nfc-issue-form > label span": "Замовлення клієнта",
+      ".nfc-issue-form > label small": "Паспорт зв'яжеться з цим замовленням — номер вводити не треба",
+      ".nfc-issue-form .button": "Створити NFC-паспорт",
+      "#cookieTitle": "Ваш вибір щодо приватності",
+      "#cookieBanner p": "Необхідне сховище тримає мову, кошик і вхід. Необов'язкова аналітика вмикається лише за вашою згодою.",
+      "#cookieBanner > div:first-child > a": "Докладніше",
+      "#essentialCookies": "Лише необхідні",
+      "#acceptCookies": "Дозволити аналітику",
+      ".footer-legal a:nth-child(1)": "Умови",
+      ".footer-legal a:nth-child(2)": "Приватність",
+      ".footer-legal a:nth-child(3)": "Повернення",
+      ".footer-legal a:nth-child(4)": "Безпека",
+      "#openCancellation": "Скасувати замовлення",
       "#openCookieSettings": "Cookies",
-      "#cancellationFormView > .eyebrow": "\u041F\u0420\u0410\u0412\u041E \u041D\u0410 \u0421\u041A\u0410\u0421\u0423\u0412\u0410\u041D\u041D\u042F",
-      "#cancellationTitle": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      "#cancellationFormView > p:not(.eyebrow)": "\u041D\u0430\u0434\u0456\u0448\u043B\u0456\u0442\u044C \u0437\u0430\u043F\u0438\u0442 \u2014 \u043C\u0438 \u0437\u0430\u0444\u0456\u043A\u0441\u0443\u0454\u043C\u043E \u0439\u043E\u0433\u043E \u0434\u0430\u0442\u0443 \u0439 \u0437\u0432'\u044F\u0436\u0435\u043C\u043E\u0441\u044F \u0437 \u0432\u0430\u043C\u0438 \u043F\u0456\u0441\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \u0441\u0442\u0430\u0442\u0443\u0441\u0443 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F.",
-      "#cancellationForm label:nth-of-type(1) span": "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      "#cancellationForm label:nth-of-type(2) span": "Email \u0456\u0437 \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      "#cancellationForm label:nth-of-type(3) span": "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 (\u043D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u043E)",
-      "#cancellationForm .button": "\u041D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438 \u0437\u0430\u043F\u0438\u0442 \u043D\u0430 \u0441\u043A\u0430\u0441\u0443\u0432\u0430\u043D\u043D\u044F",
-      "#cancellationSuccess .eyebrow": "\u0417\u0410\u041F\u0418\u0422 \u041E\u0422\u0420\u0418\u041C\u0410\u041D\u041E",
-      "#cancellationSuccess h2": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u043D\u043D\u044F \u0437\u0430\u0444\u0456\u043A\u0441\u043E\u0432\u0430\u043D\u043E",
-      "#cancellationSuccess .button": "\u0417\u0430\u043A\u0440\u0438\u0442\u0438",
-      '.dashboard-tab[data-dashboard-tab="admin-orders"]': "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "\u041A\u0430\u0442\u0430\u043B\u043E\u0433",
-      '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u0438",
-      ".admin-metrics article:nth-child(1) span": "\u041D\u043E\u0432\u0456",
-      ".admin-metrics article:nth-child(1) small": "\u043F\u043E\u0442\u0440\u0435\u0431\u0443\u044E\u0442\u044C \u0443\u0432\u0430\u0433\u0438",
-      ".admin-metrics article:nth-child(2) span": "\u0417\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-      ".admin-metrics article:nth-child(2) small": "\u0437\u0430 \u0432\u0435\u0441\u044C \u0447\u0430\u0441",
-      ".admin-metrics article:nth-child(3) span": "\u0422\u043E\u0432\u0430\u0440\u0438",
-      ".admin-metrics article:nth-child(3) small": "\u0443 \u043A\u0430\u0442\u0430\u043B\u043E\u0437\u0456",
-      ".admin-metrics article:nth-child(4) small": "\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u0456\u0432 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E",
-      "#adminAddProductToggle": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0456\u0433\u0440\u0430\u0448\u043A\u0443",
-      '.dashboard-tab[data-dashboard-tab="admin-requests"]': "\u0417\u0430\u044F\u0432\u043A\u0438",
-      '[data-dashboard-page="admin-requests"] .eyebrow': "\u0406\u041D\u0414\u0418\u0412\u0406\u0414\u0423\u0410\u041B\u042C\u041D\u0406 \u0417\u0410\u041C\u041E\u0412\u041B\u0415\u041D\u041D\u042F",
-      '[data-dashboard-page="admin-requests"] h3': "\u0417\u0430\u044F\u0432\u043A\u0438 \u0437 \u0441\u0430\u0439\u0442\u0443",
-      '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u043B\u0435\u043D\u043D\u044F \u0437 \u0444\u043E\u0440\u043C\u0438 \xAB\u0421\u0442\u0432\u043E\u0440\u0456\u0442\u044C \u0456\u0433\u0440\u0430\u0448\u043A\u0443 \u0437\u0430 \u0441\u0432\u043E\u0454\u044E \u0456\u0434\u0435\u0454\u044E\xBB \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0437\u0456."
+      "#cancellationFormView > .eyebrow": "ПРАВО НА СКАСУВАННЯ",
+      "#cancellationTitle": "Скасувати замовлення",
+      "#cancellationFormView > p:not(.eyebrow)": "Надішліть запит — ми зафіксуємо його дату й зв'яжемося з вами після перевірки статусу замовлення.",
+      "#cancellationForm label:nth-of-type(1) span": "Номер замовлення",
+      "#cancellationForm label:nth-of-type(2) span": "Email із замовлення",
+      "#cancellationForm label:nth-of-type(3) span": "Причина (необов'язково)",
+      "#cancellationForm .button": "Надіслати запит на скасування",
+      "#cancellationSuccess .eyebrow": "ЗАПИТ ОТРИМАНО",
+      "#cancellationSuccess h2": "Скасування зафіксовано",
+      "#cancellationSuccess .button": "Закрити",
+      '.dashboard-tab[data-dashboard-tab="admin-orders"]': "Замовлення",
+      '.dashboard-tab[data-dashboard-tab="admin-catalog"]': "Каталог",
+      '.dashboard-tab[data-dashboard-tab="admin-nfc"]': "NFC-паспорти",
+      ".admin-metrics article:nth-child(1) span": "Нові",
+      ".admin-metrics article:nth-child(1) small": "потребують уваги",
+      ".admin-metrics article:nth-child(2) span": "Замовлення",
+      ".admin-metrics article:nth-child(2) small": "за весь час",
+      ".admin-metrics article:nth-child(3) span": "Товари",
+      ".admin-metrics article:nth-child(3) small": "у каталозі",
+      ".admin-metrics article:nth-child(4) small": "паспортів випущено",
+      "#adminAddProductToggle": "Додати іграшку",
+      '.dashboard-tab[data-dashboard-tab="admin-requests"]': "Заявки",
+      '[data-dashboard-page="admin-requests"] .eyebrow': "ІНДИВІДУАЛЬНІ ЗАМОВЛЕННЯ",
+      '[data-dashboard-page="admin-requests"] h3': "Заявки з сайту",
+      '[data-dashboard-page="admin-requests"] .admin-heading > p:not(.eyebrow)': "Повідомлення з форми «Створіть іграшку за своєю ідеєю» в каталозі."
     },
     nl: {
-      "title": "VIORI \u2014 handgemaakte gehaakte knuffels",
+      "title": "VIORI — handgemaakte gehaakte knuffels",
       'meta[name="description"]': "VIORI maakt handgemaakte knuffels met een eigen karakter, verhaal en digitaal NFC-paspoort.",
       ".main-nav a:nth-child(1)": "Knuffels",
       ".main-nav a:nth-child(2)": "Catalogus",
       ".main-nav a:nth-child(3)": "Over VIORI",
       ".main-nav a:nth-child(4)": "Contact",
       ".account-button-text": "Mijn account",
-      ".hero-copy .eyebrow": "VIORI \xB7 MET DE HAND GEMAAKT",
+      ".hero-copy .eyebrow": "VIORI · MET DE HAND GEMAAKT",
       ".hero-copy h1": "Elke knuffel <em>heeft een eigen leven</em>",
       ".hero-text": "Elke VIORI wordt met de hand gemaakt en krijgt een naam, karakter en uniek digitaal paspoort. Tik met je telefoon op de NFC-tag en ontdek het verhaal en de herinneringen.",
       ".hero-actions .button": "Bekijk de knuffels",
-      ".hero-actions .text-link": "Laat jouw idee maken <span>\u2192</span>",
+      ".hero-actions .text-link": "Laat jouw idee maken <span>→</span>",
       "#catalog .section-heading .eyebrow": "Een kleine collectie",
       "#catalog .section-heading h2": "VIORI-knuffels",
       "#catalog .section-heading > p": "Ontdek handgemaakte personages met een eigen digitaal verhaal.",
@@ -20742,27 +20742,27 @@ ${suffix}`;
       ".checkout-total span": "Totaal"
     },
     de: {
-      "title": "VIORI \u2014 handgefertigte H\xE4keltiere",
+      "title": "VIORI — handgefertigte Häkeltiere",
       'meta[name="description"]': "VIORI fertigt handgemachte Kuscheltiere mit eigenem Charakter, eigener Geschichte und digitalem NFC-Pass.",
       ".main-nav a:nth-child(1)": "Kuscheltiere",
       ".main-nav a:nth-child(2)": "Katalog",
-      ".main-nav a:nth-child(3)": "\xDCber VIORI",
+      ".main-nav a:nth-child(3)": "Über VIORI",
       ".main-nav a:nth-child(4)": "Kontakt",
       ".account-button-text": "Mein Konto",
-      ".hero-copy .eyebrow": "VIORI \xB7 VON HAND GEFERTIGT",
+      ".hero-copy .eyebrow": "VIORI · VON HAND GEFERTIGT",
       ".hero-copy h1": "Jedes Kuscheltier <em>hat ein eigenes Leben</em>",
-      ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erh\xE4lt einen Namen, einen Charakter und einen digitalen Pass. Ber\xFChre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
+      ".hero-text": "Jede VIORI-Figur wird von Hand gefertigt und erhält einen Namen, einen Charakter und einen digitalen Pass. Berühre den NFC-Tag mit deinem Smartphone und entdecke ihre Geschichte.",
       ".hero-actions .button": "Kuscheltiere ansehen",
-      ".hero-actions .text-link": "Eigene Idee anfragen <span>\u2192</span>",
+      ".hero-actions .text-link": "Eigene Idee anfragen <span>→</span>",
       "#catalog .section-heading .eyebrow": "Eine kleine Kollektion",
       "#catalog .section-heading h2": "VIORI-Kuscheltiere",
       "#catalog .section-heading > p": "Entdecke handgefertigte Charaktere mit ihrer eigenen digitalen Geschichte.",
       '.filters [data-filter="all"]': "Alle",
       '.filters [data-filter="animals"]': "Tiere",
       '.filters [data-filter="dolls"]': "Puppen",
-      '.filters [data-filter="baby"]': "F\xFCr Babys",
-      "#about .eyebrow": "\xDCber das Atelier",
-      "#about h2": "Jede Masche erz\xE4hlt eine Geschichte",
+      '.filters [data-filter="baby"]': "Für Babys",
+      "#about .eyebrow": "Über das Atelier",
+      "#about h2": "Jede Masche erzählt eine Geschichte",
       "#contacts .eyebrow": "VIORI kontaktieren",
       "#contacts h2": "Lass uns ein besonderes Kuscheltier erschaffen",
       ".form-submit": "Anfrage senden",
@@ -20779,45 +20779,45 @@ ${suffix}`;
       "#logoutButton": "Abmelden",
       ".cart-checkout": "Zur Bestellung",
       "#cartTitle": "Warenkorb",
-      "#checkoutTitle": "Bestellung abschlie\xDFen",
+      "#checkoutTitle": "Bestellung abschließen",
       ".checkout-total span": "Gesamt"
     },
     fr: {
-      "title": "VIORI \u2014 peluches au crochet faites main",
-      'meta[name="description"]': "VIORI cr\xE9e des peluches faites main avec leur propre caract\xE8re, leur histoire et un passeport NFC num\xE9rique.",
+      "title": "VIORI — peluches au crochet faites main",
+      'meta[name="description"]': "VIORI crée des peluches faites main avec leur propre caractère, leur histoire et un passeport NFC numérique.",
       ".main-nav a:nth-child(1)": "Peluches",
       ".main-nav a:nth-child(2)": "Catalogue",
-      ".main-nav a:nth-child(3)": "\xC0 propos",
+      ".main-nav a:nth-child(3)": "À propos",
       ".main-nav a:nth-child(4)": "Contact",
       ".account-button-text": "Mon compte",
-      ".hero-copy .eyebrow": "VIORI \xB7 CR\xC9\xC9 \xC0 LA MAIN",
+      ".hero-copy .eyebrow": "VIORI · CRÉÉ À LA MAIN",
       ".hero-copy h1": "Chaque peluche <em>a sa propre vie</em>",
-      ".hero-text": "Chaque VIORI est cr\xE9\xE9e \xE0 la main et re\xE7oit un nom, un caract\xE8re et un passeport num\xE9rique unique. Touchez la puce NFC avec votre t\xE9l\xE9phone pour d\xE9couvrir son histoire.",
+      ".hero-text": "Chaque VIORI est créée à la main et reçoit un nom, un caractère et un passeport numérique unique. Touchez la puce NFC avec votre téléphone pour découvrir son histoire.",
       ".hero-actions .button": "Voir les peluches",
-      ".hero-actions .text-link": "Cr\xE9er votre id\xE9e <span>\u2192</span>",
+      ".hero-actions .text-link": "Créer votre idée <span>→</span>",
       "#catalog .section-heading .eyebrow": "Une petite collection",
       "#catalog .section-heading h2": "Peluches VIORI",
-      "#catalog .section-heading > p": "D\xE9couvrez des personnages faits main avec leur propre histoire num\xE9rique.",
+      "#catalog .section-heading > p": "Découvrez des personnages faits main avec leur propre histoire numérique.",
       '.filters [data-filter="all"]': "Toutes",
       '.filters [data-filter="animals"]': "Animaux",
-      '.filters [data-filter="dolls"]': "Poup\xE9es",
-      '.filters [data-filter="baby"]': "Pour b\xE9b\xE9s",
-      "#about .eyebrow": "\xC0 propos de l\u2019atelier",
+      '.filters [data-filter="dolls"]': "Poupées",
+      '.filters [data-filter="baby"]': "Pour bébés",
+      "#about .eyebrow": "À propos de l’atelier",
       "#about h2": "Chaque maille raconte une histoire",
       "#contacts .eyebrow": "Contacter VIORI",
-      "#contacts h2": "Cr\xE9ons une peluche exceptionnelle",
+      "#contacts h2": "Créons une peluche exceptionnelle",
       ".form-submit": "Envoyer la demande",
       ".auth-view > .eyebrow": "VIORI WORLD",
       "#accountTitle": "La vie de votre peluche",
       '.auth-tab[data-auth-tab="login"]': "Connexion",
       '.auth-tab[data-auth-tab="register"]': "Inscription",
       "#loginForm .button": "Se connecter",
-      "#registerForm .button": "Cr\xE9er un compte",
+      "#registerForm .button": "Créer un compte",
       ".dashboard-head .eyebrow": "MON COMPTE",
       '.dashboard-tab[data-dashboard-tab="toys"]': "Mes peluches",
       '.dashboard-tab[data-dashboard-tab="orders"]': "Commandes",
       '.dashboard-tab[data-dashboard-tab="profile"]': "Profil",
-      "#logoutButton": "D\xE9connexion",
+      "#logoutButton": "Déconnexion",
       ".cart-checkout": "Finaliser la commande",
       "#cartTitle": "Panier",
       "#checkoutTitle": "Finaliser la commande",
@@ -20836,7 +20836,7 @@ ${suffix}`;
   var languageButtons = document.querySelectorAll(".language-button");
   var languageSwitcher = document.querySelector(".language-switcher");
   var languageMenuButton = document.getElementById("languageMenuButton");
-  var languageLabels = { ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439", uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Fran\xE7ais" };
+  var languageLabels = { ru: "Русский", uk: "Українська", en: "English", nl: "Nederlands", de: "Deutsch", fr: "Français" };
   var currentLanguage = "ru";
   function setLanguage(language) {
     currentLanguage = ["ru", "uk", "en", "nl", "de", "fr"].includes(language) ? language : "ru";
@@ -20856,16 +20856,16 @@ ${suffix}`;
     document.querySelector(".order-product")?.setAttribute("data-product", bunnyName || "");
     const nameInput = document.querySelector('input[name="name"]');
     const messageInput = document.querySelector('textarea[name="message"]');
-    nameInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0410\u043D\u043D\u0430");
-    messageInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "Tell us your preferred colour, size and any other details" : "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0446\u0432\u0435\u0442, \u0440\u0430\u0437\u043C\u0435\u0440 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0434\u0435\u0442\u0430\u043B\u0438");
-    document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
-    document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "\u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432");
-    document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0410\u043D\u043D\u0430");
-    document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, VIORI-MIA-001" : "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, VIORI-MIA-001");
-    document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage !== "ru" ? "VIORI \u2014 home" : "VIORI \u2014 \u0433\u043B\u0430\u0432\u043D\u0430\u044F");
-    mainNav?.setAttribute("aria-label", currentLanguage !== "ru" ? "Main navigation" : "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044F");
-    menuButton?.setAttribute("aria-label", currentLanguage !== "ru" ? "Open menu" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E");
-    document.querySelector(".language-switcher")?.setAttribute("aria-label", currentLanguage !== "ru" ? "Choose language" : "\u0412\u044B\u0431\u043E\u0440 \u044F\u0437\u044B\u043A\u0430");
+    nameInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
+    messageInput?.setAttribute("placeholder", currentLanguage !== "ru" ? "Tell us your preferred colour, size and any other details" : "Напишите желаемый цвет, размер и другие детали");
+    document.querySelector('#loginForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "Не менее 8 символов");
+    document.querySelector('#registerForm input[name="password"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "At least 8 characters" : "Не менее 8 символов");
+    document.querySelector('#registerForm input[name="name"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, Anna" : "Например, Анна");
+    document.querySelector('#nfcForm input[name="code"]')?.setAttribute("placeholder", currentLanguage !== "ru" ? "For example, VIORI-MIA-001" : "Например, VIORI-MIA-001");
+    document.querySelector(".brand")?.setAttribute("aria-label", currentLanguage !== "ru" ? "VIORI — home" : "VIORI — главная");
+    mainNav?.setAttribute("aria-label", currentLanguage !== "ru" ? "Main navigation" : "Основная навигация");
+    menuButton?.setAttribute("aria-label", currentLanguage !== "ru" ? "Open menu" : "Открыть меню");
+    document.querySelector(".language-switcher")?.setAttribute("aria-label", currentLanguage !== "ru" ? "Choose language" : "Выбор языка");
     languageButtons.forEach((button) => {
       const active = button.dataset.language === currentLanguage;
       button.classList.toggle("active", active);
@@ -20969,15 +20969,15 @@ ${suffix}`;
       `Toy: ${data.get("product")}`,
       `Preferences: ${data.get("message") || "not specified"}`
     ].join("\n") : [
-      "\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435! \u0425\u043E\u0447\u0443 \u0437\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u0438\u0433\u0440\u0443\u0448\u043A\u0443 VIORI.",
+      "Здравствуйте! Хочу заказать игрушку VIORI.",
       "",
-      `\u0418\u043C\u044F: ${data.get("name")}`,
-      `\u041A\u043E\u043D\u0442\u0430\u043A\u0442: ${data.get("contact")}`,
-      `\u0418\u0433\u0440\u0443\u0448\u043A\u0430: ${data.get("product")}`,
-      `\u041F\u043E\u0436\u0435\u043B\u0430\u043D\u0438\u044F: ${data.get("message") || "\u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u044B"}`
+      `Имя: ${data.get("name")}`,
+      `Контакт: ${data.get("contact")}`,
+      `Игрушка: ${data.get("product")}`,
+      `Пожелания: ${data.get("message") || "не указаны"}`
     ].join("\n");
     if (WHATSAPP_NUMBER === "31000000000") {
-      if (formStatus) formStatus.textContent = currentLanguage !== "ru" ? "The form works. Add the real WhatsApp number in script.js before publishing." : "\u0424\u043E\u0440\u043C\u0430 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442. \u041F\u0435\u0440\u0435\u0434 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0435\u0439 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0438\u0439 \u043D\u043E\u043C\u0435\u0440 WhatsApp \u0432 \u0444\u0430\u0439\u043B\u0435 script.js.";
+      if (formStatus) formStatus.textContent = currentLanguage !== "ru" ? "The form works. Add the real WhatsApp number in script.js before publishing." : "Форма работает. Перед публикацией укажите настоящий номер WhatsApp в файле script.js.";
       return;
     }
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -21064,7 +21064,7 @@ ${suffix}`;
         card.dataset.category = product.category;
         const activeFilter = document.querySelector(".filter.active")?.dataset.filter || "all";
         card.classList.toggle("hidden", activeFilter !== "all" && activeFilter !== product.category);
-        card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage !== "ru" ? "Crochet toy" : "\u0412\u044F\u0437\u0430\u043D\u0430\u044F \u0438\u0433\u0440\u0443\u0448\u043A\u0430"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage !== "ru" ? "from" : "\u043E\u0442"} \u20AC${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Details" : "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"}</button></div>`;
+        card.innerHTML = `<div class="product-image"><img src="${product.image}" alt="${safeText(name)}"></div><div class="product-info"><div><p class="product-type">${currentLanguage !== "ru" ? "Crochet toy" : "Вязаная игрушка"}</p><h3>${safeText(name)}</h3></div><p class="price">${currentLanguage !== "ru" ? "from" : "от"} €${product.price}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button view-product" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Details" : "Подробнее"}</button><button class="card-button add-to-cart" type="button" data-catalog-product="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "В корзину"}</button></div>`;
         grid.appendChild(card);
         const option = document.createElement("option");
         option.dataset.adminProduct = product.id;
@@ -21112,7 +21112,7 @@ ${suffix}`;
     }, openProduct2 = function(product) {
       activeShopProduct = product;
       document.getElementById("productModalName").textContent = product.name;
-      document.getElementById("productModalPrice").textContent = `${currentLanguage !== "ru" ? "from" : "\u043E\u0442"} \u20AC${product.price}`;
+      document.getElementById("productModalPrice").textContent = `${currentLanguage !== "ru" ? "from" : "от"} €${product.price}`;
       document.getElementById("productModalDescription").textContent = product.description;
       const image = document.getElementById("productModalImage");
       image.style.backgroundImage = product.image ? `url("${product.image}")` : "linear-gradient(145deg,#e9d6c6,#f9eee5)";
@@ -21136,9 +21136,9 @@ ${suffix}`;
       const cart = getCart2();
       const items = cart.map((item) => ({ item, product: resolveShopProductById2(item.id) })).filter((entry) => Boolean(entry.product));
       document.getElementById("cartCount").textContent = String(items.reduce((sum, entry) => sum + entry.item.quantity, 0));
-      document.getElementById("cartTotal").textContent = `\u20AC${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
+      document.getElementById("cartTotal").textContent = `€${items.reduce((sum, entry) => sum + entry.product.price * entry.item.quantity, 0)}`;
       const container = document.getElementById("cartItems");
-      container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} \xD7 \u20AC${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage !== "ru" ? "Remove" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}">\xD7</button></article>`).join("") : `<div class="cart-empty">${currentLanguage !== "ru" ? "Your future character is waiting for you." : "\u0412\u0430\u0448 \u0431\u0443\u0434\u0443\u0449\u0438\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0436\u0434\u0451\u0442 \u0432\u0441\u0442\u0440\u0435\u0447\u0438 \u0441 \u0432\u0430\u043C\u0438."}</div>`;
+      container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div class="cart-item-image"${product.image ? ` style="background-image:url('${product.image}')"` : ""}></div><div><strong>${safeText(product.name)}</strong><span>${item.quantity} × €${product.price}</span></div><button class="cart-remove" type="button" data-remove-cart="${safeText(item.id)}" aria-label="${currentLanguage !== "ru" ? "Remove" : "Удалить"}">×</button></article>`).join("") : `<div class="cart-empty">${currentLanguage !== "ru" ? "Your future character is waiting for you." : "Ваш будущий персонаж ждёт встречи с вами."}</div>`;
       container.querySelectorAll("[data-remove-cart]").forEach((button) => button.addEventListener("click", () => saveCart2(cart.filter((item) => item.id !== button.dataset.removeCart))));
     }, getCheckoutOrders2 = function() {
       try {
@@ -21154,7 +21154,7 @@ ${suffix}`;
       const delivery = selected === "pickup" ? 0 : 4.95;
       return { subtotal, delivery, total: subtotal + delivery };
     }, updateCheckoutTotal2 = function() {
-      document.getElementById("checkoutTotal").textContent = `\u20AC${checkoutAmount2().total.toFixed(2)}`;
+      document.getElementById("checkoutTotal").textContent = `€${checkoutAmount2().total.toFixed(2)}`;
     }, openCheckout2 = function() {
       const modal = document.getElementById("checkoutModal");
       const form = document.getElementById("checkoutForm");
@@ -21198,7 +21198,7 @@ ${suffix}`;
     }, renderAdminProducts2 = function() {
       const container = document.getElementById("adminProducts");
       if (!container) return;
-      container.innerHTML = getCatalogProducts2().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage !== "ru" ? product.nameEn : product.nameRu)}</strong><span>\u20AC${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div>`).join("");
+      container.innerHTML = getCatalogProducts2().map((product) => `<div class="admin-product-item"><img src="${product.image}" alt=""><div><strong>${safeText(currentLanguage !== "ru" ? product.nameEn : product.nameRu)}</strong><span>€${product.price}</span></div><button class="delete-product" type="button" data-delete-product="${product.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div>`).join("");
       container.querySelectorAll("[data-delete-product]").forEach((button) => {
         button.addEventListener("click", () => {
           saveCatalogProducts2(getCatalogProducts2().filter((product) => product.id !== button.dataset.deleteProduct));
@@ -21209,18 +21209,18 @@ ${suffix}`;
       });
     }, orderStatusLabel2 = function(status) {
       const labels = {
-        new: ["\u041D\u043E\u0432\u044B\u0439", "New"],
-        making: ["\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", "Making"],
-        shipped: ["\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", "Shipped"],
-        completed: ["\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", "Completed"],
-        cancelled: ["\u041E\u0442\u043C\u0435\u043D\u0451\u043D", "Cancelled"]
+        new: ["Новый", "New"],
+        making: ["Создаётся", "Making"],
+        shipped: ["Отправлен", "Shipped"],
+        completed: ["Завершён", "Completed"],
+        cancelled: ["Отменён", "Cancelled"]
       };
       return labels[status][currentLanguage !== "ru" ? 1 : 0];
     }, renderAdminOrders2 = function() {
       const container = document.getElementById("adminOrders");
       if (!container) return;
       const orders = getCheckoutOrders2();
-      container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} \xB7 ${safeText(order.customer.city)} \xB7 ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${["new", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel2(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
+      container.innerHTML = orders.length ? orders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.number)}</strong><span>${new Date(order.createdAt).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${order.total.toFixed(2)}</strong></div><p class="admin-order-products">${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</p><span>${safeText(order.customer.name)} · ${safeText(order.customer.city)} · ${safeText(order.customer.email)}</span><select class="order-status-select" data-order-number="${safeText(order.number)}">${["new", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${orderStatusLabel2(status)}</option>`).join("")}</select></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
       container.querySelectorAll("[data-order-number]").forEach((select) => select.addEventListener("change", () => {
         const currentOrders = getCheckoutOrders2();
         const order = currentOrders.find((item) => item.number === select.dataset.orderNumber);
@@ -21247,7 +21247,7 @@ ${suffix}`;
       const container = document.getElementById("nfcPassports");
       if (!container) return;
       const passports = getNfcPassports2();
-      container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` \xB7 ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : currentLanguage !== "ru" ? "Ready for activation" : "\u0413\u043E\u0442\u043E\u0432 \u043A \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438"}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? currentLanguage !== "ru" ? "Activated" : "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D" : currentLanguage !== "ru" ? "New" : "\u041D\u043E\u0432\u044B\u0439"}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No passports issued yet." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u044B\u043F\u0443\u0441\u043A\u0430\u043B\u0438\u0441\u044C."}</p></div>`;
+      container.innerHTML = passports.length ? passports.map((passport) => `<article class="nfc-passport-item"><div><strong>${safeText(currentLanguage !== "ru" ? passport.nameEn : passport.nameRu)}</strong><span>${safeText(passport.code)}${passport.orderNumber ? ` · ${safeText(passport.orderNumber)}` : ""}</span><span>${passport.ownerEmail ? safeText(passport.ownerEmail) : currentLanguage !== "ru" ? "Ready for activation" : "Готов к активации"}</span></div><b class="nfc-state${passport.ownerEmail ? " claimed" : ""}">${passport.ownerEmail ? currentLanguage !== "ru" ? "Activated" : "Активирован" : currentLanguage !== "ru" ? "New" : "Новый"}</b></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No passports issued yet." : "Паспорта ещё не выпускались."}</p></div>`;
     }, openPassport2 = function(code) {
       const session = getSession2();
       const account = session ? getAccounts2()[session] : void 0;
@@ -21269,7 +21269,7 @@ ${suffix}`;
     }, renderPassportTimeline2 = function(toy) {
       const born = new Date(toy.born).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU");
       const memories = toy.memories || [];
-      document.getElementById("passportTimeline").innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage !== "ru" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3><p>${currentLanguage !== "ru" ? "The day this character became part of your family." : "\u0414\u0435\u043D\u044C, \u043A\u043E\u0433\u0434\u0430 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0441\u0442\u0430\u043B \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
+      document.getElementById("passportTimeline").innerHTML = `<article class="passport-event"><span>${born}</span><h3>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</h3><p>${currentLanguage !== "ru" ? "The day this character became part of your family." : "День, когда персонаж стал частью вашей семьи."}</p></article>${memories.map((memory) => `<article class="passport-event"><span>${new Date(memory.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.text)}</p></article>`).join("")}`;
     }, renderDashboard2 = function(account) {
       document.getElementById("profileName").textContent = account.name;
       document.getElementById("profileCardName").textContent = account.name;
@@ -21294,11 +21294,11 @@ ${suffix}`;
       document.getElementById("toyList").innerHTML = toys.map((toy) => {
         const date = new Date(toy.born).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU");
         const name = currentLanguage !== "ru" ? toy.nameEn || toy.name : toy.nameRu || toy.name;
-        return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage !== "ru" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</strong>${currentLanguage !== "ru" ? `Joined your family on ${date}` : `\u0421\u0442\u0430\u043B\u0430 \u0447\u0430\u0441\u0442\u044C\u044E \u0432\u0430\u0448\u0435\u0439 \u0441\u0435\u043C\u044C\u0438 ${date}`}</div><div class="life-event"><strong>${currentLanguage !== "ru" ? "Saved chapters" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0433\u043B\u0430\u0432\u044B"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage !== "ru" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
+        return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(toy.code)}</span></div><div class="life-timeline"><div class="life-event"><strong>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</strong>${currentLanguage !== "ru" ? `Joined your family on ${date}` : `Стала частью вашей семьи ${date}`}</div><div class="life-event"><strong>${currentLanguage !== "ru" ? "Saved chapters" : "Сохранённые главы"}</strong>${toy.memories?.length || 0}</div></div><button class="card-button open-passport" type="button" data-open-passport="${safeText(toy.code)}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
       }).join("");
       const shopOrders = getCheckoutOrders2().filter((order) => order.customer.email.toLowerCase() === account.email.toLowerCase());
       const legacyOrders = account.orders || [];
-      document.getElementById("ordersList").innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} \xB7 \u20AC${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} \xD7 ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} \xB7 ${orderStatusLabel2(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3><p>${currentLanguage !== "ru" ? "Your future characters will appear here." : "\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0432\u0430\u0448\u0438 \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0438."}</p></div>`;
+      document.getElementById("ordersList").innerHTML = shopOrders.length ? shopOrders.map((order) => `<article class="order-item"><strong>${safeText(order.number)} · €${order.total.toFixed(2)}</strong><span>${order.items.map((item) => `${safeText(item.name)} × ${item.quantity}`).join(", ")}</span><span>${new Date(order.createdAt).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${orderStatusLabel2(order.status)}</span></article>`).join("") : legacyOrders.length ? legacyOrders.map((order) => `<article class="order-item"><strong>${safeText(order.product)}</strong><span>${new Date(order.date).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3><p>${currentLanguage !== "ru" ? "Your future characters will appear here." : "Здесь появятся ваши будущие персонажи."}</p></div>`;
     }, renderAccount2 = function() {
       const accounts = getAccounts2();
       const session = getSession2();
@@ -21313,7 +21313,7 @@ ${suffix}`;
         account = session ? getAccounts2()[session] : void 0;
         setTimeout(() => {
           const status = document.getElementById("nfcStatus");
-          if (status) status.textContent = result === "claimed" ? currentLanguage !== "ru" ? "The passport is activated." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D." : result === "taken" ? currentLanguage !== "ru" ? "This passport belongs to another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u0438\u0442 \u0434\u0440\u0443\u0433\u043E\u043C\u0443 \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0443." : result === "invalid" ? currentLanguage !== "ru" ? "Passport not found." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D." : "";
+          if (status) status.textContent = result === "claimed" ? currentLanguage !== "ru" ? "The passport is activated." : "Паспорт активирован." : result === "taken" ? currentLanguage !== "ru" ? "This passport belongs to another owner." : "Этот паспорт принадлежит другому владельцу." : result === "invalid" ? currentLanguage !== "ru" ? "Passport not found." : "Паспорт не найден." : "";
         }, 0);
         const cleanUrl = new URL(window.location.href);
         cleanUrl.searchParams.delete("nfc");
@@ -21345,7 +21345,7 @@ ${suffix}`;
       const email = String(data.get("email")).trim().toLowerCase();
       const accounts = getAccounts2();
       if (accounts[email]) {
-        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "An account with this email already exists." : "\u0410\u043A\u043A\u0430\u0443\u043D\u0442 \u0441 \u0442\u0430\u043A\u0438\u043C email \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442.";
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "An account with this email already exists." : "Аккаунт с таким email уже существует.";
         return;
       }
       const hasAdmin = Object.values(accounts).some((account) => account.role === "admin");
@@ -21362,7 +21362,7 @@ ${suffix}`;
       const email = String(data.get("email")).trim().toLowerCase();
       const account = getAccounts2()[email];
       if (!account || account.password !== String(data.get("password"))) {
-        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Incorrect email or password." : "Неверный email или пароль.";
         return;
       }
       localStorage.setItem("viori-session", email);
@@ -21394,10 +21394,10 @@ ${suffix}`;
       const status = document.getElementById("nfcStatus");
       const result = claimNfcPassport2(code, email);
       const messages = {
-        claimed: currentLanguage !== "ru" ? "The passport is activated. Welcome to the VIORI world." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D. \u0414\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u043C\u0438\u0440 VIORI.",
-        owned: currentLanguage !== "ru" ? "This toy is already in your collection." : "\u042D\u0442\u0430 \u0438\u0433\u0440\u0443\u0448\u043A\u0430 \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u0432 \u0432\u0430\u0448\u0435\u0439 \u043A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u0438.",
-        taken: currentLanguage !== "ru" ? "This passport has already been activated by another owner." : "\u042D\u0442\u043E\u0442 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D \u0434\u0440\u0443\u0433\u0438\u043C \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0435\u043C.",
-        invalid: currentLanguage !== "ru" ? "Passport not found. Check the code and try again." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u043E\u0434 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430."
+        claimed: currentLanguage !== "ru" ? "The passport is activated. Welcome to the VIORI world." : "Паспорт активирован. Добро пожаловать в мир VIORI.",
+        owned: currentLanguage !== "ru" ? "This toy is already in your collection." : "Эта игрушка уже есть в вашей коллекции.",
+        taken: currentLanguage !== "ru" ? "This passport has already been activated by another owner." : "Этот паспорт уже активирован другим владельцем.",
+        invalid: currentLanguage !== "ru" ? "Passport not found. Check the code and try again." : "Паспорт не найден. Проверьте код и попробуйте снова."
       };
       if (status) status.textContent = messages[result];
       if (result !== "claimed") return;
@@ -21407,17 +21407,17 @@ ${suffix}`;
     let activeShopProduct = null;
     const staticShopProducts = {
       mia: {
-        nameRu: "\u0417\u0430\u0439\u043A\u0430 \u041C\u0438\u044F",
+        nameRu: "Зайка Мия",
         nameEn: "Mia the Bunny",
         price: 29,
-        descriptionRu: "\u041D\u0435\u0436\u043D\u0430\u044F \u0437\u0430\u0439\u043A\u0430 \u0441 \u0434\u043B\u0438\u043D\u043D\u044B\u043C\u0438 \u0443\u0448\u043A\u0430\u043C\u0438, \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0441\u0434\u0435\u043B\u0430\u0439\u0442\u0435 \u0435\u0451 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0432\u043E\u0435\u0439.",
+        descriptionRu: "Нежная зайка с длинными ушками, собственным характером и личным NFC-паспортом. Выберите цвет одежды и сделайте её историю своей.",
         descriptionEn: "A gentle bunny with long ears, her own character and a personal NFC passport. Choose the colour of her outfit and make her story yours."
       },
       teo: {
-        nameRu: "\u041C\u0438\u0448\u043A\u0430 \u0422\u0435\u043E",
+        nameRu: "Мишка Тео",
         nameEn: "Theo the Bear",
         price: 34,
-        descriptionRu: "\u0413\u043E\u0442\u043E\u0432\u044B\u0439 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 \u0441 \u0432\u044F\u0437\u0430\u043D\u044B\u043C \u0448\u0430\u0440\u0444\u043E\u043C \u0438 \u043B\u0438\u0447\u043D\u044B\u043C NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442\u043E\u043C. \u0412\u044B\u0441\u043E\u0442\u0430 \u043E\u043A\u043E\u043B\u043E 30 \u0441\u043C.",
+        descriptionRu: "Готовый персонаж с вязаным шарфом и личным NFC-паспортом. Высота около 30 см.",
         descriptionEn: "A ready character with a knitted scarf and a personal NFC passport. About 30 cm tall."
       }
     };
@@ -21479,7 +21479,7 @@ ${suffix}`;
       const accounts = getAccounts2();
       let account = session ? accounts[session] : void 0;
       if (account) {
-        account.orders.unshift({ product: items.map((item) => `${item.name} \xD7 ${item.quantity}`).join(", "), date: now.toISOString(), status: order.status });
+        account.orders.unshift({ product: items.map((item) => `${item.name} × ${item.quantity}`).join(", "), date: now.toISOString(), status: order.status });
         saveAccounts2(accounts);
       }
       saveCart2([]);
@@ -21505,7 +21505,7 @@ ${suffix}`;
       const order = orders.find((item) => item.number === orderNumber && item.customer.email.toLowerCase() === email);
       const status = document.getElementById("cancellationStatus");
       if (!order) {
-        if (status) status.textContent = currentLanguage !== "ru" ? "No matching order was found." : "\u0417\u0430\u043A\u0430\u0437 \u0441 \u0442\u0430\u043A\u0438\u043C\u0438 \u0434\u0430\u043D\u043D\u044B\u043C\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D.";
+        if (status) status.textContent = currentLanguage !== "ru" ? "No matching order was found." : "Заказ с такими данными не найден.";
         return;
       }
       const requests = getCancellationRequests2();
@@ -21515,7 +21515,7 @@ ${suffix}`;
       order.status = "cancelled";
       saveCheckoutOrders2(orders);
       form.reset();
-      document.getElementById("cancellationReference").textContent = `${currentLanguage !== "ru" ? "Reference" : "\u041D\u043E\u043C\u0435\u0440 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F"}: ${reference}`;
+      document.getElementById("cancellationReference").textContent = `${currentLanguage !== "ru" ? "Reference" : "Номер обращения"}: ${reference}`;
       document.getElementById("cancellationFormView")?.classList.add("hidden");
       document.getElementById("cancellationSuccess")?.classList.remove("hidden");
       renderAdminOrders2();
@@ -21550,7 +21550,7 @@ ${suffix}`;
       const file = data.get("image");
       if (!(file instanceof File) || !file.size) return;
       if (file.size > 1.5 * 1024 * 1024) {
-        if (status) status.textContent = currentLanguage !== "ru" ? "The image is larger than 1.5 MB." : "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 1,5 \u041C\u0411.";
+        if (status) status.textContent = currentLanguage !== "ru" ? "The image is larger than 1.5 MB." : "Изображение больше 1,5 МБ.";
         return;
       }
       const reader = new FileReader();
@@ -21570,12 +21570,12 @@ ${suffix}`;
           saveCatalogProducts2(products);
           form.reset();
           document.getElementById("adminImagePreview")?.classList.add("hidden");
-          if (status) status.textContent = currentLanguage !== "ru" ? "The toy has been published." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u0430.";
+          if (status) status.textContent = currentLanguage !== "ru" ? "The toy has been published." : "Игрушка опубликована.";
           renderCatalogProducts2();
           renderAdminProducts2();
           renderAdminOverview2();
         } catch {
-          if (status) status.textContent = currentLanguage !== "ru" ? "Browser storage is full. Use a smaller image." : "\u0425\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E. \u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043C\u0435\u043D\u044C\u0448\u0435\u0433\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0430.";
+          if (status) status.textContent = currentLanguage !== "ru" ? "Browser storage is full. Use a smaller image." : "Хранилище браузера заполнено. Загрузите изображение меньшего размера.";
         }
       });
       reader.readAsDataURL(file);
@@ -21595,7 +21595,7 @@ ${suffix}`;
       form.reset();
       const activationUrl = `${window.location.href.split("?")[0]}?nfc=${encodeURIComponent(code)}`;
       const status = document.getElementById("nfcIssueStatus");
-      if (status) status.textContent = `${currentLanguage !== "ru" ? "Passport created" : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0441\u043E\u0437\u0434\u0430\u043D"}: ${activationUrl}`;
+      if (status) status.textContent = `${currentLanguage !== "ru" ? "Passport created" : "Паспорт создан"}: ${activationUrl}`;
       renderNfcPassports2();
       renderAdminOverview2();
     });
@@ -21722,9 +21722,9 @@ ${suffix}`;
     const cart = getProductionCart().filter((item) => productionProducts.some((product) => product.id === item.id));
     const items = cart.map((item) => ({ item, product: productionProducts.find((product) => product.id === item.id) }));
     document.getElementById("cartCount").textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
-    document.getElementById("cartTotal").textContent = `\u20AC${items.reduce((sum, row) => sum + row.product.price_cents * row.item.quantity, 0) / 100}`;
+    document.getElementById("cartTotal").textContent = `€${items.reduce((sum, row) => sum + row.product.price_cents * row.item.quantity, 0) / 100}`;
     const container = document.getElementById("cartItems");
-    if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage !== "ru" ? product.name_en : product.name_ru)}</strong><span>\u20AC${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">\u2212</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "Your bag is empty." : "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u0430."}</p></div>`;
+    if (container) container.innerHTML = items.length ? items.map(({ item, product }) => `<article class="cart-item"><div><strong>${safeText(currentLanguage !== "ru" ? product.name_en : product.name_ru)}</strong><span>€${(product.price_cents / 100).toFixed(2)}</span></div><div class="cart-quantity"><button type="button" data-cart-change="-1" data-cart-id="${product.id}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-id="${product.id}">+</button></div></article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "Your bag is empty." : "Корзина пока пуста."}</p></div>`;
     const checkout = document.getElementById("cartCheckout");
     if (checkout) checkout.disabled = !items.length;
   }
@@ -21752,7 +21752,7 @@ ${suffix}`;
     if (!user) {
       closeProductionCart();
       productionOpenAccount();
-      if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in before checkout." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 \u043F\u0435\u0440\u0435\u0434 \u043E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435\u043C \u0437\u0430\u043A\u0430\u0437\u0430.";
+      if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in before checkout." : "Войдите в аккаунт перед оформлением заказа.";
       return;
     }
     closeProductionCart();
@@ -21760,7 +21760,7 @@ ${suffix}`;
     form.elements.namedItem("email").value = user.email || "";
     form.elements.namedItem("email").readOnly = true;
     (_a = form.elements.namedItem("name")).value || (_a.value = productionProfile?.display_name || "");
-    document.getElementById("checkoutTotal").textContent = `\u20AC${(productionCheckoutTotal() / 100).toFixed(2)}`;
+    document.getElementById("checkoutTotal").textContent = `€${(productionCheckoutTotal() / 100).toFixed(2)}`;
     document.getElementById("checkoutFormView")?.classList.remove("hidden");
     document.getElementById("checkoutSuccess")?.classList.add("hidden");
     document.getElementById("checkoutModal")?.classList.add("open");
@@ -21773,7 +21773,7 @@ ${suffix}`;
     if (!grid || error) return;
     productionProducts = data || [];
     if (!productionProducts.length) {
-      grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "The collection is being prepared" : "\u041A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u044F \u0433\u043E\u0442\u043E\u0432\u0438\u0442\u0441\u044F"}</h3><p>${currentLanguage !== "ru" ? "Products will appear after safety documentation is complete." : "\u0422\u043E\u0432\u0430\u0440\u044B \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043F\u043E \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u0438."}</p></div>`;
+      grid.innerHTML = `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "The collection is being prepared" : "Коллекция готовится"}</h3><p>${currentLanguage !== "ru" ? "Products will appear after safety documentation is complete." : "Товары появятся после завершения документов по безопасности."}</p></div>`;
       return;
     }
     grid.innerHTML = productionProducts.map((product) => {
@@ -21781,7 +21781,7 @@ ${suffix}`;
       const description = currentLanguage !== "ru" ? product.description_en : product.description_ru;
       const path = product.product_images?.[0]?.storage_path;
       const imageUrl = path ? supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl : "";
-      return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">\u20AC${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"}</button></div></article>`;
+      return `<article class="product-card visible" data-category="${safeText(product.category)}"><div class="product-image"${imageUrl ? ` style="background-image:url('${safeText(imageUrl)}');background-size:cover;background-position:center"` : ""}></div><div class="product-info"><h3>${safeText(name)}</h3><p class="price">€${(product.price_cents / 100).toFixed(2)}</p></div><p class="product-description">${safeText(description)}</p><div class="card-actions"><button class="card-button" type="button" data-db-add-cart="${product.id}">${currentLanguage !== "ru" ? "Add to bag" : "В корзину"}</button></div></article>`;
     }).join("");
     renderCart();
   }
@@ -21797,7 +21797,7 @@ ${suffix}`;
   }
   function passportDisplayName(passport) {
     const fallback = currentLanguage === "ru" ? passport.character_name_ru : passport.character_name_en;
-    return passport.owner_name || fallback || passport.character_name_ru || passport.character_name_en || (currentLanguage !== "ru" ? "VIORI character" : "\u041F\u0435\u0440\u0441\u043E\u043D\u0430\u0436 VIORI");
+    return passport.owner_name || fallback || passport.character_name_ru || passport.character_name_en || (currentLanguage !== "ru" ? "VIORI character" : "Персонаж VIORI");
   }
   var productionProfile = null;
   var productionPassports = [];
@@ -21809,15 +21809,15 @@ ${suffix}`;
     const raw = error;
     const message = error instanceof Error ? error.message : String(raw?.message || error || "");
     if (error) console.error("VIORI backend error:", error);
-    if (message.includes("Invalid login credentials")) return currentLanguage !== "ru" ? "Incorrect email or password." : "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 email \u0438\u043B\u0438 \u043F\u0430\u0440\u043E\u043B\u044C.";
-    if (message.includes("Email not confirmed")) return currentLanguage !== "ru" ? "Confirm your email first." : "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email.";
-    if (message.includes("User already registered")) return currentLanguage !== "ru" ? "This email is already registered." : "\u042D\u0442\u043E\u0442 email \u0443\u0436\u0435 \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D.";
-    if (message.includes("authentication_required")) return currentLanguage !== "ru" ? "Please sign in to place an order." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u0430\u043A\u043A\u0430\u0443\u043D\u0442, \u0447\u0442\u043E\u0431\u044B \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437.";
-    if (message.includes("empty_cart")) return currentLanguage !== "ru" ? "Your cart is empty." : "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u0443\u0441\u0442\u0430.";
-    if (message.includes("invalid_cart")) return currentLanguage !== "ru" ? "Some items are no longer available. Please refresh the cart." : "\u0422\u043E\u0432\u0430\u0440\u0430 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435\u0442 \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u043A\u043E\u0440\u0437\u0438\u043D\u0443.";
-    if (message.includes("invalid_customer_details")) return currentLanguage !== "ru" ? "Check your name and phone number." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u043C\u044F \u0438 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430.";
-    if (message.includes("invalid_delivery_method")) return currentLanguage !== "ru" ? "Choose a delivery method." : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438.";
-    return currentLanguage !== "ru" ? "Something went wrong. Please try again." : "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.";
+    if (message.includes("Invalid login credentials")) return currentLanguage !== "ru" ? "Incorrect email or password." : "Неверный email или пароль.";
+    if (message.includes("Email not confirmed")) return currentLanguage !== "ru" ? "Confirm your email first." : "Сначала подтвердите email.";
+    if (message.includes("User already registered")) return currentLanguage !== "ru" ? "This email is already registered." : "Этот email уже зарегистрирован.";
+    if (message.includes("authentication_required")) return currentLanguage !== "ru" ? "Please sign in to place an order." : "Войдите в аккаунт, чтобы оформить заказ.";
+    if (message.includes("empty_cart")) return currentLanguage !== "ru" ? "Your cart is empty." : "Корзина пуста.";
+    if (message.includes("invalid_cart")) return currentLanguage !== "ru" ? "Some items are no longer available. Please refresh the cart." : "Товара больше нет в каталоге. Обновите корзину.";
+    if (message.includes("invalid_customer_details")) return currentLanguage !== "ru" ? "Check your name and phone number." : "Проверьте имя и номер телефона.";
+    if (message.includes("invalid_delivery_method")) return currentLanguage !== "ru" ? "Choose a delivery method." : "Выберите способ доставки.";
+    return currentLanguage !== "ru" ? "Something went wrong. Please try again." : "Произошла ошибка. Попробуйте ещё раз.";
   }
   function productionOpenAccount() {
     document.getElementById("accountModal")?.classList.add("open");
@@ -21885,7 +21885,7 @@ ${suffix}`;
       const clean = new URL(location.href);
       clean.searchParams.delete("transfer");
       history.replaceState({}, "", clean);
-      if (accountStatus) accountStatus.textContent = error ? currentLanguage !== "ru" ? "Transfer link is invalid or expired." : "\u0421\u0441\u044B\u043B\u043A\u0430 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0438 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0430 \u0438\u043B\u0438 \u0443\u0441\u0442\u0430\u0440\u0435\u043B\u0430." : currentLanguage !== "ru" ? "The toy is now in your account." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043F\u0435\u0440\u0435\u0434\u0430\u043D\u0430 \u0432 \u0432\u0430\u0448 \u043A\u0430\u0431\u0438\u043D\u0435\u0442.";
+      if (accountStatus) accountStatus.textContent = error ? currentLanguage !== "ru" ? "Transfer link is invalid or expired." : "Ссылка передачи недействительна или устарела." : currentLanguage !== "ru" ? "The toy is now in your account." : "Игрушка передана в ваш кабинет.";
       if (!error) {
         productionOpenAccount();
         await loadProductionAccount();
@@ -21896,7 +21896,7 @@ ${suffix}`;
     if (!productionProfile) return;
     const isAdmin = productionProfile.role === "admin";
     document.getElementById("profileName").textContent = productionProfile.display_name || email;
-    document.getElementById("profileCardName").textContent = productionProfile.display_name || "\u2014";
+    document.getElementById("profileCardName").textContent = productionProfile.display_name || "—";
     document.getElementById("profileEmail").textContent = email;
     document.querySelectorAll(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     document.querySelector(".account-panel")?.classList.toggle("admin-mode", isAdmin);
@@ -21908,16 +21908,16 @@ ${suffix}`;
     document.getElementById("toyEmpty")?.classList.toggle("hidden", productionPassports.length > 0);
     document.getElementById("toyList").innerHTML = productionPassports.map((passport) => {
       const name = passportDisplayName(passport);
-      return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442"}</button></article>`;
+      return `<article class="toy-life-card"><div class="toy-life-head"><div><p class="eyebrow">VIORI CHARACTER</p><h3>${safeText(name)}</h3></div><span class="toy-code">${safeText(passport.public_code)}</span></div><button class="card-button" type="button" data-production-passport="${passport.id}">${currentLanguage !== "ru" ? "Open passport" : "Открыть паспорт"}</button></article>`;
     }).join("");
-    document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} \xB7 \u20AC${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} \xB7 ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442"}</h3></div>`;
+    document.getElementById("ordersList").innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="order-item"><strong>${safeText(order.order_number)} · €${(order.total_cents / 100).toFixed(2)}</strong><span>${new Date(order.created_at).toLocaleDateString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")} · ${dbOrderStatusLabel(order.status)}</span></article>`).join("") : `<div class="toy-empty"><h3>${currentLanguage !== "ru" ? "No orders yet" : "Заказов пока нет"}</h3></div>`;
     if (isAdmin) void loadProductionAdmin();
   }
   async function claimProductionPassport(token) {
     if (!supabase) return;
     const status = document.getElementById("nfcStatus");
     const { error } = await supabase.rpc("claim_nfc_passport", { claim_token: token.trim() });
-    if (status) status.textContent = error ? currentLanguage !== "ru" ? "Invalid or already activated passport." : "\u041A\u043E\u0434 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u0435\u043D \u0438\u043B\u0438 \u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D." : currentLanguage !== "ru" ? "Passport activated." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D.";
+    if (status) status.textContent = error ? currentLanguage !== "ru" ? "Invalid or already activated passport." : "Код недействителен или паспорт уже активирован." : currentLanguage !== "ru" ? "Passport activated." : "Паспорт активирован.";
     const clean = new URL(location.href);
     clean.searchParams.delete("nfc");
     history.replaceState({}, "", clean);
@@ -21934,7 +21934,7 @@ ${suffix}`;
     if (nameInput) nameInput.value = passport.owner_name || "";
     document.getElementById("passportBorn").textContent = new Date(passport.claimed_at || passport.issued_at).toLocaleDateString();
     const { data } = await supabase.from("toy_memories").select("id,title,body,happened_at").eq("passport_id", id).order("happened_at");
-    document.getElementById("passportTimeline").innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage !== "ru" ? "The story begins" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F"}</h3></article>`;
+    document.getElementById("passportTimeline").innerHTML = (data || []).map((memory) => `<article class="passport-event"><span>${safeText(memory.happened_at)}</span><h3>${safeText(memory.title)}</h3><p>${safeText(memory.body)}</p></article>`).join("") || `<article class="passport-event"><h3>${currentLanguage !== "ru" ? "The story begins" : "История начинается"}</h3></article>`;
     document.getElementById("passportModal")?.classList.add("open");
     document.getElementById("passportModal")?.setAttribute("aria-hidden", "false");
   }
@@ -21953,8 +21953,8 @@ ${suffix}`;
       const status = document.getElementById("nfcIssueStatus");
       if (status && !fallback.error) {
         status.textContent = label(
-          `\u0411\u0430\u0437\u0430 \u0435\u0449\u0451 \u043D\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430: ${passportResult.error.message}. \u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u043C\u0438\u0433\u0440\u0430\u0446\u0438\u044E.`,
-          `\u0411\u0430\u0437\u0443 \u0449\u0435 \u043D\u0435 \u043E\u043D\u043E\u0432\u043B\u0435\u043D\u043E: ${passportResult.error.message}. \u0412\u0438\u043A\u043E\u043D\u0430\u0439\u0442\u0435 \u043E\u0441\u0442\u0430\u043D\u043D\u044E \u043C\u0456\u0433\u0440\u0430\u0446\u0456\u044E.`,
+          `База ещё не обновлена: ${passportResult.error.message}. Выполните последнюю миграцию.`,
+          `Базу ще не оновлено: ${passportResult.error.message}. Виконайте останню міграцію.`,
           `The database is out of date: ${passportResult.error.message}. Apply the latest migration.`
         );
       }
@@ -21965,12 +21965,12 @@ ${suffix}`;
     renderProductionAdmin();
   }
   var dbStatusLabels = {
-    new: { ru: "\u041D\u043E\u0432\u044B\u0439", uk: "\u041D\u043E\u0432\u0435", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-    paid: { ru: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D", uk: "\u041E\u043F\u043B\u0430\u0447\u0435\u043D\u043E", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Pay\xE9e" },
-    making: { ru: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F", uk: "\u0421\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En cr\xE9ation" },
-    shipped: { ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", uk: "\u0412\u0456\u0434\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Exp\xE9di\xE9e" },
-    completed: { ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D", uk: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Termin\xE9e" },
-    cancelled: { ru: "\u041E\u0442\u043C\u0435\u043D\u0451\u043D", uk: "\u0421\u043A\u0430\u0441\u043E\u0432\u0430\u043D\u043E", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annul\xE9e" }
+    new: { ru: "Новый", uk: "Нове", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    paid: { ru: "Оплачен", uk: "Оплачено", en: "Paid", nl: "Betaald", de: "Bezahlt", fr: "Payée" },
+    making: { ru: "Создаётся", uk: "Створюється", en: "Making", nl: "In de maak", de: "In Arbeit", fr: "En création" },
+    shipped: { ru: "Отправлен", uk: "Відправлено", en: "Shipped", nl: "Verzonden", de: "Versandt", fr: "Expédiée" },
+    completed: { ru: "Завершён", uk: "Завершено", en: "Completed", nl: "Afgerond", de: "Abgeschlossen", fr: "Terminée" },
+    cancelled: { ru: "Отменён", uk: "Скасовано", en: "Cancelled", nl: "Geannuleerd", de: "Storniert", fr: "Annulée" }
   };
   function dbOrderStatusLabel(status) {
     return dbStatusLabels[status]?.[currentLanguage] || safeText(status);
@@ -21978,35 +21978,35 @@ ${suffix}`;
   var openStoryPassportId = "";
   var storySavedMessage = "";
   var requestStatusLabels = {
-    new: { ru: "\u041D\u043E\u0432\u0430\u044F", uk: "\u041D\u043E\u0432\u0430", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
-    in_progress: { ru: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", uk: "\u0412 \u0440\u043E\u0431\u043E\u0442\u0456", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
-    done: { ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u0430", uk: "\u0417\u0430\u043A\u0440\u0438\u0442\u0430", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Termin\xE9e" }
+    new: { ru: "Новая", uk: "Нова", en: "New", nl: "Nieuw", de: "Neu", fr: "Nouvelle" },
+    in_progress: { ru: "В работе", uk: "В роботі", en: "In progress", nl: "In behandeling", de: "In Bearbeitung", fr: "En cours" },
+    done: { ru: "Закрыта", uk: "Закрита", en: "Done", nl: "Afgerond", de: "Erledigt", fr: "Terminée" }
   };
   function renderProductionRequests() {
     const container = document.getElementById("adminRequests");
     if (!container) return;
     const ru = currentLanguage === "ru";
     if (!productionRequests.length) {
-      container.innerHTML = `<div class="toy-empty"><p>${ru ? "\u0417\u0430\u044F\u0432\u043E\u043A \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." : "No requests yet."}</p></div>`;
+      container.innerHTML = `<div class="toy-empty"><p>${ru ? "Заявок пока нет." : "No requests yet."}</p></div>`;
       return;
     }
     container.innerHTML = productionRequests.map((request) => {
       const options = Object.keys(requestStatusLabels).map(
         (status) => `<option value="${status}"${status === request.status ? " selected" : ""}>${requestStatusLabels[status][currentLanguage]}</option>`
       ).join("");
-      return `<article class="admin-request${request.status === "new" ? " unread" : ""}"><div class="admin-request-top"><div><strong>${safeText(request.customer_name)}</strong><span>${new Date(request.created_at).toLocaleString(ru ? "ru-RU" : "en-GB")} \xB7 ${safeText(request.product)}</span></div><select class="order-status-select" data-request="${request.id}">${options}</select></div><p class="admin-request-message">${safeText(request.message)}</p><a class="admin-request-reply" href="mailto:${safeText(request.contact_email)}?subject=${encodeURIComponent("VIORI \u2014 " + request.product)}">${safeText(request.contact_email)}</a></article>`;
+      return `<article class="admin-request${request.status === "new" ? " unread" : ""}"><div class="admin-request-top"><div><strong>${safeText(request.customer_name)}</strong><span>${new Date(request.created_at).toLocaleString(ru ? "ru-RU" : "en-GB")} · ${safeText(request.product)}</span></div><select class="order-status-select" data-request="${request.id}">${options}</select></div><p class="admin-request-message">${safeText(request.message)}</p><a class="admin-request-reply" href="mailto:${safeText(request.contact_email)}?subject=${encodeURIComponent("VIORI — " + request.product)}">${safeText(request.contact_email)}</a></article>`;
     }).join("");
   }
   function orderDetailsHtml(order) {
     const ru = currentLanguage === "ru";
-    const items = (order.order_items || []).map((item) => `<li><span>${safeText(item.product_name)} \xD7 ${item.quantity}</span><b>\u20AC${(item.unit_price_cents * item.quantity / 100).toFixed(2)}</b></li>`).join("");
+    const items = (order.order_items || []).map((item) => `<li><span>${safeText(item.product_name)} × ${item.quantity}</span><b>€${(item.unit_price_cents * item.quantity / 100).toFixed(2)}</b></li>`).join("");
     const address = order.shipping_address || {};
     const addressLine = [address.street, address.postcode, address.city, address.country].filter(Boolean).map((part) => safeText(String(part))).join(", ");
-    const delivery = order.delivery_method === "pickup" ? ru ? "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437" : "Pickup" : ru ? "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Standard delivery";
-    const row = (label2, value) => `<div><dt>${label2}</dt><dd>${value || "\u2014"}</dd></div>`;
-    return `<details class="admin-order-details"><summary>${ru ? "\u0427\u0442\u043E \u0432 \u0437\u0430\u043A\u0430\u0437\u0435" : "Order details"}</summary><div class="admin-order-body"><ul class="admin-order-items">${items || `<li><span>${ru ? "\u041F\u043E\u0437\u0438\u0446\u0438\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B" : "No items"}</span></li>`}</ul><dl class="admin-order-meta">` + row(ru ? "\u041A\u043B\u0438\u0435\u043D\u0442" : "Customer", safeText(order.customer_name || "")) + row(ru ? "\u0422\u0435\u043B\u0435\u0444\u043E\u043D" : "Phone", safeText(order.customer_phone || "")) + row("Email", safeText(order.customer_email || "")) + row(ru ? "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430" : "Delivery", `${delivery} \xB7 \u20AC${((order.delivery_cents || 0) / 100).toFixed(2)}`) + row(ru ? "\u0410\u0434\u0440\u0435\u0441" : "Address", addressLine) + row(
-      label("NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442", "NFC-\u043F\u0430\u0441\u043F\u043E\u0440\u0442", "NFC passport"),
-      productionPassports.filter((passport) => passport.order_id === order.id).map((passport) => safeText(passport.public_code)).join(", ") || label("\u043D\u0435 \u0432\u044B\u043F\u0443\u0449\u0435\u043D", "\u043D\u0435 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E", "not issued")
+    const delivery = order.delivery_method === "pickup" ? ru ? "Самовывоз" : "Pickup" : ru ? "Стандартная доставка" : "Standard delivery";
+    const row = (label2, value) => `<div><dt>${label2}</dt><dd>${value || "—"}</dd></div>`;
+    return `<details class="admin-order-details"><summary>${ru ? "Что в заказе" : "Order details"}</summary><div class="admin-order-body"><ul class="admin-order-items">${items || `<li><span>${ru ? "Позиции не найдены" : "No items"}</span></li>`}</ul><dl class="admin-order-meta">` + row(ru ? "Клиент" : "Customer", safeText(order.customer_name || "")) + row(ru ? "Телефон" : "Phone", safeText(order.customer_phone || "")) + row("Email", safeText(order.customer_email || "")) + row(ru ? "Доставка" : "Delivery", `${delivery} · €${((order.delivery_cents || 0) / 100).toFixed(2)}`) + row(ru ? "Адрес" : "Address", addressLine) + row(
+      label("NFC-паспорт", "NFC-паспорт", "NFC passport"),
+      productionPassports.filter((passport) => passport.order_id === order.id).map((passport) => safeText(passport.public_code)).join(", ") || label("не выпущен", "не випущено", "not issued")
     ) + `</dl></div></details>`;
   }
   function renderNfcOrderOptions() {
@@ -22016,24 +22016,24 @@ ${suffix}`;
     const linked = new Set(productionPassports.map((passport) => passport.order_id).filter(Boolean));
     const options = productionOrders.map((order) => {
       const date = new Date(order.created_at).toLocaleDateString(currentLanguage === "ru" ? "ru-RU" : "en-GB");
-      const mark = linked.has(order.id) ? ` \xB7 ${label("\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0432\u044B\u043F\u0443\u0449\u0435\u043D", "\u043F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0432\u0438\u043F\u0443\u0449\u0435\u043D\u043E", "passport already issued")}` : "";
-      return `<option value="${safeText(order.order_number)}">${safeText(order.order_number)} \xB7 ${safeText(order.customer_name || "")} \xB7 ${date}${mark}</option>`;
+      const mark = linked.has(order.id) ? ` · ${label("паспорт уже выпущен", "паспорт уже випущено", "passport already issued")}` : "";
+      return `<option value="${safeText(order.order_number)}">${safeText(order.order_number)} · ${safeText(order.customer_name || "")} · ${date}${mark}</option>`;
     }).join("");
-    select.innerHTML = `<option value="">${label("\u0411\u0435\u0437 \u043F\u0440\u0438\u0432\u044F\u0437\u043A\u0438 \u043A \u0437\u0430\u043A\u0430\u0437\u0443", "\u0411\u0435\u0437 \u043F\u0440\u0438\u0432'\u044F\u0437\u043A\u0438 \u0434\u043E \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F", "Not linked to an order")}</option>${options}`;
+    select.innerHTML = `<option value="">${label("Без привязки к заказу", "Без прив'язки до замовлення", "Not linked to an order")}</option>${options}`;
     select.value = previous;
   }
   function renderProductionAdmin() {
     renderNfcOrderOptions();
     const productContainer = document.getElementById("adminProducts");
-    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>\u20AC${(p.price_cents / 100).toFixed(2)} \xB7 ${p.is_active ? currentLanguage !== "ru" ? "PUBLISHED" : "\u041E\u041F\u0423\u0411\u041B\u0418\u041A\u041E\u0412\u0410\u041D\u041E" : currentLanguage !== "ru" ? "DRAFT" : "\u0427\u0415\u0420\u041D\u041E\u0412\u0418\u041A"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" : currentLanguage !== "ru" ? "Publish" : "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"}</button></div></div>`).join("");
+    if (productContainer) productContainer.innerHTML = productionProducts.map((p) => `<div class="admin-product-item"><div><strong>${safeText(currentLanguage !== "ru" ? p.name_en : p.name_ru)}</strong><span>€${(p.price_cents / 100).toFixed(2)} · ${p.is_active ? currentLanguage !== "ru" ? "PUBLISHED" : "ОПУБЛИКОВАНО" : currentLanguage !== "ru" ? "DRAFT" : "ЧЕРНОВИК"}</span></div><div class="admin-product-actions"><button type="button" data-toggle-db-product="${p.id}" data-next-active="${String(!p.is_active)}">${p.is_active ? currentLanguage !== "ru" ? "Hide" : "Скрыть из каталога" : currentLanguage !== "ru" ? "Publish" : "Опубликовать в каталоге"}</button><button type="button" data-delete-db-product="${p.id}">${currentLanguage !== "ru" ? "Delete" : "Удалить"}</button></div></div>`).join("");
     const passportContainer = document.getElementById("nfcPassports");
     if (passportContainer) passportContainer.innerHTML = productionPassports.map((p) => {
       const ru = currentLanguage === "ru";
       const photo = p.photo_path ? supabase.storage.from("product-images").getPublicUrl(p.photo_path).data.publicUrl : "";
-      return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div><div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b><button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("\u0423\u0434\u0430\u043B\u0438\u0442\u044C", "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438", "Delete")}</button></div></div><details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("\u0421\u043A\u0430\u0437\u043A\u0430 \u0438 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u044F", "\u041A\u0430\u0437\u043A\u0430 \u0456 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F", "Story and photo")}</summary><form class="account-form passport-story-form" data-passport-story="${p.id}">` + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "") + `<div class="story-langs" role="tablist">${["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>` + ["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("\u0421\u043A\u0430\u0437\u043A\u0430", "\u041A\u0430\u0437\u043A\u0430", "Story")} \xB7 ${code.toUpperCase()}</span><textarea name="story_${code}" rows="6" placeholder="${ru ? "\u041E\u043D\u0430 \u0440\u043E\u0434\u0438\u043B\u0430\u0441\u044C \u0442\u0438\u0445\u0438\u043C \u0443\u0442\u0440\u043E\u043C\u2026" : "She was born on a quiet morning\u2026"}">${safeText(p.story?.[code] || "")}</textarea></label>`).join("") + `<label class="image-upload"><span>${label("\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430", "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG \u0438\u043B\u0438 WebP. \u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u2014 \u043C\u043E\u0436\u043D\u043E \u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u044E\u044E.", "JPG, PNG \u0430\u0431\u043E WebP. \u041D\u0435\u043E\u0431\u043E\u0432'\u044F\u0437\u043A\u043E\u0432\u043E \u2014 \u043C\u043E\u0436\u043D\u0430 \u043B\u0438\u0448\u0438\u0442\u0438 \u043F\u043E\u043F\u0435\u0440\u0435\u0434\u043D\u044E.", "JPG, PNG or WebP. Optional \u2014 the current one stays.")}</small></label><button class="button" type="submit">${label("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438", "Save")}</button><p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p></form></details></article>`;
+      return `<article class="nfc-passport-item"><div class="nfc-passport-head"><div><strong>${safeText(passportDisplayName(p))}</strong><span>${safeText(p.public_code)}</span></div><div class="nfc-passport-actions">${passportOrderNumber(p) ? `<span class="nfc-order">${safeText(passportOrderNumber(p))}</span>` : ""}<b class="nfc-state${p.status === "claimed" ? " claimed" : ""}">${safeText(p.status)}</b><button type="button" class="nfc-delete" data-delete-passport="${p.id}" data-passport-code="${safeText(p.public_code)}">${label("Удалить", "Видалити", "Delete")}</button></div></div><details class="passport-story-editor"${openStoryPassportId === p.id ? " open" : ""}><summary>${label("Сказка и фотография", "Казка і фотографія", "Story and photo")}</summary><form class="account-form passport-story-form" data-passport-story="${p.id}">` + (photo ? `<img class="passport-story-photo" src="${photo}" alt="">` : "") + `<div class="story-langs" role="tablist">${["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<button class="story-lang${index === 0 ? " active" : ""}" type="button" data-story-lang="${code}">${code.toUpperCase()}</button>`).join("")}</div>` + ["ru", "uk", "en", "nl", "de", "fr"].map((code, index) => `<label class="story-lang-field${index === 0 ? " active" : ""}" data-story-field="${code}"><span>${label("Сказка", "Казка", "Story")} · ${code.toUpperCase()}</span><textarea name="story_${code}" rows="6" placeholder="${ru ? "Она родилась тихим утром…" : "She was born on a quiet morning…"}">${safeText(p.story?.[code] || "")}</textarea></label>`).join("") + `<label class="image-upload"><span>${label("Фотография персонажа", "Фотографія персонажа", "Character photo")}</span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"><small>${label("JPG, PNG или WebP. Необязательно — можно оставить прежнюю.", "JPG, PNG або WebP. Необов'язково — можна лишити попередню.", "JPG, PNG or WebP. Optional — the current one stays.")}</small></label><button class="button" type="submit">${label("Сохранить", "Зберегти", "Save")}</button><p class="account-status" data-story-status="${p.id}" aria-live="polite">${openStoryPassportId === p.id ? safeText(storySavedMessage) : ""}</p></form></details></article>`;
     }).join("");
     const orderContainer = document.getElementById("adminOrders");
-    if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>\u20AC${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "\u0417\u0430\u043A\u0430\u0437\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442."}</p></div>`;
+    if (orderContainer) orderContainer.innerHTML = productionOrders.length ? productionOrders.map((order) => `<article class="admin-order-item"><div class="admin-order-top"><div><strong>${safeText(order.order_number)}</strong><span>${new Date(order.created_at).toLocaleString(currentLanguage !== "ru" ? "en-GB" : "ru-RU")}</span></div><strong>€${(order.total_cents / 100).toFixed(2)}</strong></div><select class="order-status-select" data-db-order="${order.id}">${["new", "paid", "making", "shipped", "completed", "cancelled"].map((status) => `<option value="${status}"${status === order.status ? " selected" : ""}>${dbOrderStatusLabel(status)}</option>`).join("")}</select>${orderDetailsHtml(order)}</article>`).join("") : `<div class="toy-empty"><p>${currentLanguage !== "ru" ? "No orders yet." : "Заказов пока нет."}</p></div>`;
     document.getElementById("adminMetricProducts").textContent = String(productionProducts.length);
     document.getElementById("adminMetricOrders").textContent = String(productionOrders.length);
     document.getElementById("adminMetricNewOrders").textContent = String(productionOrders.filter((o) => o.status === "new").length);
@@ -22051,7 +22051,7 @@ ${suffix}`;
     }));
     document.getElementById("cartCheckout")?.addEventListener("click", () => void openProductionCheckout());
     document.querySelectorAll('#checkoutForm input[name="delivery"]').forEach((input) => input.addEventListener("change", () => {
-      document.getElementById("checkoutTotal").textContent = `\u20AC${(productionCheckoutTotal() / 100).toFixed(2)}`;
+      document.getElementById("checkoutTotal").textContent = `€${(productionCheckoutTotal() / 100).toFixed(2)}`;
     }));
     document.addEventListener("click", (event) => {
       const add = event.target.closest("[data-db-add-cart]");
@@ -22100,7 +22100,7 @@ ${suffix}`;
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         productionOpenAccount();
-        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in to request a cancellation." : "\u0412\u043E\u0439\u0434\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u043D\u0443.";
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Sign in to request a cancellation." : "Войдите, чтобы запросить отмену.";
         return;
       }
       const form = document.getElementById("cancellationForm");
@@ -22120,10 +22120,10 @@ ${suffix}`;
       const status = document.getElementById("cancellationStatus");
       const { data: reference, error } = await supabase.rpc("request_order_cancellation", { target_order_number: String(data.get("orderNumber")).trim(), cancellation_reason: String(data.get("reason")).trim() });
       if (error || !reference) {
-        if (status) status.textContent = currentLanguage !== "ru" ? "This order cannot be cancelled online." : "\u042D\u0442\u043E\u0442 \u0437\u0430\u043A\u0430\u0437 \u043D\u0435\u043B\u044C\u0437\u044F \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u043D\u043B\u0430\u0439\u043D.";
+        if (status) status.textContent = currentLanguage !== "ru" ? "This order cannot be cancelled online." : "Этот заказ нельзя отменить онлайн.";
         return;
       }
-      document.getElementById("cancellationReference").textContent = `${currentLanguage !== "ru" ? "Reference" : "\u041D\u043E\u043C\u0435\u0440 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F"}: ${String(reference).slice(0, 8).toUpperCase()}`;
+      document.getElementById("cancellationReference").textContent = `${currentLanguage !== "ru" ? "Reference" : "Номер обращения"}: ${String(reference).slice(0, 8).toUpperCase()}`;
       document.getElementById("cancellationFormView")?.classList.add("hidden");
       document.getElementById("cancellationSuccess")?.classList.remove("hidden");
     });
@@ -22153,7 +22153,7 @@ ${suffix}`;
     document.getElementById("backToLoginButton")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
     document.getElementById("registrationSuccessLogin")?.addEventListener("click", () => showProductionAuthForm("loginForm"));
     document.getElementById("googleAuthButton")?.addEventListener("click", async () => {
-      if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Opening Google\u2026" : "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u043C Google\u2026";
+      if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Opening Google…" : "Открываем Google…";
       const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${location.origin}${location.pathname}` } });
       if (error && accountStatus) accountStatus.textContent = productionMessage(error);
     });
@@ -22162,7 +22162,7 @@ ${suffix}`;
       if (!input) return;
       const reveal = input.type === "password";
       input.type = reveal ? "text" : "password";
-      button.textContent = reveal ? currentLanguage !== "ru" ? "Hide" : "\u0421\u043A\u0440\u044B\u0442\u044C" : currentLanguage !== "ru" ? "Show" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C";
+      button.textContent = reveal ? currentLanguage !== "ru" ? "Hide" : "Скрыть" : currentLanguage !== "ru" ? "Show" : "Показать";
       button.setAttribute("aria-label", button.textContent);
     }));
     const registrationPassword = document.querySelector('#registerForm input[name="password"]');
@@ -22172,7 +22172,7 @@ ${suffix}`;
       const strength = document.getElementById("passwordStrength");
       if (!strength) return;
       strength.dataset.score = String(score);
-      const labels = currentLanguage !== "ru" ? ["Use at least 8 characters", "Weak password", "Fair password", "Good password", "Strong password"] : ["\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432", "\u0421\u043B\u0430\u0431\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u0425\u043E\u0440\u043E\u0448\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C", "\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C"];
+      const labels = currentLanguage !== "ru" ? ["Use at least 8 characters", "Weak password", "Fair password", "Good password", "Strong password"] : ["Используйте минимум 8 символов", "Слабый пароль", "Средний пароль", "Хороший пароль", "Надёжный пароль"];
       const label2 = strength.querySelector("span");
       if (label2) label2.textContent = labels[score];
     });
@@ -22180,7 +22180,7 @@ ${suffix}`;
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const { error } = await supabase.auth.resetPasswordForEmail(String(data.get("email")).trim(), { redirectTo: `${location.origin}${location.pathname}?reset-password=1` });
-      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Check your email for the reset link." : "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0447\u0442\u0443 \u2014 \u0441\u0441\u044B\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u043C\u0435\u043D\u044B \u043F\u0430\u0440\u043E\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430.";
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Check your email for the reset link." : "Проверьте почту — ссылка для смены пароля отправлена.";
     });
     document.getElementById("resetPasswordForm")?.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -22189,11 +22189,11 @@ ${suffix}`;
       const password = String(data.get("password"));
       const confirmation = String(data.get("passwordConfirm"));
       if (password !== confirmation) {
-        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "\u041F\u0430\u0440\u043E\u043B\u0438 \u043D\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0442.";
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "Пароли не совпадают.";
         return;
       }
       const { error } = await supabase.auth.updateUser({ password });
-      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Password updated." : "\u041D\u043E\u0432\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D.";
+      if (accountStatus) accountStatus.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Password updated." : "Новый пароль сохранён.";
       if (!error) {
         history.replaceState({}, "", location.pathname);
         showProductionAuthForm("loginForm");
@@ -22205,7 +22205,7 @@ ${suffix}`;
       const data = new FormData(form);
       const password = String(data.get("password"));
       if (password !== String(data.get("passwordConfirm"))) {
-        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "\u041F\u0430\u0440\u043E\u043B\u0438 \u043D\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0442.";
+        if (accountStatus) accountStatus.textContent = currentLanguage !== "ru" ? "Passwords do not match." : "Пароли не совпадают.";
         return;
       }
       const { error } = await supabase.auth.signUp({ email: String(data.get("email")).trim(), password, options: { data: { display_name: String(data.get("name")).trim(), account_owner_is_adult: true, privacy_consent_at: (/* @__PURE__ */ new Date()).toISOString() }, emailRedirectTo: location.origin + location.pathname } });
@@ -22261,11 +22261,11 @@ ${suffix}`;
       const status = document.getElementById("passportTransferStatus");
       const { data: token, error } = await supabase.rpc("create_passport_transfer", { target_passport: activePassportId, recipient_email: String(data.get("email")).trim() });
       if (error || !token) {
-        if (status) status.textContent = currentLanguage !== "ru" ? "Recipient must have a different registered VIORI account." : "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C \u0434\u043E\u043B\u0436\u0435\u043D \u0438\u043C\u0435\u0442\u044C \u0434\u0440\u0443\u0433\u043E\u0439 \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 VIORI.";
+        if (status) status.textContent = currentLanguage !== "ru" ? "Recipient must have a different registered VIORI account." : "Получатель должен иметь другой зарегистрированный аккаунт VIORI.";
         return;
       }
       const url = `${location.origin}${location.pathname}?transfer=${encodeURIComponent(token)}`;
-      if (status) status.textContent = `${currentLanguage !== "ru" ? "Send this one-time link" : "\u041E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043E\u0434\u043D\u043E\u0440\u0430\u0437\u043E\u0432\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443"}: ${url}`;
+      if (status) status.textContent = `${currentLanguage !== "ru" ? "Send this one-time link" : "Отправьте одноразовую ссылку"}: ${url}`;
       form.reset();
     });
     document.getElementById("nfcIssueForm")?.addEventListener("submit", async (event) => {
@@ -22283,9 +22283,9 @@ ${suffix}`;
       const localUrl = `${location.href.replace(/[^/]*$/, "")}passport.html?code=${code}`;
       if (status) {
         status.textContent = label(
-          `\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0432 \u0447\u0438\u043F: ${chipUrl} \xB7 \u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435: ${result[0].claim_token} (\u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437) \xB7 \u0414\u043B\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435: ${localUrl}`,
-          `\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0432 \u0447\u0456\u043F: ${chipUrl} \xB7 \u041D\u0430\u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u043D\u0430 \u043A\u0430\u0440\u0442\u0446\u0456: ${result[0].claim_token} (\u043F\u043E\u043A\u0430\u0437\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437) \xB7 \u0414\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F'\u044E\u0442\u0435\u0440\u0456: ${localUrl}`,
-          `Write on the chip: ${chipUrl} \xB7 Print on the card: ${result[0].claim_token} (shown once) \xB7 For testing on this computer: ${localUrl}`
+          `Записать в чип: ${chipUrl} · Напечатать на карточке: ${result[0].claim_token} (показывается один раз) · Для проверки на этом компьютере: ${localUrl}`,
+          `Записати в чіп: ${chipUrl} · Надрукувати на картці: ${result[0].claim_token} (показується один раз) · Для перевірки на цьому комп'ютері: ${localUrl}`,
+          `Write on the chip: ${chipUrl} · Print on the card: ${result[0].claim_token} (shown once) · For testing on this computer: ${localUrl}`
         );
       }
       form.reset();
@@ -22309,7 +22309,7 @@ ${suffix}`;
         if (!upload.error) await supabase.from("product_images").insert({ product_id: product.id, storage_path: path, alt_ru: String(data.get("nameRu")), alt_en: String(data.get("nameEn")) });
       }
       form.reset();
-      if (status) status.textContent = currentLanguage !== "ru" ? "Published in the toy catalogue." : "\u0418\u0433\u0440\u0443\u0448\u043A\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u0430 \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435.";
+      if (status) status.textContent = currentLanguage !== "ru" ? "Published in the toy catalogue." : "Игрушка опубликована в каталоге.";
       await loadProductionAdmin();
     });
     document.addEventListener("click", async (event) => {
@@ -22345,7 +22345,7 @@ ${suffix}`;
       const status = document.getElementById("passportNameStatus");
       const name = String(new FormData(form).get("name") || "").trim();
       const { error } = await supabase.rpc("set_passport_name", { target_passport: activePassportId, new_name: name });
-      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Name saved." : "\u0418\u043C\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E.";
+      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Name saved." : "Имя сохранено.";
       if (!error) {
         await loadProductionAccount();
         await openProductionPassport(activePassportId);
@@ -22355,11 +22355,11 @@ ${suffix}`;
       const button = event.target.closest("[data-delete-passport]");
       if (!button?.dataset.deletePassport || productionProfile?.role !== "admin") return;
       const code = button.dataset.passportCode || "";
-      const question = currentLanguage !== "ru" ? `Delete passport ${code}? Its story chapters will be lost for good.` : `\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0430\u0441\u043F\u043E\u0440\u0442 ${code}? \u0413\u043B\u0430\u0432\u044B \u0435\u0433\u043E \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0440\u043E\u043F\u0430\u0434\u0443\u0442 \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E.`;
+      const question = currentLanguage !== "ru" ? `Delete passport ${code}? Its story chapters will be lost for good.` : `Удалить паспорт ${code}? Главы его истории пропадут безвозвратно.`;
       if (!window.confirm(question)) return;
       const status = document.getElementById("nfcIssueStatus");
       const { error } = await supabase.from("nfc_passports").delete().eq("id", button.dataset.deletePassport);
-      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Passport deleted." : "\u041F\u0430\u0441\u043F\u043E\u0440\u0442 \u0443\u0434\u0430\u043B\u0451\u043D.";
+      if (status) status.textContent = error ? productionMessage(error) : currentLanguage !== "ru" ? "Passport deleted." : "Паспорт удалён.";
       if (!error) await loadProductionAdmin();
     });
     document.addEventListener("click", (event) => {
@@ -22396,7 +22396,7 @@ ${suffix}`;
         update.photo_path = path;
       }
       const { error } = await supabase.from("nfc_passports").update(update).eq("id", passportId);
-      storySavedMessage = error ? productionMessage(error) : label("\u0421\u043A\u0430\u0437\u043A\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430.", "\u041A\u0430\u0437\u043A\u0443 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u043E.", "Story saved.");
+      storySavedMessage = error ? productionMessage(error) : label("Сказка сохранена.", "Казку збережено.", "Story saved.");
       if (status) status.textContent = storySavedMessage;
       if (!error) await loadProductionAdmin();
     });

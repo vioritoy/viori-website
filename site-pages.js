@@ -384,9 +384,11 @@ async function loadPassportPage() {
     // Сказка хранится по языкам. Если на языке посетителя её ещё не написали,
     // показываем английскую, затем русскую, затем любую заполненную —
     // пустая страница хуже, чем страница на другом языке.
+    // Не `code`: так называется код паспорта выше, и переобъявление затеняло
+    // его на весь блок — запрос падал с ReferenceError ещё до отправки.
     const stories = passport.story || {};
-    const code = catalogLanguage();
-    const story = stories[code] || stories.en || stories.ru || Object.values(stories).find(Boolean) || '';
+    const lang = catalogLanguage();
+    const story = stories[lang] || stories.en || stories.ru || Object.values(stories).find(Boolean) || '';
     const storyEl = document.getElementById('passportPageStory');
     if (story && storyEl) {
       storyEl.textContent = story;
