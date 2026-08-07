@@ -325,6 +325,74 @@ document.getElementById('orderForm')?.addEventListener('submit', async (event) =
 // поэтому здесь показываем только имя персонажа. Код активации печатается
 // на карточке в коробке и вводится вручную — так чужой человек с игрушкой
 // в руках не может привязать её к себе.
+// Озвучивание сказки. Используем синтез речи самого браузера: не нужен ни
+// сторонний сервис, ни ключи, ни оплата, и языки те же, что у сказки.
+const SPEECH_LOCALES = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-GB', nl: 'nl-NL', de: 'de-DE', fr: 'fr-FR' };
+
+function pickVoice(locale) {
+  const voices = window.speechSynthesis?.getVoices?.() || [];
+  const exact = voices.find((voice) => voice.lang.replace('_', '-').toLowerCase() === locale.toLowerCase());
+  if (exact) return exact;
+  const prefix = locale.split('-')[0].toLowerCase();
+  return voices.find((voice) => voice.lang.replace('_', '-').toLowerCase().startsWith(prefix)) || null;
+}
+
+// Длинный текст в одном запросе часть браузеров обрывает на середине,
+// поэтому читаем предложениями.
+function splitForSpeech(text) {
+  const parts = [];
+  let chunk = '';
+  for (const sentence of text.split(/(?<=[.!?…])\s+/)) {
+    if ((chunk + ' ' + sentence).trim().length > 200) {
+      if (chunk.trim()) parts.push(chunk.trim());
+      chunk = sentence;
+    } else {
+      chunk += ' ' + sentence;
+    }
+  }
+  if (chunk.trim()) parts.push(chunk.trim());
+  return parts;
+}
+
+function setUpStoryVoice(story, lang) {
+  const button = document.getElementById('passportListen');
+  const labelEl = document.getElementById('passportListenLabel');
+  const speech = window.speechSynthesis;
+  if (!button || !labelEl || !speech || !story.trim()) return;
+
+  const ru = catalogLanguage() === 'ru';
+  const uk = catalogLanguage() === 'uk';
+  const listenText = ru ? 'Послушать сказку' : uk ? 'Послухати казку' : 'Listen to the story';
+  const stopText = ru ? 'Остановить' : uk ? 'Зупинити' : 'Stop';
+  const locale = SPEECH_LOCALES[lang] || SPEECH_LOCALES.en;
+
+  labelEl.textContent = listenText;
+  button.classList.remove('hidden');
+
+  const reset = () => { labelEl.textContent = listenText; button.classList.remove('speaking'); };
+
+  button.addEventListener('click', () => {
+    if (speech.speaking || speech.pending) { speech.cancel(); reset(); return; }
+    const chunks = splitForSpeech(story);
+    const voice = pickVoice(locale);
+    chunks.forEach((chunk, index) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      utterance.lang = locale;
+      if (voice) utterance.voice = voice;
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+      if (index === chunks.length - 1) utterance.onend = reset;
+      utterance.onerror = reset;
+      speech.speak(utterance);
+    });
+    labelEl.textContent = stopText;
+    button.classList.add('speaking');
+  });
+
+  // Уходя со страницы, обрываем чтение: иначе оно продолжается вслух.
+  window.addEventListener('pagehide', () => speech.cancel());
+}
+
 async function loadPassportPage() {
   const page = document.getElementById('passportPreview');
   if (!page) return;
@@ -393,6 +461,11 @@ async function loadPassportPage() {
     if (story && storyEl) {
       storyEl.textContent = story;
       storyEl.classList.remove('hidden');
+      // Голоса подгружаются асинхронно; без ожидания список бывает пустым
+      // и подходящий язык не находится.
+      const storyLang = stories[lang] ? lang : stories.en ? 'en' : stories.ru ? 'ru' : lang;
+      if (window.speechSynthesis?.getVoices?.().length) setUpStoryVoice(story, storyLang);
+      else window.speechSynthesis?.addEventListener?.('voiceschanged', () => setUpStoryVoice(story, storyLang), { once: true });
     }
     if (passport.photo_path) {
       const photoEl = document.getElementById('passportPagePhoto');
@@ -781,7 +854,8 @@ const bodyCopyUk = {
     ['#passportActivateLabel', 'Код активації з картки в коробці'],
     ['#passportActivateButton', 'Активувати паспорт'],
     ['#passportActivateNote', 'Паспорт можна прив\'язати лише до одного дорослого акаунта.'],
-    ['#passportPageEyebrow', 'ЦИФРОВИЙ ПАСПОРТ']
+    ['#passportPageEyebrow', 'ЦИФРОВИЙ ПАСПОРТ'],
+    ['#passportListenLabel', 'Послухати казку']
   ]
 };
 
