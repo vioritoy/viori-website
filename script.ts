@@ -1654,6 +1654,20 @@ function switchProductionDashboardPage(pageName: string): void {
   });
 }
 
+// Паспорт читают и кабинет, и админка, поэтому набор колонок один на двоих.
+// Пока очередная миграция не применена, полный запрос падает на отсутствующей
+// колонке — тогда берём то, что было в схеме с самого начала, и список
+// остаётся на экране вместо пустоты.
+const passportColumns = "id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)";
+const passportColumnsFallback = "id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at";
+
+async function loadPassports(): Promise<{ passports: DbPassport[]; schemaError: string | null }> {
+  const full = await supabase!.from("nfc_passports").select(passportColumns).order("issued_at", { ascending: false });
+  if (!full.error) return { passports: (full.data || []) as DbPassport[], schemaError: null };
+  const fallback = await supabase!.from("nfc_passports").select(passportColumnsFallback).order("issued_at", { ascending: false });
+  return { passports: (fallback.data || []) as DbPassport[], schemaError: full.error.message };
+}
+
 async function loadProductionAccount(): Promise<void> {
   if (!supabase) return;
   const { data: { user } } = await supabase.auth.getUser();
@@ -1669,9 +1683,9 @@ async function loadProductionAccount(): Promise<void> {
   }
   syncCartOwner(user.id);
   renderCart();
-  const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
+  const [{ data: profile, error: profileError }, passportResult, { data: orders }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+    loadPassports(),
     supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
   ]);
   if (profileError) throw profileError;
@@ -1681,7 +1695,7 @@ async function loadProductionAccount(): Promise<void> {
     const { error: nameError } = await supabase.from("profiles").update({ display_name: googleName }).eq("id", user.id);
     if (!nameError) productionProfile.display_name = googleName;
   }
-  productionPassports = (passports || []) as DbPassport[];
+  productionPassports = passportResult.passports;
   productionOrders = (orders || []) as DbOrder[];
   authView?.classList.add("hidden"); dashboardView?.classList.remove("hidden");
   renderProductionDashboard(user.email || "");
@@ -1785,31 +1799,21 @@ async function loadProductionAdmin(): Promise<void> {
   if (!supabase || productionProfile?.role !== "admin") return;
   const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
     supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-    supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+    loadPassports(),
     supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
   ]);
   productionProducts = (products || []) as DbProduct[];
 
-  // Если очередная миграция ещё не применена, запрос падает на отсутствующей
-  // колонке и список паспортов пропадал целиком. Показываем то, что есть,
-  // и говорим, чего не хватает, вместо пустого экрана.
-  let passports: DbPassport[] | null = passportResult.data as DbPassport[] | null;
-  if (passportResult.error) {
-    const fallback = await supabase
-      .from("nfc_passports")
-      .select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at")
-      .order("issued_at", { ascending: false });
-    passports = fallback.data as DbPassport[] | null;
-    const status = document.getElementById("nfcIssueStatus");
-    if (status && !fallback.error) {
-      status.textContent = label(
-        `База ещё не обновлена: ${passportResult.error.message}. Выполните последнюю миграцию.`,
-        `Базу ще не оновлено: ${passportResult.error.message}. Виконайте останню міграцію.`,
-        `The database is out of date: ${passportResult.error.message}. Apply the latest migration.`
-      );
-    }
+  // Об отставшей базе говорим администратору: только он может её обновить.
+  const status = document.getElementById("nfcIssueStatus");
+  if (passportResult.schemaError && status) {
+    status.textContent = label(
+      `База ещё не обновлена: ${passportResult.schemaError}. Выполните последнюю миграцию.`,
+      `Базу ще не оновлено: ${passportResult.schemaError}. Виконайте останню міграцію.`,
+      `The database is out of date: ${passportResult.schemaError}. Apply the latest migration.`
+    );
   }
-  productionPassports = (passports || []) as DbPassport[];
+  productionPassports = passportResult.passports;
   productionRequests = (requests || []) as DbCustomRequest[];
   renderProductionRequests();
   renderProductionAdmin();

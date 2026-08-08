@@ -21842,6 +21842,14 @@ ${suffix}`;
       page.classList.toggle("hidden", page.dataset.dashboardPage !== pageName);
     });
   }
+  var passportColumns = "id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)";
+  var passportColumnsFallback = "id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at";
+  async function loadPassports() {
+    const full = await supabase.from("nfc_passports").select(passportColumns).order("issued_at", { ascending: false });
+    if (!full.error) return { passports: full.data || [], schemaError: null };
+    const fallback = await supabase.from("nfc_passports").select(passportColumnsFallback).order("issued_at", { ascending: false });
+    return { passports: fallback.data || [], schemaError: full.error.message };
+  }
   async function loadProductionAccount() {
     if (!supabase) return;
     const { data: { user } } = await supabase.auth.getUser();
@@ -21860,9 +21868,9 @@ ${suffix}`;
     }
     syncCartOwner(user.id);
     renderCart();
-    const [{ data: profile, error: profileError }, { data: passports }, { data: orders }] = await Promise.all([
+    const [{ data: profile, error: profileError }, passportResult, { data: orders }] = await Promise.all([
       supabase.from("profiles").select("id,display_name,role").eq("id", user.id).single(),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+      loadPassports(),
       supabase.from("orders").select("id,order_number,total_cents,status,created_at,customer_name,customer_phone,customer_email,shipping_address,delivery_method,delivery_cents,order_items(product_name,unit_price_cents,quantity)").order("created_at", { ascending: false })
     ]);
     if (profileError) throw profileError;
@@ -21872,7 +21880,7 @@ ${suffix}`;
       const { error: nameError } = await supabase.from("profiles").update({ display_name: googleName }).eq("id", user.id);
       if (!nameError) productionProfile.display_name = googleName;
     }
-    productionPassports = passports || [];
+    productionPassports = passportResult.passports;
     productionOrders = orders || [];
     authView?.classList.add("hidden");
     dashboardView?.classList.remove("hidden");
@@ -21962,24 +21970,19 @@ ${suffix}`;
     if (!supabase || productionProfile?.role !== "admin") return;
     const [{ data: products }, passportResult, { data: requests }] = await Promise.all([
       supabase.from("products").select("id,slug,name_ru,name_en,description_ru,description_en,category,price_cents,is_active,product_images(storage_path)").order("created_at", { ascending: false }),
-      supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at,story,audio,photo_path,owner_name,owner_id,order_id,orders(order_number)").order("issued_at", { ascending: false }),
+      loadPassports(),
       supabase.from("custom_requests").select("id,created_at,customer_name,contact_email,product,message,status").order("created_at", { ascending: false })
     ]);
     productionProducts = products || [];
-    let passports = passportResult.data;
-    if (passportResult.error) {
-      const fallback = await supabase.from("nfc_passports").select("id,public_code,character_name_ru,character_name_en,status,claimed_at,issued_at").order("issued_at", { ascending: false });
-      passports = fallback.data;
-      const status = document.getElementById("nfcIssueStatus");
-      if (status && !fallback.error) {
-        status.textContent = label(
-          `База ещё не обновлена: ${passportResult.error.message}. Выполните последнюю миграцию.`,
-          `Базу ще не оновлено: ${passportResult.error.message}. Виконайте останню міграцію.`,
-          `The database is out of date: ${passportResult.error.message}. Apply the latest migration.`
-        );
-      }
+    const status = document.getElementById("nfcIssueStatus");
+    if (passportResult.schemaError && status) {
+      status.textContent = label(
+        `База ещё не обновлена: ${passportResult.schemaError}. Выполните последнюю миграцию.`,
+        `Базу ще не оновлено: ${passportResult.schemaError}. Виконайте останню міграцію.`,
+        `The database is out of date: ${passportResult.schemaError}. Apply the latest migration.`
+      );
     }
-    productionPassports = passports || [];
+    productionPassports = passportResult.passports;
     productionRequests = requests || [];
     renderProductionRequests();
     renderProductionAdmin();

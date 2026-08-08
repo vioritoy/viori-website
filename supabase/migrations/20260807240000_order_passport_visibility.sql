@@ -7,6 +7,7 @@
 -- Право на активацию это не даёт: owner_id по-прежнему проставляет только
 -- claim_nfc_passport по коду, то есть тому, у кого игрушка в руках.
 
+drop policy if exists "passports_order_owner_read" on public.nfc_passports;
 create policy "passports_order_owner_read" on public.nfc_passports
   for select using (
     exists (

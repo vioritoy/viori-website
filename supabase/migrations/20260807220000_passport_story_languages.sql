@@ -7,13 +7,22 @@ alter table public.nfc_passports
   add column if not exists story jsonb not null default '{}'::jsonb;
 
 -- Переносим то, что уже было написано, чтобы ничего не потерялось.
-update public.nfc_passports
-   set story = jsonb_strip_nulls(jsonb_build_object(
-     'ru', nullif(story_ru, ''),
-     'en', nullif(story_en, '')
-   ))
- where story = '{}'::jsonb
-   and (coalesce(story_ru, '') <> '' or coalesce(story_en, '') <> '');
+-- Колонки story_ru/story_en исчезают ниже, поэтому перенос выполняем только
+-- пока они есть: иначе повторный прогон миграции падал бы на них.
+do $$ begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'nfc_passports' and column_name = 'story_ru'
+  ) then
+    update public.nfc_passports
+       set story = jsonb_strip_nulls(jsonb_build_object(
+         'ru', nullif(story_ru, ''),
+         'en', nullif(story_en, '')
+       ))
+     where story = '{}'::jsonb
+       and (coalesce(story_ru, '') <> '' or coalesce(story_en, '') <> '');
+  end if;
+end $$;
 
 alter table public.nfc_passports drop column if exists story_ru;
 alter table public.nfc_passports drop column if exists story_en;

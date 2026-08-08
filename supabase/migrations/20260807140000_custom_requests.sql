@@ -2,9 +2,15 @@
 -- Раньше форма только открывала почтовый клиент: заявка нигде не сохранялась,
 -- а до администратора доходила, лишь если у посетителя настроена почта.
 
-create type public.custom_request_status as enum ('new', 'in_progress', 'done');
+-- Часть этих объектов уже могла быть создана вручную через SQL-редактор,
+-- поэтому миграция написана так, чтобы её можно было выполнить повторно:
+-- иначе `supabase db push` падает на первом же «уже существует».
+do $$ begin
+  create type public.custom_request_status as enum ('new', 'in_progress', 'done');
+exception when duplicate_object then null;
+end $$;
 
-create table public.custom_requests (
+create table if not exists public.custom_requests (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   user_id uuid references public.profiles(id) on delete set null,
@@ -15,14 +21,16 @@ create table public.custom_requests (
   status public.custom_request_status not null default 'new'
 );
 
-create index custom_requests_created_at_idx on public.custom_requests (created_at desc);
+create index if not exists custom_requests_created_at_idx on public.custom_requests (created_at desc);
 
 alter table public.custom_requests enable row level security;
 
 -- Читает и ведёт заявки только администратор. Прямая вставка не разрешена
 -- никому: заявка принимается через функцию ниже, которая проверяет данные.
+drop policy if exists "custom_requests_admin_read" on public.custom_requests;
 create policy "custom_requests_admin_read" on public.custom_requests
   for select using (public.is_admin());
+drop policy if exists "custom_requests_admin_update" on public.custom_requests;
 create policy "custom_requests_admin_update" on public.custom_requests
   for update using (public.is_admin()) with check (public.is_admin());
 
